@@ -21,7 +21,7 @@ public class EmployeeManagement {
     
     public static void main(String[] args) {
         EmployeeView employeeView = new EmployeeView();
-        employeeView.userOperationSelecting();
+        employeeView.choosingOperation();
             
     }
 }

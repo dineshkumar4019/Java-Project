@@ -29,19 +29,19 @@ public class EmployeeView {
     /**
      * Selecting the respective operation by user
      */
-    public void userOperationSelecting() {
-        int userOperationChoice;git commit -m "initial commit"
+    public void choosingOperation() {
+        int userOperationChoice;
         
         do {
             System.out.println("\n\t**1.Insert 2.Display 3.Update 4.Delete 5.Exit**");
             userOperationChoice = getAndValidateChoice();
             
-            switch(userOperationChoice) {Z
+            switch(userOperationChoice) {
                 case 1:
                     createEmployee();
                     break;
                 case 2:
-                    viewEmployee();
+                    displayEmployee();
                     break;
                 case 3:
                     updateEmployee();
@@ -270,15 +270,15 @@ public class EmployeeView {
                 System.out.println("\t**invalid format**");
             }
         }
-        return employeeController.dateConversion(DOB);
+        return employeeController.stringDateConversion(DOB);
     }
     
     /** 
      * Selecting the ways of displaying the employee
      * 
      */           
-    private void viewEmployee() {
-        int employeeViewChoice;
+    private void displayEmployee() {
+        int ViewChoice;
         int id;
         
         if (employeeController.isDatabaseEmpty()) {
@@ -286,34 +286,34 @@ public class EmployeeView {
         } else {
             System.out.println("1:Display all\n2:display by id");
             do {
-                employeeViewChoice = getAndValidateChoice();                
-                switch (employeeViewChoice) {
+                ViewChoice = getAndValidateChoice();                
+                switch (ViewChoice) {
                     case 1:
                         viewAllEmployee();
                         break;
                     case 2:
                         System.out.println("Enter Employee id to view:");
                         id = getAndValidateExistingId();
-                        viewUniqueEmployee(id);
+                        viewEmployee(id);
                         break;
                     default :
                         System.out.println("\t**Wrong choice**\n\t**Enter choice again**");
                 }
-            }  while (2 < employeeViewChoice);
+            }  while (2 < ViewChoice);
         }
     }
     
     /**
-     * displaying the particular employee
+     * displaying the particular employee by id
      * 
      * @param id employee id to view
      */
-    private void viewUniqueEmployee(int id) {
+    private void viewEmployee(int id) {
         System.out.println(employeeController.getSingleEmployee(id));
     }
     
     /**
-     * displaying the entire employees
+     * displaying all the employee in the database
      */
     private void viewAllEmployee() {
         for (Object entry: employeeController.getAllEmployee()) {
@@ -346,7 +346,7 @@ public class EmployeeView {
      * 
      */
     private void updateEmployee() {
-        int employeeUpdateChoice = 0;
+        int UpdateChoice = 0;
         int id;
         
         if (employeeController.isDatabaseEmpty()) {
@@ -356,8 +356,8 @@ public class EmployeeView {
             id = getAndValidateExistingId();
             System.out.println("1:Update all\n2:Update specific field");
             do {
-                employeeUpdateChoice = getAndValidateChoice();                
-                switch (employeeUpdateChoice) {
+                UpdateChoice = getAndValidateChoice();                
+                switch (UpdateChoice) {
                     case 1:
                         updateAllFields(id);
                         break;
@@ -367,7 +367,7 @@ public class EmployeeView {
                     default :
                         System.out.println("\t**Wrong choice**\n\t**Enter choice again**");
                 }
-            } while (2 < employeeUpdateChoice);
+            } while (2 < UpdateChoice);
         }
     }
     
@@ -433,7 +433,7 @@ public class EmployeeView {
     }
     
     private void deleteEmployee() {
-        int employeeDeleteChoice;
+        int DeleteChoice;
         int id;
         
         if (employeeController.isDatabaseEmpty()) {
@@ -441,8 +441,8 @@ public class EmployeeView {
         } else {
             System.out.println("1:Delete all\n2:Delete by id");
             do {
-                employeeDeleteChoice = getAndValidateChoice();                
-                switch (employeeDeleteChoice) {
+                DeleteChoice = getAndValidateChoice();                
+                switch (DeleteChoice) {
                     case 1:
                         deleteAllEmployee();
                         break;
@@ -454,7 +454,7 @@ public class EmployeeView {
                     default :
                         System.out.println("\t**Wrong choice**\n\t**Enter choice again**");
                 }
-            }  while (2 < employeeDeleteChoice);
+            }  while (2 < DeleteChoice);
         }
     }
     

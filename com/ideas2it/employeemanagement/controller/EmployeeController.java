@@ -24,7 +24,7 @@ public class EmployeeController {
     private EmployeeService employeeService = new EmployeeService();
     
     /**
-     * Checking any empolyee  details present in database
+     * Checking employees is present in the database
      *
      * @return database empty or not
      */   
@@ -108,8 +108,8 @@ public class EmployeeController {
      * @param DOB date of birth to convert to local date format
      * @return DOB in local date format
      */
-    public LocalDate dateConversion(String DOB) {
-        return employeeService.dateConversion(DOB);
+    public LocalDate stringDateConversion(String DOB) {
+        return employeeService.stringDateConversion(DOB);
     }
   
     /**
