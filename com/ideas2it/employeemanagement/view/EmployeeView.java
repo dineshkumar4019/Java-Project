@@ -1,7 +1,7 @@
 /*
  * Copyright (c) ideas2it.
  *
- * Date: 2021-09-12
+ * Date: 2021-09-12 
  */
 package com.ideas2it.employeemanagement.view;
 
@@ -30,13 +30,13 @@ public class EmployeeView {
      * Selecting the respective operation by user
      */
     public void userOperationSelecting() {
-        int userOperationChoice;
+        int userOperationChoice;git commit -m "initial commit"
         
         do {
             System.out.println("\n\t**1.Insert 2.Display 3.Update 4.Delete 5.Exit**");
             userOperationChoice = getAndValidateChoice();
             
-            switch(userOperationChoice) {
+            switch(userOperationChoice) {Z
                 case 1:
                     createEmployee();
                     break;
