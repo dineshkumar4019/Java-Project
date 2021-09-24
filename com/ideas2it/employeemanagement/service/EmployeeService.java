@@ -149,7 +149,7 @@ public class EmployeeService {
      * @param DOB date of birth to convert to local date format
      * @return DOB in local date format
      */
-    public LocalDate dateConversion(String DOB) {
+    public LocalDate stringDateConversion(String DOB) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyy");
         LocalDate localDate = LocalDate.parse(DOB, formatter);
         
@@ -167,10 +167,10 @@ public class EmployeeService {
      * @param DOB date of birth of an employee
      * @return employee created or not
      */
-    public boolean createEmployee(int id, String name, double salary, String email
-                                   , long phoneNumber, LocalDate DOB) {
-        return (null == employeeDetails.put(id, new Employee(id, name, salary
-                                            , email, phoneNumber, DOB)));
+    public boolean createEmployee(int id, String name, double salary, String email,
+                                  long phoneNumber, LocalDate DOB) {
+        return (null == employeeDetails.put(id, new Employee(id, name, salary,
+                                            email, phoneNumber, DOB)));
     }
     
     /**
@@ -182,7 +182,7 @@ public class EmployeeService {
     public List<Employee> getSingleEmployee(int id) {
         List<Employee> employee = new ArrayList<>();
         
-        employee.add(employeeDetails.get(id));
+        employee.add(employeeDetails.get(id)); 
         return employee;
     }
     
