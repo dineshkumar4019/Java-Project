@@ -3,7 +3,7 @@
  *
  * Date: 2021-09-12
  */
-//package com.ideas2it.employeemanagement.connection;
+package com.ideas2it.employeemanagement.connection;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -55,9 +55,8 @@ public class DataBaseConnection {
      */
     public void closeConnection() {
         try {
-            if (connection != null) {
-                connection.close();
-            }
+            connection.close();
+            connection = null;
         } catch (SQLException e) {
             e.printStackTrace();
         }

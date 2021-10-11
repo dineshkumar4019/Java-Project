@@ -193,9 +193,10 @@ public class EmployeeService implements EmployeeServiceInterface {
      *
      * @param id id to get the required employee
      * @param name employee changed name
+     * @return Total rows updated
      */
-    public void updateName(int id, String name) throws SQLException {
-        employeeDao.updateName(id, name);
+    public int updateName(int id, String name) throws SQLException {
+        return employeeDao.updateName(id, name);
     }
     
     /**
@@ -203,9 +204,10 @@ public class EmployeeService implements EmployeeServiceInterface {
      *
      * @param id id to get the required employee
      * @param phoneNumber employee changed phone number
+     * @return Total rows updated
      */
-    public void updatePhoneNumber(int id, long phoneNumber) throws SQLException {
-        employeeDao.updatePhoneNumber(id, phoneNumber);
+    public int updatePhoneNumber(int id, long phoneNumber) throws SQLException {
+        return employeeDao.updatePhoneNumber(id, phoneNumber);
     }
     
     /**
@@ -213,9 +215,10 @@ public class EmployeeService implements EmployeeServiceInterface {
      *
      * @param id id to get the required employee
      * @param salary employee changed salary
+     * @return Total rows updated
      */
-    public void updateSalary(int id, double salary) throws SQLException{
-        employeeDao.updateSalary(id, salary);
+    public int updateSalary(int id, double salary) throws SQLException{
+        return employeeDao.updateSalary(id, salary);
     }
     
     /**
@@ -223,9 +226,10 @@ public class EmployeeService implements EmployeeServiceInterface {
      *
      * @param id id to get the required employee
      * @param email employee changed email
+     * @return Total rows updated
      */
-    public void updateEmail(int id, String email) throws SQLException {
-        employeeDao.updateEmail(id, email);
+    public int updateEmail(int id, String email) throws SQLException {
+        return employeeDao.updateEmail(id, email);
     }
     
     /**
@@ -233,9 +237,10 @@ public class EmployeeService implements EmployeeServiceInterface {
      *
      * @param id id to get the required employee
      * @param DOB employee changed date of Birth
+     * @return Total rows updated
      */
-    public void updateDOB(int id, LocalDate DOB) throws SQLException {
-        employeeDao.updateDOB(id, DOB);
+    public int updateDOB(int id, LocalDate DOB) throws SQLException {
+        return employeeDao.updateDOB(id, DOB);
     }
     
     /**

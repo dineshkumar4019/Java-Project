@@ -140,7 +140,7 @@ public interface EmployeeServiceInterface {
      * @param id id to get the required employee
      * @param name employee changed name
      */
-    public void updateName(int id, String name) throws SQLException;
+    public int updateName(int id, String name) throws SQLException;
     
     /**
      * Updating the phoneNumber of the particular employee
@@ -148,7 +148,7 @@ public interface EmployeeServiceInterface {
      * @param id id to get the required employee
      * @param phoneNumber employee changed phone number
      */
-    public void updatePhoneNumber(int id, long phoneNumber) throws SQLException;
+    public int updatePhoneNumber(int id, long phoneNumber) throws SQLException;
     
     /**
      * Updating the salary of the particular employee
@@ -156,7 +156,7 @@ public interface EmployeeServiceInterface {
      * @param id id to get the required employee
      * @param salary employee changed salary
      */
-    public void updateSalary(int id, double salary) throws SQLException;
+    public int updateSalary(int id, double salary) throws SQLException;
     
     /**
      * Updating the email of the particular employee
@@ -164,7 +164,7 @@ public interface EmployeeServiceInterface {
      * @param id id to get the required employee
      * @param email employee changed email
      */
-    public void updateEmail(int id, String email) throws SQLException;
+    public int updateEmail(int id, String email) throws SQLException;
     
     /**
      * Updating the date of birth of the particular employee
@@ -172,7 +172,7 @@ public interface EmployeeServiceInterface {
      * @param id id to get the required employee
      * @param DOB employee changed date of Birth
      */
-    public void updateDOB(int id, LocalDate DOB) throws SQLException;
+    public int updateDOB(int id, LocalDate DOB) throws SQLException;
     
     /**
      * Deleting the required employee

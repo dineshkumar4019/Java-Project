@@ -180,8 +180,8 @@ public class EmployeeController {
      * @param id id to get the required employee
      * @param name employee changed name
      */
-    public void updateName(int id, String name) throws SQLException {
-        employeeService.updateName(id, name);
+    public int updateName(int id, String name) throws SQLException {
+        return employeeService.updateName(id, name);
     }
     
     /**
@@ -190,8 +190,8 @@ public class EmployeeController {
      * @param id id to get the required employee
      * @param salary employee changed salary
      */
-    public void updateSalary(int id, double salary) throws SQLException {
-        employeeService.updateSalary(id, salary);
+    public int updateSalary(int id, double salary) throws SQLException {
+        return employeeService.updateSalary(id, salary);
     }
     
     /**
@@ -200,8 +200,8 @@ public class EmployeeController {
      * @param id id to get the required employee
      * @param phoneNumber employee changed phone number
      */
-    public void updatePhoneNumber(int id, long phoneNumber) throws SQLException {
-        employeeService.updatePhoneNumber(id, phoneNumber);
+    public int updatePhoneNumber(int id, long phoneNumber) throws SQLException {
+        return employeeService.updatePhoneNumber(id, phoneNumber);
     }
     
     /**
@@ -210,8 +210,8 @@ public class EmployeeController {
      * @param id id to get the required employee
      * @param email employee changed email
      */
-    public void updateEmail(int id, String email) throws SQLException {
-        employeeService.updateEmail(id, email);
+    public int updateEmail(int id, String email) throws SQLException {
+        return employeeService.updateEmail(id, email);
     }
     
     /**
@@ -220,8 +220,8 @@ public class EmployeeController {
      * @param id id to get the required employee
      * @param DOB employee changed date of Birth
      */
-    public void updateDOB(int id, LocalDate DOB) throws SQLException {
-        employeeService.updateDOB(id, DOB);
+    public int updateDOB(int id, LocalDate DOB) throws SQLException {
+        return employeeService.updateDOB(id, DOB);
     }
     
     /**
