@@ -35,7 +35,8 @@ public interface EmployeeDaoInterface {
      *
      * @return database empty or not
      */
-    public int insertEmployee(String name, double salary, String email, long phoneNumber, LocalDate DOB) throws SQLException;
+    public int insertEmployee(String name, double salary, String email, 
+                              long phoneNumber, LocalDate DOB) throws SQLException;
     
     /**
      * Updating all employee fields in the database
@@ -43,7 +44,7 @@ public interface EmployeeDaoInterface {
      * @return Total number of rows updated in database
      */
     public int updateAllFields(int id, String name, double salary, String email,
-                                long phoneNumber, LocalDate DOB) throws SQLException;
+                               long phoneNumber, LocalDate DOB) throws SQLException;
     
     /**
      * Updating employee name in the database by 

@@ -37,7 +37,8 @@ public class EmployeeDao implements EmployeeDaoInterface {
      *
      * @return database empty or not
      */
-    public int insertEmployee(String name, double salary, String email, long phoneNumber, LocalDate DOB) throws SQLException {
+    public int insertEmployee(String name, double salary, String email,
+                              long phoneNumber, LocalDate DOB) throws SQLException {
         Connection connection = dataBaseConnection.getConnection();
         int rowsAffected = 0;
         
@@ -60,7 +61,7 @@ public class EmployeeDao implements EmployeeDaoInterface {
      * @return Total number of rows updated in database
      */
     public int updateAllFields(int id, String name, double salary, String email,
-                                long phoneNumber, LocalDate DOB) throws SQLException {
+                               long phoneNumber, LocalDate DOB) throws SQLException {
         Connection connection = dataBaseConnection.getConnection();
         int rowsAffected = 0;
         
@@ -297,7 +298,8 @@ public class EmployeeDao implements EmployeeDaoInterface {
         Connection connection = dataBaseConnection.getConnection();
         boolean isExist = false;
         
-        PreparedStatement statement = connection.prepareStatement("SELECT phone_number FROM employees WHERE phone_number = ?");
+        PreparedStatement statement = connection.prepareStatement("SELECT phone_number"
+                                                                  +" FROM employees WHERE phone_number = ?");
         
         statement.setLong(1, phoneNumber);
         if (statement.executeQuery().next()) {
