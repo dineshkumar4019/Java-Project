@@ -15,7 +15,7 @@ import java.time.LocalDate;
  * @version	1.0
  * 
  */
-public class Employee {
+public class EmployeeDTO {
     private int id;
     private String name;
     private double salary;
@@ -23,7 +23,7 @@ public class Employee {
     private long phoneNumber;
     private LocalDate DOB;
     
-    public Employee() {
+    public EmployeeDTO() {
         
     }
     
@@ -37,7 +37,7 @@ public class Employee {
      * @param email employee email
      * @param DOB date of birth of an employee
      */
-    public Employee(int id, String name, double salary
+    public EmployeeDTO(int id, String name, double salary
                    , String email, long phoneNumber, LocalDate DOB) {
         this.id = id;
         this.name = name;
@@ -93,5 +93,20 @@ public class Employee {
     
     public void setDOB(LocalDate DOB) {
         this.DOB = DOB;
+    }
+     
+    /**
+     * displaying the respective employee details 
+     * 
+     * @return empolyee details
+     */
+    public String toString() {
+        return new StringBuilder().append("\n\tEmp Id: ").append(getId())
+                   .append("\n\tEmp Name: ").append(getName())
+                   .append("\n\tEmp salary: ").append(getSalary())
+                   .append("\n\tEmp email: ").append(getEmail())
+                   .append("\n\tEmp phone number: ").append(getPhoneNumber())
+                   .append("\n\tEmp Date of birth: ").append(getDOB())
+                   .toString();
     }
 }

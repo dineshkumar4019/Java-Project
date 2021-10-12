@@ -10,12 +10,15 @@ import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern; 
 
 import com.ideas2it.employeemanagement.dao.impl.EmployeeDao;
 import com.ideas2it.employeemanagement.model.Employee;
+import com.ideas2it.employeemanagement.model.EmployeeDTO;
 import com.ideas2it.employeemanagement.service.EmployeeServiceInterface;
+import com.ideas2it.employeemanagement.utils.ModelMapper;
 
 /**
  * <h1> Employees service</h1>
@@ -29,6 +32,7 @@ import com.ideas2it.employeemanagement.service.EmployeeServiceInterface;
  */
 public class EmployeeService implements EmployeeServiceInterface {
     private EmployeeDao employeeDao = new EmployeeDao();
+    private ModelMapper modelMapper  = new ModelMapper();
        
     /**
      * Getting the total employees present in the database
@@ -159,8 +163,13 @@ public class EmployeeService implements EmployeeServiceInterface {
      * @param id employee id to get
      * @return single employee details
      */
-    public List<Employee> getSingleEmployee(int id) throws SQLException {
-        return employeeDao.getEmployee(id);
+    public List<EmployeeDTO> getSingleEmployee(int id) throws SQLException {
+        List<EmployeeDTO> employeeDto = new ArrayList<>();
+        
+        for (Employee entry: employeeDao.getEmployee(id)) {
+               employeeDto.add(modelMapper.toEmployeeDto(entry));
+        }
+        return employeeDto;
     }
     
     /**
@@ -168,9 +177,14 @@ public class EmployeeService implements EmployeeServiceInterface {
      *
      * @return All employee details
      */
-    public List<Employee> getAllEmployee() throws SQLException {
-        return employeeDao.getEmployees();
-    } 
+    public List<EmployeeDTO> getAllEmployee() throws SQLException {
+        List<EmployeeDTO> employeeDto = new ArrayList<>();
+        
+        for (Employee entry: employeeDao.getEmployees()) {
+            employeeDto.add(modelMapper.toEmployeeDto(entry));
+        }
+        return employeeDto;
+    }
     
     /**
      * Updating the all fields of an employee 

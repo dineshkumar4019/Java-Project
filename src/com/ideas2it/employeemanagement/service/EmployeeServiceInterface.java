@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.ideas2it.employeemanagement.model.Employee;
+import com.ideas2it.employeemanagement.model.EmployeeDTO;
 
 public interface EmployeeServiceInterface {
     /**
@@ -111,14 +112,14 @@ public interface EmployeeServiceInterface {
      * @param id employee id to get
      * @return single employee details
      */
-    public List<Employee> getSingleEmployee(int id) throws SQLException;
+    public List<EmployeeDTO> getSingleEmployee(int id) throws SQLException;
     
     /**
      * Getting all employee in the database
      *
      * @return All employee details
      */
-    public List<Employee> getAllEmployee() throws SQLException;
+    public List<EmployeeDTO> getAllEmployee() throws SQLException;
     
     /**
      * Updating the all fields of an employee 
