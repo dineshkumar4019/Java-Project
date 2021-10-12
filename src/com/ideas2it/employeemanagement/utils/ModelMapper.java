@@ -2,6 +2,7 @@ package com.ideas2it.employeemanagement.utils;
 
 import com.ideas2it.employeemanagement.model.Employee;
 import com.ideas2it.employeemanagement.model.EmployeeDTO;
+import com.ideas2it.employeemanagement.model.EmployeeAddressDTO;
 
 public class ModelMapper {
     public EmployeeDTO toEmployeeDto(Employee employee) {

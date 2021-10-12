@@ -9,7 +9,7 @@ import java.lang.StringBuilder;
 import java.time.LocalDate; 
 
 /**
- * Employees fields creation
+ * Employee fields creation and carries employee details
  * 
  * @author	Dinesh Kumar
  * @version	1.0

@@ -14,14 +14,14 @@ import java.lang.StringBuilder;
  * @version	1.0
  * 
  */
-public class EmployeeAddress {
+public class EmployeeAddressDTO {
     private String address;
     private String city;
     private int pincode;
     private String state;
     private String country;
     
-    public EmployeeAddress() {
+    public EmployeeAddressDTO() {
         
     }
     
@@ -34,7 +34,7 @@ public class EmployeeAddress {
      * @param state employee current living state
      * @param country employee current living country
      */
-    public EmployeeAddress(String address, String city, int pincode, String state, String country) {
+    public EmployeeAddressDTO(String address, String city, int pincode, String state, String country) {
         this.address = address;
         this.city = city;
         this.pincode = pincode;
@@ -80,5 +80,19 @@ public class EmployeeAddress {
         
     public void setCountry(String country) {
         this.country = country;
+    }
+     
+    /**
+     * displaying the respective employee address 
+     * 
+     * @return empolyee address
+     */
+    public String toString() {
+        return new StringBuilder().append("\n\tEmp Address: ").append(getAddress())
+                   .append("\n\tEmp City: ").append(getCity())
+                   .append("\n\tEmp Pincode: ").append(getPincode())
+                   .append("\n\tEmp State: ").append(getState())
+                   .append("\n\tEmp Country: ").append(getCountry())
+                   .toString();
     }
 }
