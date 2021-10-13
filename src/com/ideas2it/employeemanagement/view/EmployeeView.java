@@ -40,7 +40,8 @@ public class EmployeeView {
             
             switch(userOperationChoice) {
                 case 1:
-                    createEmployee();
+                    //createEmployee();
+                    addAddress(createEmployee());
                     break;
                 case 2:
                     displayEmployee();
@@ -314,8 +315,9 @@ public class EmployeeView {
      * Creating employee and Storing in the database
      * 
      */
-    private void createEmployee() {
-        int id;
+    private int createEmployee() {
+        int id = 0;
+        
         try {
             String name = getAndValidateName();
             double salary = getAndValidateSalary();
@@ -324,11 +326,11 @@ public class EmployeeView {
             LocalDate DOB = getAndValidateDOB();
         
             id = employeeController.createEmployee(name, salary, email, phoneNumber, DOB);
-            System.out.println("Created Employee id is: " + id);  
-            createAddress(id);             
+            createAddress(id);
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return id;
    }
    
    private String getAndValidateAddress() {
@@ -416,27 +418,48 @@ public class EmployeeView {
         return country;
     }
     
-   private void createAddress(int id) {
-       try {
-           String address = getAndValidateAddress();
-           String city = getAndValidateCity();
-           String pincode = getAndValidatePincode();
-           String state = getAndValidateState();
-           String country = getAndValidateCountry();
+    private void createAddress(int id) { 
+        try {
+            System.out.println("\n\tEnter Employee Address");
+            String address = getAndValidateAddress();
+            String city = getAndValidateCity();
+            String pincode = getAndValidatePincode();
+            String state = getAndValidateState();
+            String country = getAndValidateCountry();
            
-           if(1 == employeeController.createAddress(id, address, city, pincode,
-                                                    state, country)) {
-               System.out.println("Employee created successfully");
-           } else {
-               System.out.println("Employee NOT created");
-           }
-       } catch (SQLException e) {
-            e.printStackTrace();
-       }
-   }
-           
-           
-    
+            if(1 == employeeController.createAddress(id, address, city, pincode,
+                                                     state, country)) {
+                System.out.println("\n\tCREATED EMPLOYEE ID is: " + id);
+                System.out.println("\n\t**Employee address added successfully**");
+            } else {
+                System.out.println("Employee NOT created");
+            }
+        } catch (SQLException e) {
+             e.printStackTrace();
+        }
+    }
+   
+    private void addAddress(int id) {
+        int userChoice = 0;
+       
+        while (2 != userChoice){
+            System.out.println("\n\t**Do You Want To Add Another Address\npress 1 for Yes and 2 for No");
+            userChoice = getAndValidateChoice();
+            
+            switch (userChoice) {
+                case 1:
+                    createAddress(id);
+                    break;
+                case 2:
+                    System.out.println("You Entered NO");
+                    break;
+                default :
+                    System.out.println("\t**Wrong choice**\n\t**Enter choice Again**");
+                    break;
+            }
+        }
+    }
+   
     /**
      * Selecting the ways of updating the fields
      * and getting the employee id to update

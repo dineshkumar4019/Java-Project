@@ -211,8 +211,10 @@ public class EmployeeDao implements EmployeeDaoInterface {
         Connection connection = dataBaseConnection.getConnection();
         int rowsAffected = 0;
         
-        PreparedStatement statement = connection.prepareStatement("TRUNCATE TABLE employees");
+        PreparedStatement statement = connection.prepareStatement("DELETE FROM employees");
         rowsAffected = statement.executeUpdate();
+        statement = connection.prepareStatement("ALTER TABLE employees AUTO_INCREMENT = 1");
+        statement.executeUpdate();
         dataBaseConnection.closeConnection();
         return rowsAffected;
     }
