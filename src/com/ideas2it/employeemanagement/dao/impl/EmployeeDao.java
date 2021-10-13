@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -41,18 +42,22 @@ public class EmployeeDao implements EmployeeDaoInterface {
                               long phoneNumber, LocalDate DOB) throws SQLException {
         Connection connection = dataBaseConnection.getConnection();
         int rowsAffected = 0;
+        int id;
         
         String insert = "INSERT INTO employees VALUES(NULL,?, ?, ?, ?, ?)";
-        PreparedStatement statement = connection.prepareStatement(insert);
+        PreparedStatement statement = connection.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
         
         statement.setString(1, name);
         statement.setDouble(2, salary);
         statement.setString(3, email);
         statement.setLong(4, phoneNumber);
         statement.setDate(5, Date.valueOf(DOB));
-        rowsAffected = statement.executeUpdate();
+        statement.executeUpdate();
+        ResultSet resultSet = statement.getGeneratedKeys();
+        resultSet.next();
+        id = resultSet.getInt(1);
         dataBaseConnection.closeConnection();
-        return rowsAffected;
+        return id;
     }
     
     /**

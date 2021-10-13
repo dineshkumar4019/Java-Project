@@ -8,7 +8,7 @@ package com.ideas2it.employeemanagement.model;
 import java.lang.StringBuilder; 
 
 /**
- * Employee address field creation and carries employee address
+ * Employee address field creation and carries employee details
  * 
  * @author	Dinesh Kumar
  * @version	1.0
@@ -17,7 +17,7 @@ import java.lang.StringBuilder;
 public class EmployeeAddress {
     private String address;
     private String city;
-    private int pincode;
+    private String pincode;
     private String state;
     private String country;
     
@@ -34,7 +34,7 @@ public class EmployeeAddress {
      * @param state employee current living state
      * @param country employee current living country
      */
-    public EmployeeAddress(String address, String city, int pincode, String state, String country) {
+    public EmployeeAddress(String address, String city, String pincode, String state, String country) {
         this.address = address;
         this.city = city;
         this.pincode = pincode;
@@ -58,11 +58,11 @@ public class EmployeeAddress {
         this.city = city;
     }
         
-    public int getPincode() {
+    public String getPincode() {
         return pincode;
     }
     
-    public void setPincode(int pincode) {
+    public void setPincode(String pincode) {
         this.pincode = pincode;
     }
     

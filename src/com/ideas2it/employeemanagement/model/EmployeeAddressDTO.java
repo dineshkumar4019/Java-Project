@@ -17,7 +17,7 @@ import java.lang.StringBuilder;
 public class EmployeeAddressDTO {
     private String address;
     private String city;
-    private int pincode;
+    private String pincode;
     private String state;
     private String country;
     
@@ -34,7 +34,7 @@ public class EmployeeAddressDTO {
      * @param state employee current living state
      * @param country employee current living country
      */
-    public EmployeeAddressDTO(String address, String city, int pincode, String state, String country) {
+    public EmployeeAddressDTO(String address, String city, String pincode, String state, String country) {
         this.address = address;
         this.city = city;
         this.pincode = pincode;
@@ -58,11 +58,11 @@ public class EmployeeAddressDTO {
         this.city = city;
     }
         
-    public int getPincode() {
+    public String getPincode() {
         return pincode;
     }
     
-    public void setPincode(int pincode) {
+    public void setPincode(String pincode) {
         this.pincode = pincode;
     }
     

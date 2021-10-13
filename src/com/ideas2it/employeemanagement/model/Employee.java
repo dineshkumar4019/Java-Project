@@ -22,7 +22,6 @@ public class Employee {
     private String email;
     private long phoneNumber;
     private LocalDate DOB;
-    
     public Employee() {
         
     }

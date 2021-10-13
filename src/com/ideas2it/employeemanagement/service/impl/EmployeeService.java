@@ -18,6 +18,7 @@ import com.ideas2it.employeemanagement.dao.impl.EmployeeDao;
 import com.ideas2it.employeemanagement.model.Employee;
 import com.ideas2it.employeemanagement.model.EmployeeDTO;
 import com.ideas2it.employeemanagement.service.EmployeeServiceInterface;
+import com.ideas2it.employeemanagement.service.impl.AddressService;
 import com.ideas2it.employeemanagement.utils.ModelMapper;
 
 /**
@@ -32,6 +33,7 @@ import com.ideas2it.employeemanagement.utils.ModelMapper;
  */
 public class EmployeeService implements EmployeeServiceInterface {
     private EmployeeDao employeeDao = new EmployeeDao();
+    private AddressService addressService = new AddressService();
     private ModelMapper modelMapper  = new ModelMapper();
        
     /**
@@ -153,8 +155,13 @@ public class EmployeeService implements EmployeeServiceInterface {
      * @return employee created or not
      */
     public int createEmployee(String name, double salary, String email,
-                              long phoneNumber, LocalDate DOB) throws SQLException{
+                              long phoneNumber, LocalDate DOB) throws SQLException {
         return employeeDao.insertEmployee(name,salary, email, phoneNumber, DOB);
+    }
+    
+    public int createAddress(int id, String address, String city, String pincode,
+                             String state, String country) throws SQLException {
+        return addressService.insertAddress(id, address, city, pincode, state, country);
     }
     
     /**
@@ -197,8 +204,8 @@ public class EmployeeService implements EmployeeServiceInterface {
      * @param DOB date of birth of an employee to update
      * @return All employee fields updated or not
      */
-    public int updateAllFields(int id, String name, double salary, String email
-                                   , long phoneNumber, LocalDate DOB) throws SQLException {
+    public int updateAllFields(int id, String name, double salary, String email,
+                               long phoneNumber, LocalDate DOB) throws SQLException {
         return employeeDao.updateAllFields(id, name, salary, email, phoneNumber, DOB);
     }
     

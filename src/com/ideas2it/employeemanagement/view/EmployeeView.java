@@ -315,6 +315,7 @@ public class EmployeeView {
      * 
      */
     private void createEmployee() {
+        int id;
         try {
             String name = getAndValidateName();
             double salary = getAndValidateSalary();
@@ -322,15 +323,119 @@ public class EmployeeView {
             long phoneNumber = getAndValidatePhoneNumber();
             LocalDate DOB = getAndValidateDOB();
         
-            if (1 == employeeController.createEmployee(name, salary, email, phoneNumber, DOB)) {
-                System.out.println("\n\t***Details created Successfully***");
-            } else {
-                System.out.println("\tDetails not created!!!!");
-            }
+            id = employeeController.createEmployee(name, salary, email, phoneNumber, DOB);
+            System.out.println("Created Employee id is: " + id);  
+            createAddress(id);             
         } catch (SQLException e) {
             e.printStackTrace();
         }
    }
+   
+   private String getAndValidateAddress() {
+        boolean isvalidAddress = false;
+        String address = "";
+        
+        while (!isvalidAddress) {
+            System.out.println("Enter the door no and locality name: ");
+            address = scanner.nextLine().trim();
+            
+            if (employeeController.validateAddress(address)) {
+                isvalidAddress = true;
+            } else {
+                System.out.println("\n\tEnter address correctly!!!\n\t**Address only allows '-/,' only** ");
+            }
+        }
+        return address;
+    }
+    
+    private String getAndValidateCity() {
+        boolean isvalidCity = false;
+        String city = "";
+        
+        while (!isvalidCity) {
+            System.out.println("Enter the city ");
+            city = scanner.nextLine().trim();
+            
+            if (employeeController.validateCity(city)) {
+                isvalidCity = true;
+            } else {
+                System.out.println("\n\tEnter city correctly!!!\n\t**No special characters** ");
+            }
+        }
+        return city;
+    }
+    
+    private String getAndValidatePincode() {
+        boolean isvalidPincode = false;
+        String pincode = "";
+        
+        while (!isvalidPincode) {
+            System.out.println("Enter the pincode: ");
+            pincode = scanner.nextLine().trim();
+            
+            if (employeeController.validatePincode(pincode)) {
+                isvalidPincode = true;
+            } else {
+                System.out.println("\n\tEnter pincode correctly!!!\n\t**pincode should be 6 numbers** ");
+            }
+        }
+        return pincode;
+    }
+    
+    private String getAndValidateState() {
+        boolean isvalidState = false;
+        String state = "";
+        
+        while (!isvalidState) {
+            System.out.println("Enter the state: ");
+            state = scanner.nextLine().trim();
+            
+            if (employeeController.validateState(state)) {
+                isvalidState = true;
+            } else {
+                System.out.println("\n\tEnter state correctly!!!\n\t**No special characters** ");
+            }
+        }
+        return state;
+    }
+    
+    private String getAndValidateCountry() {
+        boolean isvalidCountry = false;
+        String country = "";
+        
+        while (!isvalidCountry) {
+            System.out.println("Enter the country: ");
+            country = scanner.nextLine().trim();
+            
+            if (employeeController.validateCountry(country)) {
+                isvalidCountry = true;
+            } else {
+                System.out.println("\n\tEnter country correctly!!!\n\t**No special characters** ");
+            }
+        }
+        return country;
+    }
+    
+   private void createAddress(int id) {
+       try {
+           String address = getAndValidateAddress();
+           String city = getAndValidateCity();
+           String pincode = getAndValidatePincode();
+           String state = getAndValidateState();
+           String country = getAndValidateCountry();
+           
+           if(1 == employeeController.createAddress(id, address, city, pincode,
+                                                    state, country)) {
+               System.out.println("Employee created successfully");
+           } else {
+               System.out.println("Employee NOT created");
+           }
+       } catch (SQLException e) {
+            e.printStackTrace();
+       }
+   }
+           
+           
     
     /**
      * Selecting the ways of updating the fields
