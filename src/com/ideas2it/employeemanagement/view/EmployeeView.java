@@ -11,7 +11,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
 
-import com.ideas2it.employeemanagement.controller.EmployeeController; 
+import com.ideas2it.employeemanagement.controller.EmployeeController;
+import com.ideas2it.employeemanagement.controller.AddressController; 
 
 /**
  * <h1> Employees view</h1>
@@ -26,6 +27,7 @@ import com.ideas2it.employeemanagement.controller.EmployeeController;
 public class EmployeeView {
     private Scanner scanner = new Scanner(System.in);
     private EmployeeController employeeController = new EmployeeController();
+    private AddressController addressController = new AddressController();
     
     /**
      * Selecting the respective operation by user
@@ -40,7 +42,6 @@ public class EmployeeView {
             
             switch(userOperationChoice) {
                 case 1:
-                    //createEmployee();
                     addAddress(createEmployee());
                     break;
                 case 2:
@@ -109,6 +110,35 @@ public class EmployeeView {
             }
         }
         return id;
+    }
+    
+    /**
+     * Checking the employee id present in database 
+     * and validating the existing id
+     * 
+     * @return proper format of id
+     */
+    private int getAndValidateAddressId(int id) {
+        boolean isValidId = false;
+        int addressId = 0;
+        
+        while (!isValidId) {
+        
+            try {
+                addressId = Integer.parseInt(scanner.nextLine());
+                
+                if (!addressController.isAddressExist(addressId, id)) {
+                    System.out.println("\n\tAddress id doesn't exist\n\t**Enter id again**");
+                } else {
+                    isValidId = true;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("\n\tAddress ID must be in numbers\n\t**Enter id Again**");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return addressId;
     }
     
     /**
@@ -293,6 +323,9 @@ public class EmployeeView {
     private void viewEmployee(int id) {
         try {
             System.out.println(employeeController.getSingleEmployee(id).get(0));
+            for (Object entry : addressController.getAddress(id)) {
+                System.out.println(entry);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -303,6 +336,7 @@ public class EmployeeView {
      */
     private void viewAllEmployee() {
         try {
+            //employeeController.getAllEmployee();
             for (Object entry: employeeController.getAllEmployee()) {
                 System.out.println(entry);
             }
@@ -341,7 +375,7 @@ public class EmployeeView {
             System.out.println("Enter the door no and locality name: ");
             address = scanner.nextLine().trim();
             
-            if (employeeController.validateAddress(address)) {
+            if (addressController.validateAddress(address)) {
                 isvalidAddress = true;
             } else {
                 System.out.println("\n\tEnter address correctly!!!\n\t**Address only allows '-/,' only** ");
@@ -358,7 +392,7 @@ public class EmployeeView {
             System.out.println("Enter the city ");
             city = scanner.nextLine().trim();
             
-            if (employeeController.validateCity(city)) {
+            if (addressController.validateCity(city)) {
                 isvalidCity = true;
             } else {
                 System.out.println("\n\tEnter city correctly!!!\n\t**No special characters** ");
@@ -375,7 +409,7 @@ public class EmployeeView {
             System.out.println("Enter the pincode: ");
             pincode = scanner.nextLine().trim();
             
-            if (employeeController.validatePincode(pincode)) {
+            if (addressController.validatePincode(pincode)) {
                 isvalidPincode = true;
             } else {
                 System.out.println("\n\tEnter pincode correctly!!!\n\t**pincode should be 6 numbers** ");
@@ -392,7 +426,7 @@ public class EmployeeView {
             System.out.println("Enter the state: ");
             state = scanner.nextLine().trim();
             
-            if (employeeController.validateState(state)) {
+            if (addressController.validateState(state)) {
                 isvalidState = true;
             } else {
                 System.out.println("\n\tEnter state correctly!!!\n\t**No special characters** ");
@@ -409,7 +443,7 @@ public class EmployeeView {
             System.out.println("Enter the country: ");
             country = scanner.nextLine().trim();
             
-            if (employeeController.validateCountry(country)) {
+            if (addressController.validateCountry(country)) {
                 isvalidCountry = true;
             } else {
                 System.out.println("\n\tEnter country correctly!!!\n\t**No special characters** ");
@@ -427,7 +461,7 @@ public class EmployeeView {
             String state = getAndValidateState();
             String country = getAndValidateCountry();
            
-            if(1 == employeeController.createAddress(id, address, city, pincode,
+            if(1 == addressController.createAddress(id, address, city, pincode,
                                                      state, country)) {
                 System.out.println("\n\tCREATED EMPLOYEE ID is: " + id);
                 System.out.println("\n\t**Employee address added successfully**");
@@ -474,7 +508,8 @@ public class EmployeeView {
         } else {
             System.out.println("Enter the employee id to update: ");
             id = getAndValidateId();
-            System.out.println("1:Update all\n2:Update specific field");
+            System.out.println("1:Update all\n2:Update specific field\n3:Update all address field"
+                               + "\n4:update specific address field ");
             do {
                 UpdateChoice = getAndValidateChoice();                
                 switch (UpdateChoice) {
@@ -484,10 +519,16 @@ public class EmployeeView {
                     case 2:
                         updateField(id);
                         break;
+                    case 3:
+                        updateAddressFields(id);
+                        break;
+                    case 4:
+                        updateAddessField(id);
+                        break;
                     default :
                         System.out.println("\t**Wrong choice**\n\t**Enter choice again**");
                 }
-            } while (2 < UpdateChoice);
+            } while (4 < UpdateChoice);
         }
     }
     
@@ -575,6 +616,98 @@ public class EmployeeView {
                         System.out.println("\n\t**Wrong field**\n\t**Select the field between the range");
                 }
             } while (5 < employeeField);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void updateAddressFields(int id) {
+        int addressId;
+        
+        try {  
+            for (Object entry : addressController.getAddress(id)) {
+                System.out.println(entry);
+            }
+            System.out.println("Enter addres Id to update");
+            addressId = getAndValidateAddressId(id);
+            String address = getAndValidateAddress();
+            String city = getAndValidateCity();
+            String pincode = getAndValidatePincode();
+            String state = getAndValidateState();
+            String country = getAndValidateCountry();
+            if (1 == addressController.updateAddressFields(id, address, city, pincode, state, country)) {
+                System.out.println("\n\t***Address updated Successfully***");
+            } else {
+                System.out.println("\n\t***Address not updated***");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void updateAddessField(int id) {
+        int addressField;
+        int addressId;
+        String address;
+        String city;
+        String pincode;
+        String state;
+        String country;
+        
+        try {
+            for (Object entry : addressController.getAddress(id)) {
+                System.out.println(entry);
+            }
+            System.out.println("Enter addres Id to update");
+            addressId = getAndValidateAddressId(id);
+            System.out.println("Select field to update\n1:Address\n2:City\n3:Pincode\n4:State\n5:Country");
+            do {
+                addressField = getAndValidateChoice();
+                switch (addressField) {
+                    case 1:
+                        address = getAndValidateAddress();
+                        if(1 == addressController.updateAddress(addressId, address)) {
+                            System.out.println("\n\t***Address updated Successfully***");
+                        } else {
+                            System.out.println("\n\t***Address not updated***");
+                        }
+                        break;
+                    case 2:
+                        city = getAndValidateCity();
+                        if(1 == addressController.updateCity(addressId, city)) {
+                            System.out.println("\n\t***City updated Successfully***");
+                        } else {
+                            System.out.println("\n\t***City not updated***");
+                        }
+                        break;
+                    case 3:
+                        pincode = getAndValidatePincode();
+                        if(1 == addressController.updateAddress(addressId, pincode)) {
+                            System.out.println("\n\t***Pincode updated Successfully***");
+                        } else {
+                            System.out.println("\n\t***Pincode not updated***");
+                        }
+                        break;
+                    case 4:
+                        state = getAndValidateState();
+                        if(1 == addressController.updateState(addressId, state)) {
+                            System.out.println("\n\t***State updated Successfully***");
+                        } else {
+                            System.out.println("\n\t***State not updated***");
+                        }
+                        break;
+                    case 5:
+                        country = getAndValidateCountry();
+                        if(1 == addressController.updateCountry(addressId, country)) {
+                            System.out.println("\n\t***Country updated Successfully***");
+                        } else {
+                            System.out.println("\n\t***Country number not updated***");
+                        }
+                        break;
+                    default:
+                        System.out.println("\n\t**Wrong field**\n\t**Select the field between the range");
+                }
+            } while (5 < addressField);
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -105,8 +105,6 @@ public interface EmployeeServiceInterface {
      */
     public int createEmployee(String name, double salary, String email,
                               long phoneNumber, LocalDate DOB) throws SQLException;
-    public int createAddress(int id, String address, String city, String pincode,
-                             String state, String country) throws SQLException;
     
     /**
      * Getting the particular employee by id in database

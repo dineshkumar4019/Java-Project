@@ -10,7 +10,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.ideas2it.employeemanagement.service.impl.EmployeeService;
-import com.ideas2it.employeemanagement.service.impl.AddressService;
 
 /**
  * <h1> Employees controller</h1>
@@ -24,7 +23,6 @@ import com.ideas2it.employeemanagement.service.impl.AddressService;
  */
 public class EmployeeController {
     private EmployeeService employeeService = new EmployeeService();
-    private AddressService addressService = new AddressService();
     
     /**
      * Checking employees is present in the database 
@@ -125,26 +123,6 @@ public class EmployeeController {
         return employeeService.getEmployeeAge(DOB);
     }
     
-    public boolean validateAddress(String address) {
-        return addressService.validateAddress(address);
-    }
-    
-    public boolean validateCity(String city) {
-        return addressService.validateCity(city);
-    }
-    
-    public boolean validatePincode(String pincode) {
-        return addressService.validatePincode(pincode);
-    }
-    
-    public boolean validateState(String state) {
-        return addressService.validateState(state);
-    }
-    
-    public boolean validateCountry(String country) {
-        return addressService.validateAddress(country);
-    }
-    
     /**
      * Creating the employee and storing in database
      *
@@ -159,11 +137,6 @@ public class EmployeeController {
     public int createEmployee(String name, double salary, String email,
                                   long phoneNumber, LocalDate DOB) throws SQLException {
         return employeeService.createEmployee(name, salary, email, phoneNumber, DOB);
-    }
-    
-    public int createAddress(int id, String address, String city, String pincode,
-                                  String state, String country) throws SQLException {
-        return employeeService.createAddress(id, address, city, pincode, state, country);
     }
     
     /**

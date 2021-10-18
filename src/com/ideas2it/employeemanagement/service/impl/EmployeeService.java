@@ -18,7 +18,6 @@ import com.ideas2it.employeemanagement.dao.impl.EmployeeDao;
 import com.ideas2it.employeemanagement.model.Employee;
 import com.ideas2it.employeemanagement.model.EmployeeDTO;
 import com.ideas2it.employeemanagement.service.EmployeeServiceInterface;
-import com.ideas2it.employeemanagement.service.impl.AddressService;
 import com.ideas2it.employeemanagement.utils.ModelMapper;
 
 /**
@@ -33,7 +32,6 @@ import com.ideas2it.employeemanagement.utils.ModelMapper;
  */
 public class EmployeeService implements EmployeeServiceInterface {
     private EmployeeDao employeeDao = new EmployeeDao();
-    private AddressService addressService = new AddressService();
     private ModelMapper modelMapper  = new ModelMapper();
        
     /**
@@ -159,11 +157,6 @@ public class EmployeeService implements EmployeeServiceInterface {
         return employeeDao.insertEmployee(name,salary, email, phoneNumber, DOB);
     }
     
-    public int createAddress(int id, String address, String city, String pincode,
-                             String state, String country) throws SQLException {
-        return addressService.insertAddress(id, address, city, pincode, state, country);
-    }
-    
     /**
      * Getting the particular employee by id in the database
      *
@@ -173,8 +166,8 @@ public class EmployeeService implements EmployeeServiceInterface {
     public List<EmployeeDTO> getSingleEmployee(int id) throws SQLException {
         List<EmployeeDTO> employeeDto = new ArrayList<>();
         
-        for (Employee entry: employeeDao.getEmployee(id)) {
-               employeeDto.add(modelMapper.toEmployeeDto(entry));
+        for (Employee entry : employeeDao.getEmployee(id)) {
+            employeeDto.add(modelMapper.toEmployeeDto(entry));
         }
         return employeeDto;
     }

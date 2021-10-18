@@ -14,14 +14,16 @@ import java.lang.StringBuilder;
  * @version	1.0
  * 
  */
-public class EmployeeAddressDTO {
+public class AddressDTO {
+    private int id;
+    private int employeeId;
     private String address;
     private String city;
     private String pincode;
     private String state;
     private String country;
     
-    public EmployeeAddressDTO() {
+    public AddressDTO() {
         
     }
     
@@ -34,14 +36,33 @@ public class EmployeeAddressDTO {
      * @param state employee current living state
      * @param country employee current living country
      */
-    public EmployeeAddressDTO(String address, String city, String pincode, String state, String country) {
+    public AddressDTO(int id, int employee_id,String address, String city,
+                              String pincode, String state, String country) {
+        this.id = id;
+        this.employeeId = employeeId;
         this.address = address;
         this.city = city;
         this.pincode = pincode;
         this.state = state;
         this.country = country;
     }
-      
+    
+    public int getId() {
+        return id;
+    }
+    
+    public void setId(int id) {
+        this.id = id;
+    }
+    
+    public int getEmployeeId() {
+        return employeeId;
+    }
+    
+    public void setEmployeeId(int employeeId) {
+        this.employeeId = employeeId;
+    }
+    
     public String getAddress() {
         return address;
     }

@@ -1,21 +1,28 @@
 package com.ideas2it.employeemanagement.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.ideas2it.employeemanagement.model.Employee;
 import com.ideas2it.employeemanagement.model.EmployeeDTO;
-import com.ideas2it.employeemanagement.model.EmployeeAddressDTO;
+import com.ideas2it.employeemanagement.model.AddressDTO;
+import com.ideas2it.employeemanagement.model.Address;
 
 public class ModelMapper {
     public EmployeeDTO toEmployeeDto(Employee employee) {
-        EmployeeDTO employeeDto = new EmployeeDTO();
+        //List<Address> addresses = new ArrayList<>();
         
-        employeeDto.setId(employee.getId());
-        employeeDto.setName(employee.getName());
-        employeeDto.setSalary(employee.getSalary());
-        employeeDto.setEmail(employee.getEmail());
-        employeeDto.setPhoneNumber(employee.getPhoneNumber());
-        employeeDto.setDOB(employee.getDOB());
-
-        return employeeDto;
+        //for (Address entry : employee.getAddress()) {
+        //    addresses.add(entry);
+        //}
+        return new EmployeeDTO(employee.getId(), employee.getName(), employee.getSalary(), employee.getEmail()
+                           , employee.getPhoneNumber(), employee.getDOB());
+    }
+    
+    public AddressDTO toAddressDto(Address address) {
+        return new AddressDTO(address.getId(), address.getEmployeeId(), address.getAddress()
+                              , address.getCity(), address.getPincode()
+                              , address.getState(), address.getCountry());
     }
     
     public Employee toEmployee(EmployeeDTO employeeDto) {

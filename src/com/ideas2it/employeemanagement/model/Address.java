@@ -8,20 +8,22 @@ package com.ideas2it.employeemanagement.model;
 import java.lang.StringBuilder; 
 
 /**
- * Employee address field creation and carries employee details
+ * Employee address field creation and carries employee address
  * 
  * @author	Dinesh Kumar
  * @version	1.0
  * 
  */
-public class EmployeeAddress {
+public class Address {
+    private int id;
+    private int employeeId;
     private String address;
     private String city;
     private String pincode;
     private String state;
     private String country;
     
-    public EmployeeAddress() {
+    public Address() {
         
     }
     
@@ -34,14 +36,33 @@ public class EmployeeAddress {
      * @param state employee current living state
      * @param country employee current living country
      */
-    public EmployeeAddress(String address, String city, String pincode, String state, String country) {
+    public Address(int id, int employee_id,String address, String city,
+                              String pincode, String state, String country) {
+        this.id = id;
+        this.employeeId = employeeId;
         this.address = address;
         this.city = city;
         this.pincode = pincode;
         this.state = state;
         this.country = country;
     }
-      
+    
+    public int getId() {
+        return id;
+    }
+    
+    public void setId(int id) {
+        this.id = id;
+    }
+    
+    public int getEmployeeId() {
+        return employeeId;
+    }
+    
+    public void setEmployeeId(int employeeId) {
+        this.employeeId = employeeId;
+    }
+    
     public String getAddress() {
         return address;
     }
@@ -80,5 +101,21 @@ public class EmployeeAddress {
         
     public void setCountry(String country) {
         this.country = country;
+    }
+     
+    /**
+     * displaying the respective employee address 
+     * 
+     * @return empolyee address
+     */
+    public String toString() {
+        return new StringBuilder().append("\n\tEmp Address ID:   ").append(getId())
+                   .append("\n\tEmp Id: ").append("\t  " + getEmployeeId())
+                   .append("\n\tEmp Address: ").append("\t  " + getAddress())
+                   .append("\n\tEmp City: ").append("\t  " + getCity())
+                   .append("\n\tEmp Pincode: ").append("\t  " + getPincode())
+                   .append("\n\tEmp State: ").append("\t  " + getState())
+                   .append("\n\tEmp Country: ").append("\t  " + getCountry())
+                   .toString();
     }
 }

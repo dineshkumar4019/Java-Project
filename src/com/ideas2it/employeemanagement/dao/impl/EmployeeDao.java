@@ -17,6 +17,7 @@ import java.util.List;
 
 import com.ideas2it.employeemanagement.dao.EmployeeDaoInterface;
 import com.ideas2it.employeemanagement.model.Employee;
+import com.ideas2it.employeemanagement.model.Address;
 import com.ideas2it.employeemanagement.connection.DataBaseConnection;
 
 /**
@@ -228,7 +229,8 @@ public class EmployeeDao implements EmployeeDaoInterface {
     public List<Employee> getEmployee(int id) throws SQLException {
         List<Employee> employee = new ArrayList<>();
         Connection connection = dataBaseConnection.getConnection();
-        PreparedStatement statement = connection.prepareStatement("SELECT * FROM employees WHERE id = ?");
+        PreparedStatement statement = connection.prepareStatement("SELECT * FROM employees"
+                                                                   + " WHERE id = ?");
         
         statement.setInt(1,id);
         ResultSet resultSet = statement.executeQuery();
@@ -238,7 +240,6 @@ public class EmployeeDao implements EmployeeDaoInterface {
         dataBaseConnection.closeConnection();
         return employee;
     }
-    
     /** 
      * Getting all employees details from the database 
      *
@@ -248,10 +249,11 @@ public class EmployeeDao implements EmployeeDaoInterface {
         Connection connection = dataBaseConnection.getConnection();
         List<Employee> employees = new ArrayList<>();
         
-        PreparedStatement statement = connection.prepareStatement("SELECT * FROM employees");
+        PreparedStatement statement = connection.prepareStatement("SELECT * FROM employees INNER JOIN employees_address "
+                                                                  + "ON employees.id = employees_address.employee_id");
         ResultSet resultSet = statement.executeQuery();
         while (resultSet.next()) {
-            employees.add(setEmployee(resultSet));
+            employees.add(setAllEmployee(resultSet));
         }
         dataBaseConnection.closeConnection();
         return employees;
@@ -266,12 +268,33 @@ public class EmployeeDao implements EmployeeDaoInterface {
     private Employee setEmployee(ResultSet employeesSet) throws SQLException {
         Employee employee = new Employee();
         
-        employee.setId(employeesSet.getInt("id"));
-        employee.setName(employeesSet.getString("name"));
-        employee.setSalary(employeesSet.getDouble("salary"));
-        employee.setEmail(employeesSet.getString("email"));
-        employee.setPhoneNumber(employeesSet.getLong("phone_number"));
-        employee.setDOB(employeesSet.getDate("DOB").toLocalDate());
+        employee.setId(employeesSet.getInt(1));
+        employee.setName(employeesSet.getString(2));
+        employee.setSalary(employeesSet.getDouble(3));
+        employee.setEmail(employeesSet.getString(4));
+        employee.setPhoneNumber(employeesSet.getLong(5));
+        employee.setDOB(employeesSet.getDate(6).toLocalDate());
+        return employee;
+    }
+    
+    /**
+     * Assigning  values to respective fields from the resultSet for
+     * the purpose of "viewEmployee"
+     *
+     * @return Total number of rows updated in database
+     */
+    private Employee setAllEmployee(ResultSet employeesSet) throws SQLException {
+        List<Address> employeeAddress = new ArrayList<>();
+        Address address = new Address(employeesSet.getInt(7), employeesSet.getInt(8)
+                                      , employeesSet.getString(9), employeesSet.getString(10)
+                                      , employeesSet.getString(11), employeesSet.getString(12)
+                                      , employeesSet.getString(13));
+        
+        employeeAddress.add(address);
+        Employee employee = new Employee(employeesSet.getInt(1), employeesSet.getString(2) 
+                                         , employeesSet.getDouble(3), employeesSet.getString(4)
+                                         , employeesSet.getLong(5), employeesSet.getDate(6).toLocalDate()
+                                         , employeeAddress);
         return employee;
     }
     
