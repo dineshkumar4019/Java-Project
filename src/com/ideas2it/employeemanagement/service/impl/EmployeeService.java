@@ -179,9 +179,10 @@ public class EmployeeService implements EmployeeServiceInterface {
      */
     public List<EmployeeDTO> getAllEmployee() throws SQLException {
         List<EmployeeDTO> employeeDto = new ArrayList<>();
+        List <Employee> employeeData = employeeDao.getEmployees();
         
-        for (Employee entry: employeeDao.getEmployees()) {
-            employeeDto.add(modelMapper.toEmployeeDto(entry));
+        for (Employee employee: employeeData) {
+            employeeDto.add(modelMapper.toEmployeeDto(employee));
         }
         return employeeDto;
     }

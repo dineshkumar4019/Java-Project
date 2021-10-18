@@ -10,13 +10,22 @@ import com.ideas2it.employeemanagement.model.Address;
 
 public class ModelMapper {
     public EmployeeDTO toEmployeeDto(Employee employee) {
-        //List<Address> addresses = new ArrayList<>();
+        List<AddressDTO> addressDto = new ArrayList<>();
+        EmployeeDTO employeeDto = new EmployeeDTO();
         
-        //for (Address entry : employee.getAddress()) {
-        //    addresses.add(entry);
-        //}
-        return new EmployeeDTO(employee.getId(), employee.getName(), employee.getSalary(), employee.getEmail()
-                           , employee.getPhoneNumber(), employee.getDOB());
+        employeeDto.setId(employee.getId());
+        employeeDto.setName(employee.getName());
+        employeeDto.setSalary(employee.getSalary());
+        employeeDto.setEmail(employee.getEmail());
+        employeeDto.setPhoneNumber(employee.getPhoneNumber());
+        employeeDto.setDOB(employee.getDOB());
+        if (null != employee.getAddress()) {
+            for (Address address : employee.getAddress()) {
+                addressDto.add(toAddressDto(address));
+            }
+            employeeDto.setAddressDto(addressDto);
+        }
+        return employeeDto;
     }
     
     public AddressDTO toAddressDto(Address address) {

@@ -346,13 +346,13 @@ public class EmployeeView {
      */
     private void viewAllEmployee() {
         try {
-            //employeeController.getAllEmployee();
             for (EmployeeDTO entry: employeeController.getAllEmployee()) {
                 List<AddressDTO> addresses = entry.getAddressDto();
                 System.out.println(entry);
                 for (AddressDTO addressDto : addresses) {
                     System.out.println(addressDto);
                 }
+                System.out.println("*".repeat(40));
             }
         } catch (SQLException e) {
             e.printStackTrace();
