@@ -8,6 +8,7 @@ package com.ideas2it.employeemanagement.model;
 import java.lang.StringBuilder;
 import java.time.LocalDate; 
 import java.util.List;
+import java.util.ArrayList;
 
 import com.ideas2it.employeemanagement.model.Address;
 
@@ -25,7 +26,7 @@ public class EmployeeDTO {
     private String email;
     private long phoneNumber;
     private LocalDate DOB;
-    private List<Address> address;
+    private List<AddressDTO> addressDto = new ArrayList<>();
     
     public EmployeeDTO() {
         
@@ -41,30 +42,27 @@ public class EmployeeDTO {
      * @param email employee email
      * @param DOB date of birth of an employee
      */
-    //public EmployeeDTO(int id, String name, double salary, String email
-    //                , long phoneNumber, LocalDate DOB, List<Address> address) {
-    //    this.id = id;
-    //    this.name = name;
-    //    this.salary = salary;
-    //    this.email = email;
-    //    this.phoneNumber = phoneNumber;
-    //    this.DOB = DOB;
-    //    this.address = address;
-    //}
+    public EmployeeDTO(int id, String name, double salary, String email
+                       , long phoneNumber, LocalDate DOB) {
+        this.id = id;
+        this.name = name;
+        this.salary = salary;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.DOB = DOB;
+    }
     
     /**
      * field value initialization 
      * 
-     * @param id unique representation of an employee
      * @param name name of an employee
      * @param salary salary of an employee
      * @param phone number employee phone number
      * @param email employee email
      * @param DOB date of birth of an employee
      */
-    public EmployeeDTO(int id, String name, double salary
+    public EmployeeDTO(String name, double salary
                    , String email, long phoneNumber, LocalDate DOB) {
-        this.id = id;
         this.name = name;
         this.salary = salary;
         this.email = email;
@@ -120,12 +118,12 @@ public class EmployeeDTO {
         this.DOB = DOB;
     }
     
-    public List<Address> getAddress() {
-        return address;
+    public List<AddressDTO> getAddressDto() {
+        return addressDto;
     }
     
-    public void setAddress(List<Address> address) {
-        this.address = address;
+    public void setAddressDto(List<AddressDTO> addressDto) {
+        this.addressDto = addressDto;
     }
     
     /**

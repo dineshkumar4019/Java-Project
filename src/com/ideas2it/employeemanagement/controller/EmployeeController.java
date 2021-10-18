@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.ideas2it.employeemanagement.model.EmployeeDTO;
 import com.ideas2it.employeemanagement.service.impl.EmployeeService;
 
 /**
@@ -134,9 +135,8 @@ public class EmployeeController {
      * @param DOB date of birth of an employee
      * @return employee created or not
      */
-    public int createEmployee(String name, double salary, String email,
-                                  long phoneNumber, LocalDate DOB) throws SQLException {
-        return employeeService.createEmployee(name, salary, email, phoneNumber, DOB);
+    public int createEmployee(EmployeeDTO employeeDto) throws SQLException {
+        return employeeService.createEmployee(employeeDto);
     }
     
     /**
@@ -145,7 +145,7 @@ public class EmployeeController {
      * @param id employee id to get
      * @return single employee details
      */ 
-    public List getSingleEmployee(int id) throws SQLException {
+    public EmployeeDTO getSingleEmployee(int id) throws SQLException {
         return employeeService.getSingleEmployee(id);
     }
     
@@ -154,7 +154,7 @@ public class EmployeeController {
      *
      * @return All employee details
      */
-    public List getAllEmployee() throws SQLException {
+    public List<EmployeeDTO> getAllEmployee() throws SQLException {
         return employeeService.getAllEmployee();
     }
     
@@ -169,59 +169,12 @@ public class EmployeeController {
      * @param DOB date of birth of an employee to update
      * @return All employee fields updated or not
      */
-    public int updateAllFields(int id, String name, double salary, String email,
-                                   long phoneNumber, LocalDate DOB)  throws SQLException {
-        return employeeService.updateAllFields(id, name, salary, email, phoneNumber, DOB);
+    public int updateAllFields(EmployeeDTO employeeDto)  throws SQLException {
+        return employeeService.updateAllFields(employeeDto);
     }
     
-    /**
-     * Updating the name of the particular employee
-     *
-     * @param id id to get the required employee
-     * @param name employee changed name
-     */
-    public int updateName(int id, String name) throws SQLException {
-        return employeeService.updateName(id, name);
-    }
-    
-    /**
-     * Updating the salary of the particular employee
-     *
-     * @param id id to get the required employee
-     * @param salary employee changed salary
-     */
-    public int updateSalary(int id, double salary) throws SQLException {
-        return employeeService.updateSalary(id, salary);
-    }
-    
-    /**
-     * Updating the phoneNumber of the particular employee
-     *
-     * @param id id to get the required employee
-     * @param phoneNumber employee changed phone number
-     */
-    public int updatePhoneNumber(int id, long phoneNumber) throws SQLException {
-        return employeeService.updatePhoneNumber(id, phoneNumber);
-    }
-    
-    /**
-     * Updating the email of the particular employee
-     *
-     * @param id id to get the required employee
-     * @param email employee changed email
-     */
-    public int updateEmail(int id, String email) throws SQLException {
-        return employeeService.updateEmail(id, email);
-    }
-    
-    /**
-     * Updating the date of birth of the particular employee
-     *
-     * @param id id to get the required employee
-     * @param DOB employee changed date of Birth
-     */
-    public int updateDOB(int id, LocalDate DOB) throws SQLException {
-        return employeeService.updateDOB(id, DOB);
+    public int updateField(EmployeeDTO employeeDto) throws SQLException {
+        return employeeService.updateField(employeeDto);
     }
     
     /**

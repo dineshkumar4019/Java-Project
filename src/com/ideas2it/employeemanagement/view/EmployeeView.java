@@ -13,6 +13,9 @@ import java.util.Scanner;
 
 import com.ideas2it.employeemanagement.controller.EmployeeController;
 import com.ideas2it.employeemanagement.controller.AddressController; 
+import com.ideas2it.employeemanagement.model.EmployeeDTO;
+import com.ideas2it.employeemanagement.model.AddressDTO;
+
 
 /**
  * <h1> Employees view</h1>
@@ -28,6 +31,7 @@ public class EmployeeView {
     private Scanner scanner = new Scanner(System.in);
     private EmployeeController employeeController = new EmployeeController();
     private AddressController addressController = new AddressController();
+    private AddressDTO addressDto = new AddressDTO();
     
     /**
      * Selecting the respective operation by user
@@ -35,9 +39,10 @@ public class EmployeeView {
      */
     public void choosingOperation() {
         int userOperationChoice;
+        int id;
         
         do {
-            System.out.println("\n\t**1.Insert 2.Display 3.Update 4.Delete 5.Exit**");
+            System.out.println("\n\t**1.Insert 2.Display 3.Update 4.Delete 5:Add Address 6.Exit**");
             userOperationChoice = getAndValidateChoice();
             
             switch(userOperationChoice) {
@@ -54,12 +59,17 @@ public class EmployeeView {
                     deleteEmployee();
                     break;
                 case 5:
+                    System.out.println("Enter Employee ID to add address");
+                    id = getAndValidateId();
+                    addAddress(id);
+                    break;
+                case 6:
                     System.out.println("\t**Exited successfully**");
                     break;
                 default :
                     System.out.println("\t**Wrong choice**\n\t**Enter choice Again**");
             }
-        } while (5 != userOperationChoice);
+        } while (6 != userOperationChoice);
     }
     
     /**
@@ -127,7 +137,7 @@ public class EmployeeView {
             try {
                 addressId = Integer.parseInt(scanner.nextLine());
                 
-                if (!addressController.isAddressExist(addressId, id)) {
+                if (!addressController.isAddressExist(id)) {
                     System.out.println("\n\tAddress id doesn't exist\n\t**Enter id again**");
                 } else {
                     isValidId = true;
@@ -322,7 +332,7 @@ public class EmployeeView {
      */
     private void viewEmployee(int id) {
         try {
-            System.out.println(employeeController.getSingleEmployee(id).get(0));
+            System.out.println(employeeController.getSingleEmployee(id));
             for (Object entry : addressController.getAddress(id)) {
                 System.out.println(entry);
             }
@@ -337,8 +347,12 @@ public class EmployeeView {
     private void viewAllEmployee() {
         try {
             //employeeController.getAllEmployee();
-            for (Object entry: employeeController.getAllEmployee()) {
+            for (EmployeeDTO entry: employeeController.getAllEmployee()) {
+                List<AddressDTO> addresses = entry.getAddressDto();
                 System.out.println(entry);
+                for (AddressDTO addressDto : addresses) {
+                    System.out.println(addressDto);
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -358,8 +372,7 @@ public class EmployeeView {
             String email = getAndValidateEmail();
             long phoneNumber = getAndValidatePhoneNumber();
             LocalDate DOB = getAndValidateDOB();
-        
-            id = employeeController.createEmployee(name, salary, email, phoneNumber, DOB);
+            id = employeeController.createEmployee(new EmployeeDTO(name, salary, email, phoneNumber, DOB));
             createAddress(id);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -461,10 +474,10 @@ public class EmployeeView {
             String state = getAndValidateState();
             String country = getAndValidateCountry();
            
-            if(1 == addressController.createAddress(id, address, city, pincode,
-                                                     state, country)) {
-                System.out.println("\n\tCREATED EMPLOYEE ID is: " + id);
-                System.out.println("\n\t**Employee address added successfully**");
+            if(1 == addressController.createAddress(new AddressDTO(id, address, city, pincode,
+                                                     state, country))) {
+                System.out.println("\n\tEMPLOYEE ID is: " + id 
+                                   + "\n\t**Employee address added successfully**");
             } else {
                 System.out.println("Employee NOT created");
             }
@@ -477,7 +490,7 @@ public class EmployeeView {
         int userChoice = 0;
        
         while (2 != userChoice){
-            System.out.println("\n\t**Do You Want To Add Another Address\npress 1 for Yes and 2 for No");
+            System.out.println("\n\t**Do You Want To Add Address\npress 1 for Yes and 2 for No");
             userChoice = getAndValidateChoice();
             
             switch (userChoice) {
@@ -544,7 +557,7 @@ public class EmployeeView {
             String email = getAndValidateEmail();
             long phoneNumber = getAndValidatePhoneNumber();
             LocalDate DOB = getAndValidateDOB();
-            if (1 == employeeController.updateAllFields(id, name, salary, email, phoneNumber, DOB)) {
+            if (1 == employeeController.updateAllFields(new EmployeeDTO(id, name, salary, email, phoneNumber, DOB))) {
                 System.out.println("\n\t***Details updated Successfully***");
             } else {
                 System.out.println("\n\t***Details not updated***");
@@ -571,42 +584,44 @@ public class EmployeeView {
         try {
             do {
                 employeeField = getAndValidateChoice();
+                EmployeeDTO employeeDto = employeeController.getSingleEmployee(id);
+                employeeDto.setId(id);
                 switch (employeeField) {
                     case 1:
-                        name = getAndValidateName();
-                        if(1 == employeeController.updateName(id, name)) {
+                        employeeDto.setName(getAndValidateName());
+                        if(1 == employeeController.updateField(employeeDto)) {
                             System.out.println("\n\t***Name updated Successfully***");
                         } else {
                             System.out.println("\n\t***Name not updated***");
                         }
                         break;
                     case 2:
-                        salary = getAndValidateSalary();
-                        if(1 == employeeController.updateSalary(id, salary)) {
+                        employeeDto.setSalary(getAndValidateSalary());
+                        if(1 == employeeController.updateField(employeeDto)) {
                             System.out.println("\n\t***Salary updated Successfully***");
                         } else {
                             System.out.println("\n\t***Salary not updated***");
                         }
                         break;
                     case 3:
-                        email = getAndValidateEmail();
-                        if(1 == employeeController.updateEmail(id, email)) {
+                        employeeDto.setEmail(getAndValidateEmail());
+                        if(1 == employeeController.updateField(employeeDto)) {
                             System.out.println("\n\t***Email updated Successfully***");
                         } else {
                             System.out.println("\n\t***Email not updated***");
                         }
                         break;
                     case 4:
-                        phoneNumber = getAndValidatePhoneNumber();
-                        if(1 == employeeController.updatePhoneNumber(id, phoneNumber)) {
+                        employeeDto.setPhoneNumber(getAndValidatePhoneNumber());
+                        if(1 == employeeController.updateField(employeeDto)) {
                             System.out.println("\n\t***Phone number updated Successfully***");
                         } else {
                             System.out.println("\n\t***Phone number not updated***");
                         }
                         break;
                     case 5:
-                        DOB = getAndValidateDOB();
-                        if(1 == employeeController.updateDOB(id, DOB)) {
+                        employeeDto.setDOB(getAndValidateDOB());
+                        if(1 == employeeController.updateField(employeeDto)) {
                             System.out.println("\n\t***DOB updated Successfully***");
                         } else {
                             System.out.println("\n\t***DOB number not updated***");
@@ -635,7 +650,7 @@ public class EmployeeView {
             String pincode = getAndValidatePincode();
             String state = getAndValidateState();
             String country = getAndValidateCountry();
-            if (1 == addressController.updateAddressFields(id, address, city, pincode, state, country)) {
+            if (1 == addressController.updateAddressFields(new AddressDTO(addressId, id, address, city, pincode, state, country))) {
                 System.out.println("\n\t***Address updated Successfully***");
             } else {
                 System.out.println("\n\t***Address not updated***");
@@ -647,7 +662,7 @@ public class EmployeeView {
     
     public void updateAddessField(int id) {
         int addressField;
-        int addressId;
+        int addressId = 0;
         String address;
         String city;
         String pincode;
@@ -662,46 +677,48 @@ public class EmployeeView {
             addressId = getAndValidateAddressId(id);
             System.out.println("Select field to update\n1:Address\n2:City\n3:Pincode\n4:State\n5:Country");
             do {
+                AddressDTO addressDto = addressController.getAddressById(addressId);
+                addressDto.setId(addressId);
                 addressField = getAndValidateChoice();
                 switch (addressField) {
                     case 1:
-                        address = getAndValidateAddress();
-                        if(1 == addressController.updateAddress(addressId, address)) {
+                        addressDto.setAddress(getAndValidateAddress());
+                        if(1 == addressController.updateAddressField(addressDto)) {
                             System.out.println("\n\t***Address updated Successfully***");
                         } else {
                             System.out.println("\n\t***Address not updated***");
                         }
                         break;
                     case 2:
-                        city = getAndValidateCity();
-                        if(1 == addressController.updateCity(addressId, city)) {
+                        addressDto.setCity(getAndValidateCity());
+                        if(1 == addressController.updateAddressField(addressDto)) {
                             System.out.println("\n\t***City updated Successfully***");
                         } else {
                             System.out.println("\n\t***City not updated***");
                         }
                         break;
                     case 3:
-                        pincode = getAndValidatePincode();
-                        if(1 == addressController.updateAddress(addressId, pincode)) {
+                        addressDto.setPincode(getAndValidatePincode());
+                        if(1 == addressController.updateAddressField(addressDto)) {
                             System.out.println("\n\t***Pincode updated Successfully***");
                         } else {
                             System.out.println("\n\t***Pincode not updated***");
                         }
                         break;
                     case 4:
-                        state = getAndValidateState();
-                        if(1 == addressController.updateState(addressId, state)) {
+                        addressDto.setState(getAndValidateState());
+                        if(1 == addressController.updateAddressField(addressDto)) {
                             System.out.println("\n\t***State updated Successfully***");
                         } else {
                             System.out.println("\n\t***State not updated***");
                         }
                         break;
                     case 5:
-                        country = getAndValidateCountry();
-                        if(1 == addressController.updateCountry(addressId, country)) {
+                        addressDto.setCountry(getAndValidateCountry());
+                        if(1 == addressController.updateAddressField(addressDto)) {
                             System.out.println("\n\t***Country updated Successfully***");
                         } else {
-                            System.out.println("\n\t***Country number not updated***");
+                            System.out.println("\n\t***Country not updated***");
                         }
                         break;
                     default:
@@ -720,7 +737,7 @@ public class EmployeeView {
         if (0 == getTotalEmployees()) {
             System.out.println("\tNo employee to delete");
         } else {
-            System.out.println("1:Delete all\n2:Delete by id");
+            System.out.println("1:Delete all\n2:Delete by id\n3:Delete address");
             do {
                 DeleteChoice = getAndValidateChoice();                
                 switch (DeleteChoice) {
@@ -732,10 +749,15 @@ public class EmployeeView {
                         id = getAndValidateId();
                         deleteSingleEmployee(id);
                         break;
-                    default :
+                    case 3:
+                        System.out.println("Enter Employee id to delete:");
+                        id = getAndValidateId();
+                        deleteAddress(id);
+                        break;
+                    default:
                         System.out.println("\t**Wrong choice**\n\t**Enter choice again**");
                 }
-            }  while (2 < DeleteChoice);
+            }  while (3 < DeleteChoice);
         }
     }
     
@@ -762,7 +784,7 @@ public class EmployeeView {
      */
     private void deleteAllEmployee() {
         try {
-            if (0 == employeeController.deleteAllEmployee()) {
+            if (getTotalEmployees() == employeeController.deleteAllEmployee()) {
                 System.out.println("Deleted succesfully");
             } else {
                 System.out.println("Employee not deleted");
@@ -772,6 +794,30 @@ public class EmployeeView {
         }
     }
     
+    public void deleteAddress(int id) {
+        int addressId;
+        
+        try {
+            if (1 == addressController.countAddress(id)) {
+                System.out.println("Employee has only one address you can not able to delete");
+            } else {
+                for (Object entry : addressController.getAddress(id)) {
+                    System.out.println(entry);
+                }
+                System.out.println("Enter address id to delete");
+                addressId = getAndValidateAddressId(id);
+                
+                if (1 == addressController.deleteAddress(addressId)) {
+                    System.out.println("Address deleted successfully");
+                } else {
+                    System.out.println("Address not deleted");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+       
     /**
      * Getting total employees present in the database
      */

@@ -35,56 +35,16 @@ public interface EmployeeDaoInterface {
      *
      * @return database empty or not
      */
-    public int insertEmployee(String name, double salary, String email, 
-                              long phoneNumber, LocalDate DOB) throws SQLException;
+    public int insertEmployee(Employee employee) throws SQLException;
     
     /**
      * Updating all employee fields in the database
      *
      * @return Total number of rows updated in database
      */
-    public int updateAllFields(int id, String name, double salary, String email,
-                               long phoneNumber, LocalDate DOB) throws SQLException;
+    public int updateAllFields(Employee employee) throws SQLException;
     
-    /**
-     * Updating employee name in the database by 
-     * corresponding employee id
-     *
-     * @return Total number of rows updated in database
-     */
-    public int updateName(int id, String name) throws SQLException;
-    
-    /**
-     * Updating employee salary in the database by 
-     * corresponding employee id
-     *
-     * @return Total number of rows updated in database
-     */
-    public int updateSalary(int id, Double salary) throws SQLException;
-    
-    /**
-     * Updating employee email in the database by 
-     * corresponding employee id
-     *
-     * @return Total number of rows updated in database
-     */
-    public int updateEmail(int id, String email) throws SQLException;
-    
-    /**
-     * Updating employee phone number in the database by 
-     * corresponding employee id
-     *
-     * @return Total number of rows updated in database
-     */
-    public int updatePhoneNumber(int id, long phoneNumber) throws SQLException;
-    
-    /**
-     * Updating employee date of birth in the database by 
-     * corresponding employee id
-     *
-     * @return Total number of rows updated in database
-     */
-    public int updateDOB(int id, LocalDate DOB) throws SQLException;
+    public int updateField(Employee employee) throws SQLException;
     
     /**
      * Deleting particular employee in the database by 
@@ -107,7 +67,7 @@ public interface EmployeeDaoInterface {
      *
      * @return Single employee details
      */
-    public List<Employee> getEmployee(int id) throws SQLException;
+    public Employee getEmployee(int id) throws SQLException;
     
     /** 
      * Getting all employees details from the database 

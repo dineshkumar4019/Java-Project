@@ -26,15 +26,13 @@ public class ModelMapper {
     }
     
     public Employee toEmployee(EmployeeDTO employeeDto) {
-        Employee employee = new Employee();
-        
-        employee.setId(employeeDto.getId());
-        employee.setName(employeeDto.getName());
-        employee.setSalary(employeeDto.getSalary());
-        employee.setEmail(employeeDto.getEmail());
-        employee.setPhoneNumber(employeeDto.getPhoneNumber());
-        employee.setDOB(employeeDto.getDOB());
-
-        return employee;
+        return new Employee(employeeDto.getId(), employeeDto.getName(), employeeDto.getSalary(), employeeDto.getEmail()
+                            , employeeDto.getPhoneNumber(), employeeDto.getDOB());
+    }
+    
+    public Address toAddress(AddressDTO addressDto) {
+        return new Address(addressDto.getId(), addressDto.getEmployeeId(), addressDto.getAddress()
+                           , addressDto.getCity(), addressDto.getPincode()
+                           , addressDto.getState(), addressDto.getCountry());
     }
 }

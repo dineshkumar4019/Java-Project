@@ -24,20 +24,19 @@ public class AddressDao {
      *
      * @return database empty or not
      */
-    public int insertAddress(int id, String address, String city, String pincode,
-                             String state, String country) throws SQLException {
+    public int insertAddress(Address address) throws SQLException {
         Connection connection = dataBaseConnection.getConnection();
         int rowsAffected = 0;
         
         String insert = "INSERT INTO employees_address VALUES(NULL, ?, ?, ?, ?, ?, ?)";
         PreparedStatement statement = connection.prepareStatement(insert);
         
-        statement.setInt(1, id);
-        statement.setString(2, address);
-        statement.setString(3, city);
-        statement.setString(4, pincode);
-        statement.setString(5, state);
-        statement.setString(6, country);
+        statement.setInt(1, address.getEmployeeId());
+        statement.setString(2, address.getAddress());
+        statement.setString(3, address.getCity());
+        statement.setString(4, address.getPincode());
+        statement.setString(5, address.getState());
+        statement.setString(6, address.getCountry());
         rowsAffected = statement.executeUpdate();
         dataBaseConnection.closeConnection();
         return rowsAffected;
@@ -58,6 +57,32 @@ public class AddressDao {
         ResultSet resultSet = statement.executeQuery();
         while (resultSet.next()) {
             address.add(setAddress(resultSet));
+        }
+        dataBaseConnection.closeConnection();
+        return address;
+    }
+    
+    /**
+     * Getting the employee details from the database
+     * by corresponding employee id 
+     *
+     * @return Single employee details
+     */
+    public Address getAddressById(int id) throws SQLException {
+        Address address= new Address();
+        Connection connection = dataBaseConnection.getConnection();
+        PreparedStatement statement = connection.prepareStatement("SELECT * FROM employees_address WHERE id = ?");
+        
+        statement.setInt(1,id);
+        ResultSet resultSet = statement.executeQuery();
+        if (resultSet.next()) {
+            address.setId(resultSet.getInt("id"));
+            address.setEmployeeId(resultSet.getInt("employee_id"));
+            address.setAddress(resultSet.getString("address"));
+            address.setCity(resultSet.getString("city"));
+            address.setPincode(resultSet.getString("pincode"));
+            address.setState(resultSet.getString("state"));
+            address.setCountry(resultSet.getString("country"));
         }
         dataBaseConnection.closeConnection();
         return address;
@@ -104,16 +129,16 @@ public class AddressDao {
      * Checking the Address already exist
      * in the database 
      *
+     * @param id id of an employee
      * @return Address exist or not
      */
-    public boolean isAddressExist(int addressId, int id) throws SQLException {
+    public boolean isAddressExist(int id) throws SQLException {
         Connection connection = dataBaseConnection.getConnection();
         boolean isExist = false;
         PreparedStatement statement = connection.prepareStatement("SELECT id FROM employees_address" 
-                                                                  + " WHERE id = ? AND employee_id = ?");
+                                                                  + " WHERE employee_id = ?");
         
-        statement.setInt(1, addressId);
-        statement.setInt(2, id);
+        statement.setInt(1, id);
         if (statement.executeQuery().next()) {
              isExist = true;
         }
@@ -126,8 +151,7 @@ public class AddressDao {
      *
      * @return Total number of rows updated in database
      */
-    public int updateAddressFields(int id, String address, String city, String pincode,
-                                   String state, String country) throws SQLException {
+    public int updateAddressFields(Address address) throws SQLException {
         Connection connection = dataBaseConnection.getConnection();
         int rowsAffected = 0;
         
@@ -135,107 +159,68 @@ public class AddressDao {
                         +"state = ?, country = ? WHERE id = ?";
         PreparedStatement statement = connection.prepareStatement(update);
         
-        statement.setString(1, address);
-        statement.setString(2, city);
-        statement.setString(3, pincode);
-        statement.setString(4, state);
-        statement.setString(5, country);
-        statement.setInt(6, id);
+        statement.setString(1, address.getAddress());
+        statement.setString(2, address.getCity());
+        statement.setString(3, address.getPincode());
+        statement.setString(4, address.getState());
+        statement.setString(5, address.getCountry());
+        statement.setInt(6, address.getId());
         rowsAffected = statement.executeUpdate();
         dataBaseConnection.closeConnection();
         return rowsAffected;
     }
     
     /**
-     * Updating employee address in the database by 
-     * corresponding address id
+     * Updating all address fields in the database
      *
      * @return Total number of rows updated in database
      */
-    public int updateAddress(int addressId, String address) throws SQLException {
+    public int updateAddressField(Address address) throws SQLException {
         Connection connection = dataBaseConnection.getConnection();
         int rowsAffected = 0;
         
-        PreparedStatement statement = connection.prepareStatement("UPDATE employees_address "
-                                                                  + "SET address = ? WHERE id = ?");
-        statement.setString(1, address);
-        statement.setInt(2, addressId);
+        String update = "UPDATE employees_address  SET address = ?, city = ?, pincode = ?,"
+                        +"state = ?, country = ? WHERE id = ?";
+        PreparedStatement statement = connection.prepareStatement(update);
+        
+        statement.setString(1, address.getAddress());
+        statement.setString(2, address.getCity());
+        statement.setString(3, address.getPincode());
+        statement.setString(4, address.getState());
+        statement.setString(5, address.getCountry());
+        statement.setInt(6, address.getId());
         rowsAffected = statement.executeUpdate();
         dataBaseConnection.closeConnection();
         return rowsAffected;
     }
     
-    /**
-     * Updating employee city in the database by 
-     * corresponding address id
-     *
-     * @return Total number of rows updated in database
-     */
-    public int updateCity(int addressId, String city) throws SQLException {
+    public int countAddress(int id) throws SQLException {
         Connection connection = dataBaseConnection.getConnection();
-        int rowsAffected = 0;
+        int totalAddress = 0;
         
-        PreparedStatement statement = connection.prepareStatement("UPDATE employees_address "
-                                                                  + "SET city = ? WHERE id = ?");
-        statement.setString(1, city);
-        statement.setInt(2, addressId);
-        rowsAffected = statement.executeUpdate();
-        dataBaseConnection.closeConnection();
-        return rowsAffected;
+        PreparedStatement statement = connection.prepareStatement("SELECT COUNT(id) FROM employees_address "
+                                                                  + "WHERE employee_id = ?");
+        statement.setInt(1, id);
+        ResultSet resultSet = statement.executeQuery();
+        if (resultSet.next()) {
+            totalAddress = resultSet.getInt(1);
+        }
+        return totalAddress;
     }
     
     /**
-     * Updating employee pincode in the database by 
+     * Deleting particular address in the database by 
      * corresponding address id
      *
-     * @return Total number of rows updated in database
+     * @return Total number of rows deleted in database
      */
-    public int updatePincode(int addressId, String pincode) throws SQLException {
+    public int deleteAddress(int addressId) throws SQLException {
         Connection connection = dataBaseConnection.getConnection();
         int rowsAffected = 0;
         
-        PreparedStatement statement = connection.prepareStatement("UPDATE employees_address "
-                                                                  + "SET pincode = ? WHERE id = ?");
-        statement.setString(1, pincode);
-        statement.setInt(2, addressId);
-        rowsAffected = statement.executeUpdate();
-        dataBaseConnection.closeConnection();
-        return rowsAffected;
-    }
-    
-    /**
-     * Updating employee state in the database by 
-     * corresponding address id
-     *
-     * @return Total number of rows updated in database
-     */
-    public int updateState(int addressId, String state) throws SQLException {
-        Connection connection = dataBaseConnection.getConnection();
-        int rowsAffected = 0;
-        
-        PreparedStatement statement = connection.prepareStatement("UPDATE employees_address "
-                                                                  + "SET state = ? WHERE id = ?");
-        statement.setString(1, state);
-        statement.setInt(2, addressId);
-        rowsAffected = statement.executeUpdate();
-        dataBaseConnection.closeConnection();
-        return rowsAffected;
-    }
-    
-    /**
-     * Updating employee country in the database by 
-     * corresponding address id
-     *
-     * @return Total number of rows updated in database
-     */
-    public int updateCountry(int addressId, String country) throws SQLException {
-        Connection connection = dataBaseConnection.getConnection();
-        int rowsAffected = 0;
-        
-        PreparedStatement statement = connection.prepareStatement("UPDATE employees_address "
-                                                                  + "SET country = ? WHERE id = ?");
-        statement.setString(1, country);
-        statement.setInt(2, addressId);
+        PreparedStatement statement = connection.prepareStatement("DELETE FROM employees_address"
+                                                                  + " WHERE id = ?");
+        statement.setInt(1, addressId);
         rowsAffected = statement.executeUpdate();
         dataBaseConnection.closeConnection();
         return rowsAffected;

@@ -16,6 +16,8 @@ import java.util.regex.Pattern;
 
 import com.ideas2it.employeemanagement.dao.impl.AddressDao;
 import com.ideas2it.employeemanagement.model.Address;
+import com.ideas2it.employeemanagement.model.AddressDTO;
+import com.ideas2it.employeemanagement.utils.ModelMapper;
 
 /**
  * <h1> Employees service</h1>
@@ -28,15 +30,18 @@ import com.ideas2it.employeemanagement.model.Address;
  * 
  */
 public class AddressService {
-    AddressDao addressDao = new AddressDao();
+    private AddressDao addressDao = new AddressDao();
+    private ModelMapper modelMapper  = new ModelMapper();
+    
     /**
-     * Getting the total employees present in the database
+     * Getting the total address present in the database
+     * for an employee
      *
-     * @return total employees
+     * @return total addresses
      */
-    //public int getTotalEmployees() throws SQLException {
-    //    return employeeDao.getTotalEmployees();
-    //}
+    public int countAddress(int id) throws SQLException {
+        return addressDao.countAddress(id);
+    }
     
     /**
      * Checking an address exist in database by id
@@ -44,8 +49,8 @@ public class AddressService {
      * @param id address id for checking existance
      * @return address exist or not
      */ 
-    public boolean isAddressExist(int addressId, int id) throws SQLException {
-        return addressDao.isAddressExist(addressId, id);
+    public boolean isAddressExist(int id) throws SQLException {
+        return addressDao.isAddressExist(id);
     }
     
     /**
@@ -145,13 +150,22 @@ public class AddressService {
      * @param DOB date of birth of an employee
      * @return employee created or not
      */
-    public int insertAddress(int id, String address, String city, String pincode,
-                             String state, String country) throws SQLException{
-        return addressDao.insertAddress(id, address, city, pincode, state, country);
+    public int insertAddress(AddressDTO addressDto) throws SQLException{
+        return addressDao.insertAddress(modelMapper.toAddress(addressDto));
     }
     
     public List<Address> getAddress(int id) throws SQLException {
         return addressDao.getAddress(id);
+    }
+    
+    /**
+     * Getting the particular address by address id
+     *
+     * @param id employee id to get
+     * @return single employee details
+     */ 
+    public AddressDTO getAddressById(int addressId) throws SQLException {
+        return modelMapper.toAddressDto(addressDao.getAddressById(addressId));
     }
     
     public List<Address> getAllAddress() throws SQLException {
@@ -169,58 +183,15 @@ public class AddressService {
      * @param counrty country of an employee in address
      * @return number of rows updated
      */
-    public int updateAddressFields(int id, String address, String city, String pincode,
-                             String state, String country) throws SQLException {
-        return addressDao.updateAddressFields(id, address, city, pincode, state, country);
+    public int updateAddressFields(AddressDTO addressDto) throws SQLException {
+        return addressDao.updateAddressFields(modelMapper.toAddress(addressDto));
     }
     
-    /**
-     * Updating the address of the particular employee
-     *
-     * @param addressid addressid to get the required address
-     * @param address employee changed address
-     */
-    public int updateAddress(int addressId, String address) throws SQLException {
-        return addressDao.updateAddress(addressId, address);
+    public int updateAddressField(AddressDTO addressDto) throws SQLException {
+        return addressDao.updateAddressField(modelMapper.toAddress(addressDto));
     }
     
-    /**
-     * Updating the city of the particular employee
-     *
-     * @param addressid addressid to get the required address
-     * @param city employee changed city
-     */
-    public int updateCity(int addressId, String city) throws SQLException {
-        return addressDao.updateCity(addressId, city);
-    }
-    
-    /**
-     * Updating the pincode of the particular employee
-     *
-     * @param addressid addressid to get the required address
-     * @param pincode employee changed pincode
-     */
-    public int updatePincode(int addressId, String pincode) throws SQLException {
-        return addressDao.updatePincode(addressId, pincode);
-    }
-    
-    /**
-     * Updating the state of the particular employee
-     *
-     * @param addressid addressid to get the required address
-     * @param state employee changed state
-     */
-    public int updateState(int addressId, String state) throws SQLException {
-        return addressDao.updateState(addressId, state);
-    }
-    
-    /**
-     * Updating the country of the particular employee
-     *
-     * @param addressid addressid to get the required address
-     * @param country employee changed country
-     */
-    public int updateCountry(int addressId, String country) throws SQLException {
-        return addressDao.updateCountry(addressId, country);
+    public int deleteAddress(int addressId) throws SQLException {
+        return addressDao.deleteAddress(addressId);
     }
 }

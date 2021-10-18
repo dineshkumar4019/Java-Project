@@ -152,9 +152,9 @@ public class EmployeeService implements EmployeeServiceInterface {
      * @param DOB date of birth of an employee
      * @return employee created or not
      */
-    public int createEmployee(String name, double salary, String email,
-                              long phoneNumber, LocalDate DOB) throws SQLException {
-        return employeeDao.insertEmployee(name,salary, email, phoneNumber, DOB);
+    public int createEmployee(EmployeeDTO employeeDto) throws SQLException {
+        
+        return employeeDao.insertEmployee(modelMapper.toEmployee(employeeDto));
     }
     
     /**
@@ -163,13 +163,13 @@ public class EmployeeService implements EmployeeServiceInterface {
      * @param id employee id to get
      * @return single employee details
      */
-    public List<EmployeeDTO> getSingleEmployee(int id) throws SQLException {
-        List<EmployeeDTO> employeeDto = new ArrayList<>();
+    public EmployeeDTO getSingleEmployee(int id) throws SQLException {
+        //List<EmployeeDTO> employeeDto = new ArrayList<>();
         
-        for (Employee entry : employeeDao.getEmployee(id)) {
-            employeeDto.add(modelMapper.toEmployeeDto(entry));
-        }
-        return employeeDto;
+        //for (Employee entry : employeeDao.getEmployee(id)) {
+        //    employeeDto.add(modelMapper.toEmployeeDto(entry));
+        //}
+        return modelMapper.toEmployeeDto(employeeDao.getEmployee(id));
     }
     
     /**
@@ -197,64 +197,12 @@ public class EmployeeService implements EmployeeServiceInterface {
      * @param DOB date of birth of an employee to update
      * @return All employee fields updated or not
      */
-    public int updateAllFields(int id, String name, double salary, String email,
-                               long phoneNumber, LocalDate DOB) throws SQLException {
-        return employeeDao.updateAllFields(id, name, salary, email, phoneNumber, DOB);
+    public int updateAllFields(EmployeeDTO employeeDto) throws SQLException {
+        return employeeDao.updateAllFields(modelMapper.toEmployee(employeeDto));
     }
     
-    /**
-     * Updating the name of the particular employee
-     *
-     * @param id id to get the required employee
-     * @param name employee changed name
-     * @return Total rows updated
-     */
-    public int updateName(int id, String name) throws SQLException {
-        return employeeDao.updateName(id, name);
-    }
-    
-    /**
-     * Updating the phoneNumber of the particular employee
-     *
-     * @param id id to get the required employee
-     * @param phoneNumber employee changed phone number
-     * @return Total rows updated
-     */
-    public int updatePhoneNumber(int id, long phoneNumber) throws SQLException {
-        return employeeDao.updatePhoneNumber(id, phoneNumber);
-    }
-    
-    /**
-     * Updating the salary of the particular employee
-     *
-     * @param id id to get the required employee
-     * @param salary employee changed salary
-     * @return Total rows updated
-     */
-    public int updateSalary(int id, double salary) throws SQLException{
-        return employeeDao.updateSalary(id, salary);
-    }
-    
-    /**
-     * Updating the email of the particular employee
-     *
-     * @param id id to get the required employee
-     * @param email employee changed email
-     * @return Total rows updated
-     */
-    public int updateEmail(int id, String email) throws SQLException {
-        return employeeDao.updateEmail(id, email);
-    }
-    
-    /**
-     * Updating the date of birth of the particular employee
-     *
-     * @param id id to get the required employee
-     * @param DOB employee changed date of Birth
-     * @return Total rows updated
-     */
-    public int updateDOB(int id, LocalDate DOB) throws SQLException {
-        return employeeDao.updateDOB(id, DOB);
+    public int updateField(EmployeeDTO employeeDto) throws SQLException {
+        return employeeDao.updateField(modelMapper.toEmployee(employeeDto));
     }
     
     /**

@@ -39,8 +39,7 @@ public class EmployeeDao implements EmployeeDaoInterface {
      *
      * @return database empty or not
      */
-    public int insertEmployee(String name, double salary, String email,
-                              long phoneNumber, LocalDate DOB) throws SQLException {
+    public int insertEmployee(Employee employee) throws SQLException {
         Connection connection = dataBaseConnection.getConnection();
         int rowsAffected = 0;
         int id;
@@ -48,11 +47,11 @@ public class EmployeeDao implements EmployeeDaoInterface {
         String insert = "INSERT INTO employees VALUES(NULL,?, ?, ?, ?, ?)";
         PreparedStatement statement = connection.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
         
-        statement.setString(1, name);
-        statement.setDouble(2, salary);
-        statement.setString(3, email);
-        statement.setLong(4, phoneNumber);
-        statement.setDate(5, Date.valueOf(DOB));
+        statement.setString(1, employee.getName());
+        statement.setDouble(2, employee.getSalary());
+        statement.setString(3, employee.getEmail());
+        statement.setLong(4, employee.getPhoneNumber());
+        statement.setDate(5, Date.valueOf(employee.getDOB()));
         statement.executeUpdate();
         ResultSet resultSet = statement.getGeneratedKeys();
         resultSet.next();
@@ -66,8 +65,7 @@ public class EmployeeDao implements EmployeeDaoInterface {
      *
      * @return Total number of rows updated in database
      */
-    public int updateAllFields(int id, String name, double salary, String email,
-                               long phoneNumber, LocalDate DOB) throws SQLException {
+    public int updateAllFields(Employee employee) throws SQLException {
         Connection connection = dataBaseConnection.getConnection();
         int rowsAffected = 0;
         
@@ -75,111 +73,36 @@ public class EmployeeDao implements EmployeeDaoInterface {
                         +"phone_number = ?, DOB = ? WHERE id = ?";
         PreparedStatement statement = connection.prepareStatement(update);
         
-        statement.setString(1, name);
-        statement.setDouble(2, salary);
-        statement.setString(3, email);
-        statement.setLong(4, phoneNumber);
-        statement.setDate(5, Date.valueOf(DOB));
-        statement.setInt(6, id);
+        statement.setString(1, employee.getName());
+        statement.setDouble(2, employee.getSalary());
+        statement.setString(3, employee.getEmail());
+        statement.setLong(4, employee.getPhoneNumber());
+        statement.setDate(5, Date.valueOf(employee.getDOB()));
+        statement.setInt(6, employee.getId());
         rowsAffected = statement.executeUpdate();
         dataBaseConnection.closeConnection();
         return rowsAffected;
     }
     
     /**
-     * Updating employee name in the database by 
-     * corresponding employee id
+     * Updating all employee fields in the database
      *
      * @return Total number of rows updated in database
      */
-    public int updateName(int id, String name) throws SQLException {
+    public int updateField(Employee employee) throws SQLException {
         Connection connection = dataBaseConnection.getConnection();
         int rowsAffected = 0;
         
-        PreparedStatement statement = connection.prepareStatement("UPDATE employees "
-                                                                  + "SET name = ? WHERE id = ?");
-        statement.setString(1, name);
-        statement.setInt(2, id);
-        rowsAffected = statement.executeUpdate();
-        dataBaseConnection.closeConnection();
-        return rowsAffected;
-    }
-    
-    /**
-     * Updating employee salary in the database by 
-     * corresponding employee id
-     *
-     * @return Total number of rows updated in database
-     */
-    public int updateSalary(int id, Double salary) throws SQLException {
-        Connection connection = dataBaseConnection.getConnection();
-        int rowsAffected = 0;
+        String update = "UPDATE employees  SET name = ?, salary = ?, email = ?,"
+                        +"phone_number = ?, DOB = ? WHERE id = ?";
+        PreparedStatement statement = connection.prepareStatement(update);
         
-        PreparedStatement statement = connection.prepareStatement("UPDATE employees "
-                                                                    + "SET salary = ? WHERE id = ?");
-        
-        statement.setDouble(1, salary);
-        statement.setInt(2, id);
-        rowsAffected = statement.executeUpdate();
-        dataBaseConnection.closeConnection();
-        return rowsAffected;
-    }
-    
-    /**
-     * Updating employee email in the database by 
-     * corresponding employee id
-     *
-     * @return Total number of rows updated in database
-     */
-    public int updateEmail(int id, String email) throws SQLException {
-        Connection connection = dataBaseConnection.getConnection();
-        int rowsAffected = 0;
-        
-        PreparedStatement statement = connection.prepareStatement("UPDATE employees "
-                                                                   + "SET email = ? WHERE id = ?");
-        
-        statement.setString(1, email);
-        statement.setInt(2, id);
-        rowsAffected = statement.executeUpdate();
-        dataBaseConnection.closeConnection();
-        return rowsAffected;
-    }
-    
-    /**
-     * Updating employee phone number in the database by 
-     * corresponding employee id
-     *
-     * @return Total number of rows updated in database
-     */
-    public int updatePhoneNumber(int id, long phoneNumber) throws SQLException {
-        Connection connection = dataBaseConnection.getConnection();
-        int rowsAffected = 0;
-        
-        PreparedStatement statement = connection.prepareStatement("UPDATE employees "
-                                                                   + "SET phone_number = ? WHERE id = ?");
-        
-        statement.setLong(1, phoneNumber);
-        statement.setInt(2, id);
-        rowsAffected = statement.executeUpdate();
-        dataBaseConnection.closeConnection();
-        return rowsAffected;
-    }
-    
-    /**
-     * Updating employee date of birth in the database by 
-     * corresponding employee id
-     *
-     * @return Total number of rows updated in database
-     */
-    public int updateDOB(int id, LocalDate DOB) throws SQLException {
-        Connection connection = dataBaseConnection.getConnection();
-        int rowsAffected = 0;
-        
-        PreparedStatement statement = connection.prepareStatement("UPDATE employees "
-                                                                   + "SET DOB = ? WHERE id = ?");
-        
-        statement.setDate(1, Date.valueOf(DOB));
-        statement.setInt(2, id);
+        statement.setString(1, employee.getName());
+        statement.setDouble(2, employee.getSalary());
+        statement.setString(3, employee.getEmail());
+        statement.setLong(4, employee.getPhoneNumber());
+        statement.setDate(5, Date.valueOf(employee.getDOB()));
+        statement.setInt(6, employee.getId());
         rowsAffected = statement.executeUpdate();
         dataBaseConnection.closeConnection();
         return rowsAffected;
@@ -195,7 +118,8 @@ public class EmployeeDao implements EmployeeDaoInterface {
         Connection connection = dataBaseConnection.getConnection();
         int rowsAffected = 0;
         
-        PreparedStatement statement = connection.prepareStatement("DELETE FROM employees WHERE id = ?");
+        PreparedStatement statement = connection.prepareStatement("DELETE FROM employees"
+                                                                  + " WHERE id = ?");
         
         statement.setInt(1, id);
         rowsAffected = statement.executeUpdate();
@@ -226,8 +150,9 @@ public class EmployeeDao implements EmployeeDaoInterface {
      *
      * @return Single employee details
      */
-    public List<Employee> getEmployee(int id) throws SQLException {
-        List<Employee> employee = new ArrayList<>();
+    public Employee getEmployee(int id) throws SQLException {
+        Employee employee = new Employee();
+        
         Connection connection = dataBaseConnection.getConnection();
         PreparedStatement statement = connection.prepareStatement("SELECT * FROM employees"
                                                                    + " WHERE id = ?");
@@ -235,7 +160,7 @@ public class EmployeeDao implements EmployeeDaoInterface {
         statement.setInt(1,id);
         ResultSet resultSet = statement.executeQuery();
         if (resultSet.next()) {
-            employee.add(setEmployee(resultSet));
+            employee = setEmployee(resultSet);
         }
         dataBaseConnection.closeConnection();
         return employee;
@@ -249,11 +174,27 @@ public class EmployeeDao implements EmployeeDaoInterface {
         Connection connection = dataBaseConnection.getConnection();
         List<Employee> employees = new ArrayList<>();
         
-        PreparedStatement statement = connection.prepareStatement("SELECT * FROM employees INNER JOIN employees_address "
-                                                                  + "ON employees.id = employees_address.employee_id");
+        PreparedStatement statement = connection.prepareStatement("SELECT employees.id AS id, employees.name AS name,"
+                                                                  + " employees.salary AS salary, employees.email"
+                                                                  + " AS email, employees.phone_number AS phone_number,"
+                                                                  + " employees.DOB AS DOB, employees_address.id AS"
+                                                                  + " address_id, employees_address.address AS address,"
+                                                                  + " employees_address.city AS city, employees_address.pincode AS pincode,"
+                                                                  + " employees_address.state AS state, employees_address.country AS country"
+                                                                  + " FROM employees LEFT JOIN employees_address ON"
+                                                                  + " employees.id = employees_address.employee_id");
         ResultSet resultSet = statement.executeQuery();
+        List<Integer> list = new ArrayList<>();
         while (resultSet.next()) {
-            employees.add(setAllEmployee(resultSet));
+            if (!list.contains(resultSet.getInt("id"))) {
+                list.add(resultSet.getInt("id"));
+                employees.add(setEmployee(resultSet));
+            }
+            for (Employee employee : employees) {
+                if (employee.getId() == resultSet.getInt("id")) {
+                    employee.getAddress().add(setAddress(resultSet));
+                }
+            }
         }
         dataBaseConnection.closeConnection();
         return employees;
@@ -283,6 +224,25 @@ public class EmployeeDao implements EmployeeDaoInterface {
      *
      * @return Total number of rows updated in database
      */
+    private Address setAddress(ResultSet addressSet) throws SQLException {
+        Address address= new Address();
+        
+        address.setId(addressSet.getInt("id"));
+        //address.setEmployeeId(addressSet.getInt("employee_id"));
+        address.setAddress(addressSet.getString("address"));
+        address.setCity(addressSet.getString("city"));
+        address.setPincode(addressSet.getString("pincode"));
+        address.setState(addressSet.getString("state"));
+        address.setCountry(addressSet.getString("country"));
+        return address;
+    }
+    
+    /**
+     * Assigning  values to respective fields from the resultSet for
+     * the purpose of "viewEmployee"
+     *
+     * @return Total number of rows updated in database
+     */
     private Employee setAllEmployee(ResultSet employeesSet) throws SQLException {
         List<Address> employeeAddress = new ArrayList<>();
         Address address = new Address(employeesSet.getInt(7), employeesSet.getInt(8)
@@ -296,7 +256,7 @@ public class EmployeeDao implements EmployeeDaoInterface {
                                          , employeesSet.getLong(5), employeesSet.getDate(6).toLocalDate()
                                          , employeeAddress);
         return employee;
-    }
+   }
     
     /** 
      * Getting the total number of employees present

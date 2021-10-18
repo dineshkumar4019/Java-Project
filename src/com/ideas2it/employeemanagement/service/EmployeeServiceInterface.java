@@ -103,8 +103,7 @@ public interface EmployeeServiceInterface {
      * @param DOB date of birth of an employee
      * @return employee created or not
      */
-    public int createEmployee(String name, double salary, String email,
-                              long phoneNumber, LocalDate DOB) throws SQLException;
+    public int createEmployee(EmployeeDTO employeeDto) throws SQLException;
     
     /**
      * Getting the particular employee by id in database
@@ -112,7 +111,7 @@ public interface EmployeeServiceInterface {
      * @param id employee id to get
      * @return single employee details
      */
-    public List<EmployeeDTO> getSingleEmployee(int id) throws SQLException;
+    public EmployeeDTO getSingleEmployee(int id) throws SQLException;
     
     /**
      * Getting all employee in the database
@@ -132,48 +131,9 @@ public interface EmployeeServiceInterface {
      * @param DOB date of birth of an employee to update
      * @return All employee fields updated or not
      */
-    public int updateAllFields(int id, String name, double salary, String email
-                                   , long phoneNumber, LocalDate DOB) throws SQLException;
+    public int updateAllFields(EmployeeDTO employeeDto) throws SQLException;
     
-    /**
-     * Updating the name of the particular employee
-     *
-     * @param id id to get the required employee
-     * @param name employee changed name
-     */
-    public int updateName(int id, String name) throws SQLException;
-    
-    /**
-     * Updating the phoneNumber of the particular employee
-     *
-     * @param id id to get the required employee
-     * @param phoneNumber employee changed phone number
-     */
-    public int updatePhoneNumber(int id, long phoneNumber) throws SQLException;
-    
-    /**
-     * Updating the salary of the particular employee
-     *
-     * @param id id to get the required employee
-     * @param salary employee changed salary
-     */
-    public int updateSalary(int id, double salary) throws SQLException;
-    
-    /**
-     * Updating the email of the particular employee
-     *
-     * @param id id to get the required employee
-     * @param email employee changed email
-     */
-    public int updateEmail(int id, String email) throws SQLException;
-    
-    /**
-     * Updating the date of birth of the particular employee
-     *
-     * @param id id to get the required employee
-     * @param DOB employee changed date of Birth
-     */
-    public int updateDOB(int id, LocalDate DOB) throws SQLException;
+    public int updateField(EmployeeDTO employeeDto) throws SQLException;
     
     /**
      * Deleting the required employee

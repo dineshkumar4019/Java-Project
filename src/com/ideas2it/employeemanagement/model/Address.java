@@ -36,9 +36,28 @@ public class Address {
      * @param state employee current living state
      * @param country employee current living country
      */
-    public Address(int id, int employee_id,String address, String city,
+    public Address(int id, int employeeId,String address, String city,
                               String pincode, String state, String country) {
         this.id = id;
+        this.employeeId = employeeId;
+        this.address = address;
+        this.city = city;
+        this.pincode = pincode;
+        this.state = state;
+        this.country = country;
+    }
+    
+    /**
+     * field value initialization 
+     * 
+     * @param address employee door no 
+     * @param city employee current living city
+     * @param pincode corresponding city pincode
+     * @param state employee current living state
+     * @param country employee current living country
+     */
+    public Address(int employeeId, String address, String city,
+                              String pincode, String state, String country) {
         this.employeeId = employeeId;
         this.address = address;
         this.city = city;

@@ -8,6 +8,7 @@ package com.ideas2it.employeemanagement.model;
 import java.lang.StringBuilder;
 import java.time.LocalDate; 
 import java.util.List;
+import java.util.ArrayList;
 
 import com.ideas2it.employeemanagement.model.Address;
 
@@ -25,7 +26,7 @@ public class Employee {
     private String email;
     private long phoneNumber;
     private LocalDate DOB;
-    private List<Address> address;
+    private List<Address> address = new ArrayList<>();
     
     public Employee() {
         
@@ -53,7 +54,7 @@ public class Employee {
     }
     
     /**
-     * field value initialization 
+     * field value initialization
      * 
      * @param id unique representation of an employee
      * @param name name of an employee
@@ -62,9 +63,27 @@ public class Employee {
      * @param email employee email
      * @param DOB date of birth of an employee
      */
-    public Employee(int id, String name, double salary
-                   , String email, long phoneNumber, LocalDate DOB) {
+    public Employee(int id, String name, double salary, String email
+                    , long phoneNumber, LocalDate DOB) {
         this.id = id;
+        this.name = name;
+        this.salary = salary;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.DOB = DOB;
+    }
+    
+    /**
+     * field value initialization 
+     * 
+     * @param name name of an employee
+     * @param salary salary of an employee
+     * @param phone number employee phone number
+     * @param email employee email
+     * @param DOB date of birth of an employee
+     */
+    public Employee(String name, double salary
+                   , String email, long phoneNumber, LocalDate DOB) {
         this.name = name;
         this.salary = salary;
         this.email = email;
@@ -140,7 +159,6 @@ public class Employee {
                    .append("\n\tEmp email: ").append(getEmail())
                    .append("\n\tEmp phone number: ").append(getPhoneNumber())
                    .append("\n\tEmp Date of birth: ").append(getDOB())
-                   .append("\n\t    ").append(getAddress())
                    .toString();
     }
 }

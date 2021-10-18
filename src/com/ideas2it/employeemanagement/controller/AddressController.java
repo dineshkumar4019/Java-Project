@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.ideas2it.employeemanagement.model.AddressDTO;
 import com.ideas2it.employeemanagement.service.impl.AddressService;
 
 /**
@@ -30,8 +31,12 @@ public class AddressController {
      * @param id address id for checking existance
      * @return address exist or not
      */ 
-    public boolean isAddressExist(int addressId, int id) throws SQLException {
-        return addressService.isAddressExist(addressId, id);
+    public boolean isAddressExist(int id) throws SQLException {
+        return addressService.isAddressExist(id);
+    }
+    
+    public int countAddress(int id) throws SQLException {
+        return addressService.countAddress(id);
     }
     
     public boolean validateAddress(String address) {
@@ -65,19 +70,28 @@ public class AddressController {
      * @param DOB date of birth of an employee
      * @return employee created or not
      */
-    public int createAddress(int id, String address, String city, String pincode,
-                                  String state, String country) throws SQLException {
-        return addressService.insertAddress(id, address, city, pincode, state, country);
+    public int createAddress(AddressDTO addressDto) throws SQLException {
+        return addressService.insertAddress(addressDto);
     }
     
     /**
-     * Getting the particular employee by id
+     * Getting the addessess by employee id
      *
      * @param id employee id to get
      * @return single employee details
      */ 
     public List getAddress(int id) throws SQLException {
         return addressService.getAddress(id);
+    }
+    
+    /**
+     * Getting the particular address by address id
+     *
+     * @param id employee id to get
+     * @return single employee details
+     */ 
+    public AddressDTO getAddressById(int addressId) throws SQLException {
+        return addressService.getAddressById(addressId);
     }
     
     /**
@@ -100,70 +114,23 @@ public class AddressController {
      * @param counrty country of an employee in address
      * @return number of rows updated
      */
-    public int updateAddressFields(int id, String address, String city, String pincode,
-                             String state, String country) throws SQLException {
-        return addressService.updateAddressFields(id, address, city, pincode, state, country);
+    public int updateAddressFields(AddressDTO addressDto) throws SQLException {
+        return addressService.updateAddressFields(addressDto);
+    }
+    
+    public int updateAddressField(AddressDTO addressDto) throws SQLException {
+        return addressService.updateAddressField(addressDto);
     }
     
     /**
-     * Updating the address of the particular employee
+     * Deleting the required address
      *
-     * @param addressid addressid to get the required address
-     * @param address employee changed address
+     * @param id id for deleting the address
+     * @return rows deleted
      */
-    public int updateAddress(int addressId, String address) throws SQLException {
-        return addressService.updateAddress(addressId, address);
+    public int deleteAddress(int addressId) throws SQLException {
+        return addressService.deleteAddress(addressId);
     }
-    
-    /**
-     * Updating the city of the particular employee
-     *
-     * @param addressid addressid to get the required address
-     * @param city employee changed city
-     */
-    public int updateCity(int addressId, String city) throws SQLException {
-        return addressService.updateCity(addressId, city);
-    }
-    
-    /**
-     * Updating the pincode of the particular employee
-     *
-     * @param addressid addressid to get the required address
-     * @param pincode employee changed pincode
-     */
-    public int updatePincode(int addressId, String pincode) throws SQLException {
-        return addressService.updatePincode(addressId, pincode);
-    }
-    
-    /**
-     * Updating the state of the particular employee
-     *
-     * @param addressid addressid to get the required address
-     * @param state employee changed state
-     */
-    public int updateState(int addressId, String state) throws SQLException {
-        return addressService.updateState(addressId, state);
-    }
-    
-    /**
-     * Updating the country of the particular employee
-     *
-     * @param addressid addressid to get the required address
-     * @param country employee changed country
-     */
-    public int updateCountry(int addressId, String country) throws SQLException {
-        return addressService.updateCountry(addressId, country);
-    }
-    
-    /**
-     * Deleting the required employee
-     *
-     * @param id id for deleting the employee
-     * @return employee deleted
-     */
-    //public int deleteSingleEmployee(int id) throws SQLException {
-    //    return employeeService.deleteSingleEmployee(id);
-    //}
     
     /**
      * Deleting all employees in the database
