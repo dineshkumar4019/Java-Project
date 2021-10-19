@@ -44,7 +44,7 @@ public interface EmployeeDaoInterface {
      */
     public int updateAllFields(Employee employee) throws SQLException;
     
-    public int updateField(Employee employee) throws SQLException;
+    //public int updateField(Employee employee) throws SQLException;
     
     /**
      * Deleting particular employee in the database by 

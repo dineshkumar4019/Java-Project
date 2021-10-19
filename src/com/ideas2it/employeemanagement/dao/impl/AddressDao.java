@@ -13,23 +13,36 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ideas2it.employeemanagement.connection.DataBaseConnection;
+import com.ideas2it.employeemanagement.dao.AddressDaoInterface;
 import com.ideas2it.employeemanagement.model.Address;
 
-public class AddressDao {
+/**
+ * Connecting data base and java application and performing
+ * CRUD operations in database
+ * 
+ * @author	Dinesh Kumar
+ * @version	1.0
+ * 
+ */
+public class AddressDao implements AddressDaoInterface {
     private DataBaseConnection dataBaseConnection = DataBaseConnection.getInstance();
     
     /**
      * Inserting the employee address from  user input
      * to the database
      *
-     * @return database empty or not
+     * @param address employee address details
+     * @return Number of rows created
      */
     public int insertAddress(Address address) throws SQLException {
-        Connection connection = dataBaseConnection.getConnection();
         int rowsAffected = 0;
+        StringBuilder query = new StringBuilder();
+        Connection connection = dataBaseConnection.getConnection();
+        PreparedStatement statement;
         
-        String insert = "INSERT INTO employees_address VALUES(NULL, ?, ?, ?, ?, ?, ?)";
-        PreparedStatement statement = connection.prepareStatement(insert);
+        statement = connection.prepareStatement(query.append("INSERT INTO employees_address ")
+                                                     .append("VALUES(NULL, ?, ?, ?, ?, ?, ?)")
+                                                     .toString());
         
         statement.setInt(1, address.getEmployeeId());
         statement.setString(2, address.getAddress());
@@ -43,15 +56,21 @@ public class AddressDao {
     }
     
    /**
-     * Getting the employee details from the database
-     * by corresponding employee id 
+     * Getting all employee address by the employee id   
+     * in the database
      *
-     * @return Single employee details
+     * @param employee id to get address
+     * @return Single employee addresses
      */
     public List<Address> getAddress(int id) throws SQLException {
         List<Address> address = new ArrayList<>();
+        StringBuilder query = new StringBuilder();
         Connection connection = dataBaseConnection.getConnection();
-        PreparedStatement statement = connection.prepareStatement("SELECT * FROM employees_address WHERE employee_id = ?");
+        PreparedStatement statement;
+        
+        statement = connection.prepareStatement(query.append("SELECT * FROM employees_address")
+                                                     .append(" WHERE employee_id = ?")
+                                                     .toString());
         
         statement.setInt(1,id);
         ResultSet resultSet = statement.executeQuery();
@@ -63,26 +82,23 @@ public class AddressDao {
     }
     
     /**
-     * Getting the employee details from the database
-     * by corresponding employee id 
+     * Getting the employee address from the database
+     * by corresponding address id 
      *
-     * @return Single employee details
+     * @param id address id to get address
+     * @return Single employee address details
      */
     public Address getAddressById(int id) throws SQLException {
-        Address address= new Address();
+        Address address = new Address();
         Connection connection = dataBaseConnection.getConnection();
-        PreparedStatement statement = connection.prepareStatement("SELECT * FROM employees_address WHERE id = ?");
+        PreparedStatement statement;
+        
+        statement = connection.prepareStatement("SELECT * FROM employees_address WHERE id = ?");
         
         statement.setInt(1,id);
         ResultSet resultSet = statement.executeQuery();
         if (resultSet.next()) {
-            address.setId(resultSet.getInt("id"));
-            address.setEmployeeId(resultSet.getInt("employee_id"));
-            address.setAddress(resultSet.getString("address"));
-            address.setCity(resultSet.getString("city"));
-            address.setPincode(resultSet.getString("pincode"));
-            address.setState(resultSet.getString("state"));
-            address.setCountry(resultSet.getString("country"));
+            address = setAddress(resultSet);
         }
         dataBaseConnection.closeConnection();
         return address;
@@ -93,24 +109,24 @@ public class AddressDao {
      *
      * @return All employees and their details
      */
-    public List<Address> getAllAddress() throws SQLException {
-        Connection connection = dataBaseConnection.getConnection();
-        List<Address> address = new ArrayList<>();
-        
-        PreparedStatement statement = connection.prepareStatement("SELECT * FROM employees_address");
-        ResultSet resultSet = statement.executeQuery();
-        while (resultSet.next()) {
-            address.add(setAddress(resultSet));
-        }
-        dataBaseConnection.closeConnection();
-        return address;
-    }
+    //public List<Address> getAllAddress() throws SQLException {
+    //    Connection connection = dataBaseConnection.getConnection();
+    //    List<Address> address = new ArrayList<>();
+    //    
+    //    PreparedStatement statement = connection.prepareStatement("SELECT * FROM employees_address");
+    //    ResultSet resultSet = statement.executeQuery();
+    //    while (resultSet.next()) {
+    //        address.add(setAddress(resultSet));
+    //    }
+    //    dataBaseConnection.closeConnection();
+    //    return address;
+    //}
     
     /**
      * Assigning  values to respective fields from the resultSet for
      * the purpose of "viewEmployee"
      *
-     * @return Total number of rows updated in database
+     * @return address details
      */
     private Address setAddress(ResultSet addressSet) throws SQLException {
         Address address= new Address();
@@ -132,13 +148,17 @@ public class AddressDao {
      * @param id id of an employee
      * @return Address exist or not
      */
-    public boolean isAddressExist(int id) throws SQLException {
-        Connection connection = dataBaseConnection.getConnection();
+    public boolean isAddressExist(int addressId) throws SQLException {
         boolean isExist = false;
-        PreparedStatement statement = connection.prepareStatement("SELECT id FROM employees_address" 
-                                                                  + " WHERE employee_id = ?");
+        StringBuilder query = new StringBuilder();
+        Connection connection = dataBaseConnection.getConnection();
+        PreparedStatement statement;
         
-        statement.setInt(1, id);
+        statement = connection.prepareStatement(query.append("SELECT id FROM employees_address")
+                                                     .append(" WHERE id = ?")
+                                                     .toString());
+        
+        statement.setInt(1, addressId);
         if (statement.executeQuery().next()) {
              isExist = true;
         }
@@ -149,15 +169,19 @@ public class AddressDao {
     /**
      * Updating all address fields in the database
      *
-     * @return Total number of rows updated in database
+     * @param address employee address details
+     * @return Number of rows updated
      */
     public int updateAddressFields(Address address) throws SQLException {
-        Connection connection = dataBaseConnection.getConnection();
         int rowsAffected = 0;
-        
-        String update = "UPDATE employees_address  SET address = ?, city = ?, pincode = ?,"
-                        +"state = ?, country = ? WHERE id = ?";
-        PreparedStatement statement = connection.prepareStatement(update);
+        StringBuilder query = new StringBuilder();
+        Connection connection = dataBaseConnection.getConnection();
+        PreparedStatement statement;
+
+        statement = connection.prepareStatement(query.append("UPDATE employees_address  SET address = ?,")
+                                                     .append("city = ?, pincode = ?, state = ?,")
+                                                     .append("country = ? WHERE id = ?")
+                                                     .toString());
         
         statement.setString(1, address.getAddress());
         statement.setString(2, address.getCity());
@@ -171,35 +195,46 @@ public class AddressDao {
     }
     
     /**
-     * Updating all address fields in the database
+     * Updating particular address fields in the database
      *
-     * @return Total number of rows updated in database
+     * @param address employee address details
+     * @return Number of rows updated
      */
-    public int updateAddressField(Address address) throws SQLException {
-        Connection connection = dataBaseConnection.getConnection();
-        int rowsAffected = 0;
-        
-        String update = "UPDATE employees_address  SET address = ?, city = ?, pincode = ?,"
-                        +"state = ?, country = ? WHERE id = ?";
-        PreparedStatement statement = connection.prepareStatement(update);
-        
-        statement.setString(1, address.getAddress());
-        statement.setString(2, address.getCity());
-        statement.setString(3, address.getPincode());
-        statement.setString(4, address.getState());
-        statement.setString(5, address.getCountry());
-        statement.setInt(6, address.getId());
-        rowsAffected = statement.executeUpdate();
-        dataBaseConnection.closeConnection();
-        return rowsAffected;
-    }
+    //public int updateAddressField(Address address) throws SQLException {
+    //    Connection connection = dataBaseConnection.getConnection();
+    //    int rowsAffected = 0;
+   //     StringBuilder query = new StringBuilder();
+   //     
+   //     String update = "UPDATE employees_address  SET address = ?, city = ?, pincode = ?,"
+   //                     +"state = ?, country = ? WHERE id = ?";
+   //     PreparedStatement statement = connection.prepareStatement(update);
+   //     
+   //     statement.setString(1, address.getAddress());
+   //     statement.setString(2, address.getCity());
+   //     statement.setString(3, address.getPincode());
+    //    statement.setString(4, address.getState());
+   //     statement.setString(5, address.getCountry());
+   //     statement.setInt(6, address.getId());
+   //     rowsAffected = statement.executeUpdate();
+   //     dataBaseConnection.closeConnection();
+   //     return rowsAffected;
+    //}
     
+    /**
+     * Counting the addresses for an employee by employee id
+     *
+     * @param id id of an employee
+     * @return Total Addresses for an employee
+     */ 
     public int countAddress(int id) throws SQLException {
-        Connection connection = dataBaseConnection.getConnection();
         int totalAddress = 0;
+        StringBuilder query = new StringBuilder();
+        Connection connection = dataBaseConnection.getConnection();
+        PreparedStatement statement;
         
-        PreparedStatement statement = connection.prepareStatement("SELECT COUNT(id) FROM employees_address "
-                                                                  + "WHERE employee_id = ?");
+        statement = connection.prepareStatement(query.append("SELECT COUNT(id) FROM employees_address ")
+                                                     .append("WHERE employee_id = ?")
+                                                     .toString());
         statement.setInt(1, id);
         ResultSet resultSet = statement.executeQuery();
         if (resultSet.next()) {
@@ -212,14 +247,18 @@ public class AddressDao {
      * Deleting particular address in the database by 
      * corresponding address id
      *
+     * @param id address id to delete address details
      * @return Total number of rows deleted in database
      */
     public int deleteAddress(int addressId) throws SQLException {
-        Connection connection = dataBaseConnection.getConnection();
         int rowsAffected = 0;
+        StringBuilder query = new StringBuilder();
+        Connection connection = dataBaseConnection.getConnection();
+        PreparedStatement statement;
         
-        PreparedStatement statement = connection.prepareStatement("DELETE FROM employees_address"
-                                                                  + " WHERE id = ?");
+        statement = connection.prepareStatement(query.append("DELETE FROM employees_address")
+                                                     .append(" WHERE id = ?")
+                                                     .toString());
         statement.setInt(1, addressId);
         rowsAffected = statement.executeUpdate();
         dataBaseConnection.closeConnection();

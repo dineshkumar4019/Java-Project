@@ -5,10 +5,9 @@
  */
 package com.ideas2it.employeemanagement.model;
 
-import java.lang.StringBuilder; 
-
 /**
  * Employee address field creation and carries employee address
+ * details
  * 
  * @author	Dinesh Kumar
  * @version	1.0

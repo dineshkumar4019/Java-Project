@@ -127,13 +127,8 @@ public class EmployeeController {
     /**
      * Creating the employee and storing in database
      *
-     * @param id unique representation of an employee
-     * @param name name of an employee
-     * @param salary salary of an employee
-     * @param email employee email
-     * @param phoneNumber employee phoneNumber
-     * @param DOB date of birth of an employee
-     * @return employee created or not
+     * @param employeeDto employee details to be created
+     * @return Number of employees added
      */
     public int createEmployee(EmployeeDTO employeeDto) throws SQLException {
         return employeeService.createEmployee(employeeDto);
@@ -142,15 +137,15 @@ public class EmployeeController {
     /**
      * Getting the particular employee by id
      *
-     * @param id employee id to get
-     * @return single employee details
+     * @param id employee id to employee details
+     * @return particular employee details
      */ 
     public EmployeeDTO getSingleEmployee(int id) throws SQLException {
         return employeeService.getSingleEmployee(id);
     }
     
     /**
-     * Getting all employee in the database
+     * Getting all employees in the database
      *
      * @return All employee details
      */
@@ -161,18 +156,19 @@ public class EmployeeController {
     /**
      * Updating the all fields of an employee 
      *
-     * @param id employee id to update
-     * @param name name of an employee to update
-     * @param salary salary of an employee to update
-     * @param email employee email to update
-     * @param phoneNumber employee phoneNumber to update
-     * @param DOB date of birth of an employee to update
-     * @return All employee fields updated or not
+     * @param employeeDto employee details to be updated
+     * @return Number of rows updated
      */
     public int updateAllFields(EmployeeDTO employeeDto)  throws SQLException {
         return employeeService.updateAllFields(employeeDto);
     }
     
+    /**
+     * Updating the particular field of an employee 
+     *
+     * @param employeeDto employee details to be updated
+     * @return Number of rows uodated
+     */
     public int updateField(EmployeeDTO employeeDto) throws SQLException {
         return employeeService.updateField(employeeDto);
     }
@@ -181,7 +177,7 @@ public class EmployeeController {
      * Deleting the required employee
      *
      * @param id id for deleting the employee
-     * @return employee deleted
+     * @return Number of rows deleted
      */
     public int deleteSingleEmployee(int id) throws SQLException {
         return employeeService.deleteSingleEmployee(id);
@@ -190,7 +186,7 @@ public class EmployeeController {
     /**
      * Deleting all employees in the database
      *
-     * @return employees deleted 
+     * @return Number of rows deleted
      */
     public int deleteAllEmployee() throws SQLException {
         return employeeService.deleteAllEmployee();

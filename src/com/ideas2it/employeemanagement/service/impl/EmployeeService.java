@@ -5,7 +5,6 @@
  */
 package com.ideas2it.employeemanagement.service.impl;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
@@ -144,36 +143,25 @@ public class EmployeeService implements EmployeeServiceInterface {
     /**
      * Creating the employee and storing in database
      *
-     * @param id unique representation of an employee
-     * @param name name of an employee
-     * @param salary salary of an employee
-     * @param email employee email
-     * @param phoneNumber employee phoneNumber
-     * @param DOB date of birth of an employee
-     * @return employee created or not
+     * @param employeeDto employee details to be inserted in the database
+     * @return Number of rows created
      */
     public int createEmployee(EmployeeDTO employeeDto) throws SQLException {
-        
         return employeeDao.insertEmployee(modelMapper.toEmployee(employeeDto));
     }
     
     /**
      * Getting the particular employee by id in the database
      *
-     * @param id employee id to get
+     * @param id employee id to get employee details
      * @return single employee details
      */
     public EmployeeDTO getSingleEmployee(int id) throws SQLException {
-        //List<EmployeeDTO> employeeDto = new ArrayList<>();
-        
-        //for (Employee entry : employeeDao.getEmployee(id)) {
-        //    employeeDto.add(modelMapper.toEmployeeDto(entry));
-        //}
         return modelMapper.toEmployeeDto(employeeDao.getEmployee(id));
     }
     
     /**
-     * Getting all employee in the database
+     * Getting all employees details in the database
      *
      * @return All employee details
      */
@@ -190,31 +178,31 @@ public class EmployeeService implements EmployeeServiceInterface {
     /**
      * Updating the all fields of an employee 
      *
-     * @param id employee id to update
-     * @param name name of an employee to update
-     * @param salary salary of an employee to update
-     * @param email employee email to update
-     * @param phoneNumber employee phoneNumber to update
-     * @param DOB date of birth of an employee to update
-     * @return All employee fields updated or not
+     * @param employeeDto employee details to be update
+     * @return Number of rows updated
      */
     public int updateAllFields(EmployeeDTO employeeDto) throws SQLException {
         return employeeDao.updateAllFields(modelMapper.toEmployee(employeeDto));
     }
     
+    /**
+     * Updating the particular fields of an employee 
+     *
+     * @param employeeDto employee details to be update
+     * @return Number of rows updated
+     */
     public int updateField(EmployeeDTO employeeDto) throws SQLException {
-        return employeeDao.updateField(modelMapper.toEmployee(employeeDto));
+        return employeeDao.updateAllFields(modelMapper.toEmployee(employeeDto));
     }
     
     /**
-     * Deleting the required employee
+     * Deleting the required employee by id
      *
      * @param id id for deleting the employee
-     * @return employee deleted
+     * @return Number of rows deleted
      */
     public int deleteSingleEmployee(int id) throws SQLException {
         return employeeDao.deleteEmployee(id);
-        
     }
      
     /**

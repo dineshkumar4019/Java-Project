@@ -3,9 +3,7 @@
  *
  * Date: 27/08/2021
  */
-package com.ideas2it.employeemanagement.model;
-
-import java.lang.StringBuilder; 
+package com.ideas2it.employeemanagement.model; 
 
 /**
  * Employee address field creation and carries employee address
@@ -46,26 +44,7 @@ public class Address {
         this.state = state;
         this.country = country;
     }
-    
-    /**
-     * field value initialization 
-     * 
-     * @param address employee door no 
-     * @param city employee current living city
-     * @param pincode corresponding city pincode
-     * @param state employee current living state
-     * @param country employee current living country
-     */
-    public Address(int employeeId, String address, String city,
-                              String pincode, String state, String country) {
-        this.employeeId = employeeId;
-        this.address = address;
-        this.city = city;
-        this.pincode = pincode;
-        this.state = state;
-        this.country = country;
-    }
-    
+
     public int getId() {
         return id;
     }
