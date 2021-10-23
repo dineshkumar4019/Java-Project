@@ -25,7 +25,7 @@ public interface EmployeeServiceInterface {
      *
      * @param id employee id for checking existance
      * @return employee exist or not
-     */ 
+     */
     public boolean isEmployeeExist(int id) throws SQLException;
     
     /**
@@ -33,7 +33,7 @@ public interface EmployeeServiceInterface {
      *
      * @param name employee name for validation
      * @return name is valid or not
-     */     
+     */
     public boolean validateName(String name);
     
     /**
@@ -49,7 +49,7 @@ public interface EmployeeServiceInterface {
      *
      * @param email email for checking existence
      * @return email exist or not
-     */
+     *
     public boolean isEmailExist(String email) throws SQLException;
     
     /**
@@ -147,6 +147,6 @@ public interface EmployeeServiceInterface {
      * Deleting all employees in the database
      *
      * @return Total employees deleted
-     */ 
+     */
     public int deleteAllEmployee() throws SQLException;
 }

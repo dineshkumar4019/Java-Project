@@ -300,7 +300,7 @@ public class EmployeeView {
     /** 
      * Selecting the ways of displaying the employee
      * 
-     */           
+     */        
     private void displayEmployee() {
         int ViewChoice;
         int id;

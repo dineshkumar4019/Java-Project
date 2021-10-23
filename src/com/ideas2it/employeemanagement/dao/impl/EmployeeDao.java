@@ -20,6 +20,11 @@ import com.ideas2it.employeemanagement.model.Employee;
 import com.ideas2it.employeemanagement.model.Address;
 import com.ideas2it.employeemanagement.connection.DataBaseConnection;
 
+import org.hibernate.cfg.Configuration;
+import org.hibernate.SessionFactory;
+import org.hibernate.Session;
+import org.hibernate.HibernateException;
+
 /**
  * <h1> Employee DAO</h1>
  * Employees data manipulation by inserting, updating and deleting the
@@ -61,6 +66,27 @@ public class EmployeeDao implements EmployeeDaoInterface {
     }
     
     /**
+     * Inserting the employee details from  user input
+     * to the database
+     *
+     * @return Number of rows inserted
+     *
+    public int insertEmployee(Employee employee) {
+        int id = 0;
+        
+        try {
+            Session session = factory.openSession();
+            id = (Integer) session.save(employee);
+            session.close();
+        } catch (HibernateException e) {
+            e.printStackTrace();
+        }
+        return id;
+    }
+    */
+    
+   
+    /**
      * Updating all employee fields in the database
      *
      * @param employee employee details to update
@@ -94,26 +120,26 @@ public class EmployeeDao implements EmployeeDaoInterface {
      * @param employee employee details to update
      * @return Total number of rows updated in database
      */
-    //public int updateField(Employee employee) throws SQLException {
-    //    int rowsAffected = 0;
-    //    StringBuilder query = new StringBuilder();
-    //    Connection connection = dataBaseConnection.getConnection();
-    //    
-    //    String update = query.append("UPDATE employees  SET name = ?, salary = ?,") 
-    //                         .append("email = ?,phone_number = ?, DOB = ? WHERE id = ?")
-    //                         .toString();
-    //    PreparedStatement statement = connection.prepareStatement(update);
+    public int updateField(Employee employee) throws SQLException {
+        int rowsAffected = 0;
+        StringBuilder query = new StringBuilder();
+        Connection connection = dataBaseConnection.getConnection();
         
-    //    statement.setString(1, employee.getName());
-    //    statement.setDouble(2, employee.getSalary());
-    //    statement.setString(3, employee.getEmail());
-    //    statement.setLong(4, employee.getPhoneNumber());
-    //    statement.setDate(5, Date.valueOf(employee.getDOB()));
-    //    statement.setInt(6, employee.getId());
-    //    rowsAffected = statement.executeUpdate();
-    //    dataBaseConnection.closeConnection();
-    //    return rowsAffected;
-    //}
+        String update = query.append("UPDATE employees  SET name = ?, salary = ?,") 
+                             .append("email = ?,phone_number = ?, DOB = ? WHERE id = ?")
+                             .toString();
+        PreparedStatement statement = connection.prepareStatement(update);
+      
+        statement.setString(1, employee.getName());
+        statement.setDouble(2, employee.getSalary());
+        statement.setString(3, employee.getEmail());
+        statement.setLong(4, employee.getPhoneNumber());
+        statement.setDate(5, Date.valueOf(employee.getDOB()));
+        statement.setInt(6, employee.getId());
+        rowsAffected = statement.executeUpdate();
+        dataBaseConnection.closeConnection();
+        return rowsAffected;
+    }
     
     /**
      * Deleting particular employee in the database by 

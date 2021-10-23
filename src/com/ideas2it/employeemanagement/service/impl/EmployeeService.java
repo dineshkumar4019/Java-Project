@@ -47,7 +47,7 @@ public class EmployeeService implements EmployeeServiceInterface {
      *
      * @param id employee id for checking existance
      * @return employee exist or not
-     */ 
+     */
     public boolean isEmployeeExist(int id) throws SQLException {
         return employeeDao.isEmployeeExist(id);
     }
@@ -57,7 +57,7 @@ public class EmployeeService implements EmployeeServiceInterface {
      *
      * @param name employee name for validation
      * @return name is valid or not
-     */     
+     */
     public boolean validateName(String name) {
         return Pattern.matches("^([A-Za-z]{3,20}+ ){1,2}+[A-Za-z]+$", name);
     }
@@ -209,7 +209,7 @@ public class EmployeeService implements EmployeeServiceInterface {
      * Deleting all employees in the database
      *
      * @return Total employees deleted
-     */ 
+     */
     public int deleteAllEmployee() throws SQLException {
         return employeeDao.deleteAllEmployee();
     }

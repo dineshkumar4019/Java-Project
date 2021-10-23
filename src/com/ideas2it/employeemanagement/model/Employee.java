@@ -25,7 +25,7 @@ public class Employee {
     private String email;
     private long phoneNumber;
     private LocalDate DOB;
-    private List<Address> address = new ArrayList<>();
+    private List<Address> address;
     
     public Employee() {
         

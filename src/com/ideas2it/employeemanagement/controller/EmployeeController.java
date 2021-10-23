@@ -29,7 +29,7 @@ public class EmployeeController {
      * Checking employees is present in the database 
      *
      * @return database empty or not
-     */   
+     */
     public int getTotalEmployees() throws SQLException {
         return employeeService.getTotalEmployees();
     }
@@ -39,7 +39,7 @@ public class EmployeeController {
      *
      * @param id employee id for checking existance
      * @return employee exist or not
-     */ 
+     */
     public boolean isEmployeeExist(int id) throws SQLException {
         return employeeService.isEmployeeExist(id);
     }
@@ -139,7 +139,7 @@ public class EmployeeController {
      *
      * @param id employee id to employee details
      * @return particular employee details
-     */ 
+     */
     public EmployeeDTO getSingleEmployee(int id) throws SQLException {
         return employeeService.getSingleEmployee(id);
     }
