@@ -5,7 +5,6 @@
  */
 package com.ideas2it.employeemanagement.service.impl;
 
-import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
 import java.time.Period;
@@ -21,7 +20,6 @@ import com.ideas2it.employeemanagement.model.Address;
 import com.ideas2it.employeemanagement.model.AddressDTO;
 import com.ideas2it.employeemanagement.service.EmployeeServiceInterface;
 import com.ideas2it.employeemanagement.utils.ModelMapper;
-
 
 /**
  * <h1> Employees service</h1>
@@ -58,11 +56,6 @@ public class EmployeeService implements EmployeeServiceInterface {
         if(null == employeeDao.getEmployee(id)) {
             isExist = false;
         }
-        //for (Employee employee : getSingleEmployee(int id)) {
-        //    if (employee.getId() == id) {
-        //        isExist = true;
-        //    }
-        //}
         return isExist;
     }
     
@@ -78,13 +71,6 @@ public class EmployeeService implements EmployeeServiceInterface {
         if(null == employeeDao.getAddress(addressId)) {
             isExist = false;
         }
-        
-        //Employee employee = employeeDao.getEmployees();
-        //for (Address address :getSingleEmployee(id).getAddress()) {
-         //   if (address.getId() == addressId) {
-          //      isExist = true;
-           // }
-        //}
         return isExist;
     }
     
@@ -225,6 +211,7 @@ public class EmployeeService implements EmployeeServiceInterface {
     public int createEmployee(EmployeeDTO employeeDto) throws HibernateException {
         List<Address> addresses = new ArrayList<>();
         int id = employeeDao.insertEmployee(modelMapper.toEmployee(employeeDto));
+        
         return id;
     }
     
@@ -238,18 +225,6 @@ public class EmployeeService implements EmployeeServiceInterface {
         Address address = modelMapper.toAddress(addressDto);
         address.setEmployee(modelMapper.toEmployee(addressDto.getEmployeeDto()));
         return employeeDao.insertAddress(address);
-        //List<Address> addresses = new ArrayList<>();
-        //Address address;
-        //for (AddressDTO entry : employeeDto.getAddress()) {
-        //    address = modelMapper.toAddress(entry);
-            //entry.setEmployeeDto(modelMapper.toEmployee(employeeDto.getEmployeeDto()));
-        //    address.setEmployee(modelMapper.toEmployee(entry.getEmployeeDto()));
-        //    addresses.add(address);
-        //}
-       // for (AddressDTO address : employeeDto.getAddressDto()) {
-      //      System.out.println(address.getEmployeeDto());
-     //   }
-    //    return employeeDao.insertAddress(modelMapper.toEmployee(employeeDto));
     }
     
     
@@ -259,15 +234,7 @@ public class EmployeeService implements EmployeeServiceInterface {
      * @param id employee id to get employee details
      * @return single employee details
      */
-    public EmployeeDTO getSingleEmployee(int id) {
-        //EmployeeDTO employeeDto = null;
-        //Employee employee = employeeDao.getEmployee(id);
-       // employeeDto = modelMapper.toEmployeeDto(employeeDao.getEmployee(id))
-       // for (EmployeeDTO employeeDto : employeeDto.getAddress()) {
-       //if (null != employee) {
-       //    employeeDto = modelMapper.toEmployeeDto(employee);
-       //}
-            
+    public EmployeeDTO getSingleEmployee(int id) {  
         return modelMapper.toEmployeeDto(employeeDao.getEmployee(id));
     }
     
@@ -305,19 +272,6 @@ public class EmployeeService implements EmployeeServiceInterface {
         return employeeDao.updateAllFields(employee);
     }
     
-    //public int updateAddressFields(AddressDTO addressDto)  throws SQLException {
-   //     return employeeDao.updateAddressFields(modelMapper.toAddress(addressDto));
-   // }
-    /**
-     * Updating the particular fields of an employee 
-     *
-     * @param employeeDto employee details to be update
-     * @return Number of rows updated
-     *
-    public int updateField(EmployeeDTO employeeDto) throws SQLException {
-        return employeeDao.updateAllFields(modelMapper.toEmployee(employeeDto));
-    }
-    
     /**
      * Deleting the required employee by id
      *
@@ -346,5 +300,4 @@ public class EmployeeService implements EmployeeServiceInterface {
     public int deleteAddress(int addressId) throws HibernateException {
         return employeeDao.deleteAddress(addressId);
     }
-
 }

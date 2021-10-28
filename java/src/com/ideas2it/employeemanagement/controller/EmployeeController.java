@@ -5,8 +5,6 @@
  */
 package com.ideas2it.employeemanagement.controller;
 
-import java.sql.SQLException;
-import org.hibernate.HibernateException;
 import java.time.LocalDate;
 import java.util.List;
 import org.hibernate.HibernateException;
@@ -238,26 +236,6 @@ public class EmployeeController {
      */
     public int updateAllFields(EmployeeDTO employeeDto)  throws HibernateException {
         return employeeService.updateAllFields(employeeDto);
-    }
-    
-    /**
-     * Updating the all fields of an employee 
-     *
-     * @param employeeDto employee details to be updated
-     * @return Number of rows updated
-     */
-    //public int updateAddressFields(AddressDTO addressDto)  throws SQLException {
-     //   return employeeService.updateAddressFields(addressDto);
-    //}
-    
-    /**
-     * Updating the particular field of an employee 
-     *
-     * @param employeeDto employee details to be updated
-     * @return Number of rows uodated
-     *
-    public int updateField(EmployeeDTO employeeDto) throws SQLException {
-        return employeeService.updateField(employeeDto);
     }
     
     /**

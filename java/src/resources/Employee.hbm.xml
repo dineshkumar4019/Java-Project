@@ -14,7 +14,7 @@
         <id name="id" column="id" type="int" >
             <generator class="native"/>
         </id>
-    
+     
         <property name="name" column="name"  type="string"
                   not-null="true" lazy="true"/> 
         <property name="salary" column="salary" type="double"
@@ -27,7 +27,7 @@
                   not-null="true" lazy="true"/>
         
         <bag name = "address" cascade = "all" inverse = "true" lazy = "false" fetch = "select">
-        <key column = "employee_id"/>
+        <key column = "employee_id" on-delete="cascade"/>
         <one-to-many class="Address"/>
         </bag>
         

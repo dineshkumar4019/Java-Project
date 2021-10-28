@@ -5,18 +5,16 @@
  */
 package com.ideas2it.employeemanagement.view;
 
-import java.sql.SQLException;
-import org.hibernate.HibernateException;
 import java.time.format.DateTimeParseException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Scanner;
+import org.hibernate.HibernateException;
 
 import com.ideas2it.employeemanagement.controller.EmployeeController;
 import com.ideas2it.employeemanagement.model.EmployeeDTO;
 import com.ideas2it.employeemanagement.model.AddressDTO;
-
 
 /**
  * <h1> Employees view</h1>
@@ -328,13 +326,9 @@ public class EmployeeView {
         System.out.println("Enter Employee id to view:");
         id = getAndValidateId();
         EmployeeDTO employeeDto = employeeController.getSingleEmployee(id);
-        if (null != employeeDto) {
-                System.out.println(employeeDto);
-                for (AddressDTO entry : employeeDto.getAddressDto()) {
-                    System.out.println(entry);
-                }
-        } else {
-            System.out.println("No employee");
+        System.out.println(employeeDto);
+        for (AddressDTO entry : employeeDto.getAddressDto()) {
+            System.out.println(entry);
         }
     }
     
@@ -373,8 +367,14 @@ public class EmployeeView {
             LocalDate DOB = getAndValidateDOB();
             employeeDto = new EmployeeDTO(name, salary, email, phoneNumber, DOB);
             id = employeeController.createEmployee(employeeDto);
-            employeeDto.setId(id);
-            createAddress(employeeDto);
+            
+            if (0 != id) {
+                System.out.println("\n\t**Employee created successfully**\n\tID = " + id);
+                employeeDto.setId(id);
+                createAddress(employeeDto);
+            } else {
+                System.out.println("\n\t**Employee creation failed!!!**");
+            }
         } catch (HibernateException e) {
             e.printStackTrace();
         }
@@ -502,31 +502,25 @@ public class EmployeeView {
      * @param id id of an employee to create address
      */
     private void createAddress(EmployeeDTO employeeDto) { 
-        List<AddressDTO> list = new ArrayList<>();
+        int addressId;
         AddressDTO addressDto;
-        int id;
-        int userChoice = 0;
-        boolean toAddAddress = true;
         
         try {
-            //do {
-                System.out.println("\n\tEnter Employee Address");
-                String address = getAndValidateAddress();
-                String city = getAndValidateCity();
-                String pincode = getAndValidatePincode();
-                String state = getAndValidateState();
-                String country = getAndValidateCountry();
-                addressDto = new AddressDTO(employeeDto, address, city, pincode, state, country);
-                addressDto.setEmployeeDto(employeeDto);
-                //list.add(addressDto);
-                
-                //System.out.println("\n\t**Do You Want To Add Address\npress 1 for Yes and 2 for No");
-                //userChoice = getAndValidateChoice();
-                
-            //} while (1 == userChoice);
-            //employeeDto.setAddressDto(list);
-            employeeController.insertAddress(addressDto);
-            //id = employeeController.createAddress(employeeDto);
+            System.out.println("\n\tEnter Employee Address");
+            String address = getAndValidateAddress();
+            String city = getAndValidateCity();
+            String pincode = getAndValidatePincode();
+            String state = getAndValidateState();
+            String country = getAndValidateCountry();
+            addressDto = new AddressDTO(employeeDto, address, city, pincode, state, country);
+            addressDto.setEmployeeDto(employeeDto);
+            addressId = employeeController.insertAddress(addressDto);
+            
+            if (0 != addressId) {
+                System.out.println("\n\t**Address created successfully**\n\t");
+            } else {
+                System.out.println("\n\t**Address creation failed!!!**");
+            }
         } catch (HibernateException e) {
              e.printStackTrace();
         }
@@ -591,9 +585,6 @@ public class EmployeeView {
             employeeDto.setEmail(email);
             employeeDto.setPhoneNumber(phoneNumber);
             employeeDto.setDOB(DOB);
-            //for (AddressDTO addressDto : employeeDto.getAddressDto()) {
-            //    addressDto.setEmployeeDto(employeeDto);
-            //}
             
             if (1 == employeeController.updateAllFields(employeeDto)) {
                 System.out.println("\n\t***Details updated Successfully***");
@@ -687,9 +678,11 @@ public class EmployeeView {
         String pincode;
         String state;
         String country;
+        EmployeeDTO employeeDto;
+        AddressDTO addressDto = new AddressDTO();
         
         try {  
-            EmployeeDTO employeeDto = employeeController.getSingleEmployee(employeeId);
+            employeeDto = employeeController.getSingleEmployee(employeeId);
             for (AddressDTO entry : employeeDto.getAddressDto()) {
                 System.out.println(entry);
             }
@@ -701,15 +694,14 @@ public class EmployeeView {
             state = getAndValidateState();
             country = getAndValidateCountry();
             
-            AddressDTO addressDto = new AddressDTO();
-            for (AddressDTO entry : employeeDto.getAddressDto()) {
-                if(addressId == entry.getId()) {
-                    addressDto.setEmployeeDto(employeeDto);
-                    addressDto.setAddressLine(addressLine);
-                    addressDto.setCity(city);
-                    addressDto.setPincode(pincode);
-                    addressDto.setState(state);
-                    addressDto.setCountry(country);
+            for (AddressDTO address : employeeDto.getAddressDto()) {
+                if(addressId == address.getId()) {
+                    address.setEmployeeDto(employeeDto);
+                    address.setAddressLine(addressLine);
+                    address.setCity(city);
+                    address.setPincode(pincode);
+                    address.setState(state);
+                    address.setCountry(country);
                 }
             }
             if (1 == employeeController.updateAllFields(employeeDto)) {
@@ -735,15 +727,18 @@ public class EmployeeView {
         String pincode;
         String state;
         String country;
+        EmployeeDTO employeeDto;
         AddressDTO addressDto = new AddressDTO();
         
         try {
-            EmployeeDTO employeeDto = employeeController.getSingleEmployee(employeeId);
+            employeeDto = employeeController.getSingleEmployee(employeeId);
+            
             for (AddressDTO entry : employeeDto.getAddressDto()) {
                 System.out.println(entry);
             }
             System.out.println("Enter addres Id to update");
             addressId = getAndValidateAddressId();
+            
             for (AddressDTO entry : employeeDto.getAddressDto()) {
                 if (entry.getId() == addressId); {
                     addressDto = entry;
@@ -845,36 +840,24 @@ public class EmployeeView {
     private void deleteSingleEmployee(int id) {
         try {
             if (1 == employeeController.deleteSingleEmployee(id)) {
-                System.out.println("Deleted succesfully");
+                System.out.println("\n\t**Deleted succesfully**");
             } else {
-                System.out.println("Employee not deleted");
+                System.out.println("\n\t**Employee not deleted**");
             }
         } catch (HibernateException e) {
             e.printStackTrace();
         }
     }
-   
-    //private AddressDTO getAddress(int id) {
-      //  return employeeController.getAddress(id);
-        /*
-        try {
-            if (1 == employeeController.getAddress(id)) {
-                System.out.println("Deleted succesfully");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        */
-    //}
-    
+
     /**
      * Deleting the entire employee database
      */
     private void deleteAllEmployee() {
         try {
             if (getTotalEmployees() == employeeController.deleteAllEmployee()) {
-                System.out.println("Deleted succesfully");
+                System.out.println("\n\t**Deleted succesfully**");
             } else {
-                System.out.println("Employee not deleted");
+                System.out.println("\n\t**Employee not deleted*");
             }
         } catch (HibernateException e) {
             e.printStackTrace();
@@ -898,9 +881,9 @@ public class EmployeeView {
              addressId = getAndValidateAddressId();
                 
              if (1 == employeeController.deleteAddress(addressId)) {
-                System.out.println("Address deleted successfully");
+                System.out.println("\n\t**Address deleted successfully**");
              } else {
-                System.out.println("Address not deleted");
+                System.out.println("\n\t**Address not deleted**");
              }
         } catch (HibernateException e) {
             e.printStackTrace();
