@@ -12,9 +12,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ideas2it.employeemanagement.connection.DataBaseConnection;
 import com.ideas2it.employeemanagement.dao.AddressDaoInterface;
 import com.ideas2it.employeemanagement.model.Address;
+
+import com.ideas2it.employeemanagement.connection.HibernateUtil;
+import org.hibernate.SessionFactory;
+import org.hibernate.Session;
+import org.hibernate.HibernateException;
+import org.hibernate.Transaction;
 
 /**
  * Connecting data base and java application and performing
@@ -25,7 +30,7 @@ import com.ideas2it.employeemanagement.model.Address;
  * 
  */
 public class AddressDao implements AddressDaoInterface {
-    private DataBaseConnection dataBaseConnection = DataBaseConnection.getInstance();
+    private SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
     
     /**
      * Inserting the employee address from  user input
@@ -33,7 +38,7 @@ public class AddressDao implements AddressDaoInterface {
      *
      * @param address employee address details
      * @return Number of rows created
-     */
+     *
     public int insertAddress(Address address) throws SQLException {
         int rowsAffected = 0;
         StringBuilder query = new StringBuilder();
@@ -54,6 +59,23 @@ public class AddressDao implements AddressDaoInterface {
         dataBaseConnection.closeConnection();
         return rowsAffected;
     }
+    */
+    
+    public int insertAddress(Address address) {
+        int id = 0;
+        
+        try {
+            Session session = sessionFactory.openSession();
+            Transaction transaction = session.beginTransaction();
+            id = (Integer) session.save(address);
+            //System.out.println("123");
+            transaction.commit();
+            //session.close();
+        } catch (HibernateException e) {
+            e.printStackTrace();
+        }
+        return id;
+    }
     
    /**
      * Getting all employee address by the employee id   
@@ -61,7 +83,7 @@ public class AddressDao implements AddressDaoInterface {
      *
      * @param employee id to get address
      * @return Single employee addresses
-     */
+     *
     public List<Address> getAddress(int id) throws SQLException {
         List<Address> address = new ArrayList<>();
         StringBuilder query = new StringBuilder();
@@ -87,7 +109,7 @@ public class AddressDao implements AddressDaoInterface {
      *
      * @param id address id to get address
      * @return Single employee address details
-     */
+     *
     public Address getAddressById(int id) throws SQLException {
         Address address = new Address();
         Connection connection = dataBaseConnection.getConnection();
@@ -127,7 +149,7 @@ public class AddressDao implements AddressDaoInterface {
      * the purpose of "viewEmployee"
      *
      * @return address details
-     */
+     *
     private Address setAddress(ResultSet addressSet) throws SQLException {
         Address address= new Address();
         
@@ -147,7 +169,7 @@ public class AddressDao implements AddressDaoInterface {
      *
      * @param id id of an employee
      * @return Address exist or not
-     */
+     *
     public boolean isAddressExist(int addressId) throws SQLException {
         boolean isExist = false;
         StringBuilder query = new StringBuilder();
@@ -171,7 +193,7 @@ public class AddressDao implements AddressDaoInterface {
      *
      * @param address employee address details
      * @return Number of rows updated
-     */
+     *
     public int updateAddressFields(Address address) throws SQLException {
         int rowsAffected = 0;
         StringBuilder query = new StringBuilder();
@@ -225,7 +247,7 @@ public class AddressDao implements AddressDaoInterface {
      *
      * @param id id of an employee
      * @return Total Addresses for an employee
-     */ 
+     *
     public int countAddress(int id) throws SQLException {
         int totalAddress = 0;
         StringBuilder query = new StringBuilder();
@@ -249,7 +271,7 @@ public class AddressDao implements AddressDaoInterface {
      *
      * @param id address id to delete address details
      * @return Total number of rows deleted in database
-     */
+     *
     public int deleteAddress(int addressId) throws SQLException {
         int rowsAffected = 0;
         StringBuilder query = new StringBuilder();
@@ -264,4 +286,5 @@ public class AddressDao implements AddressDaoInterface {
         dataBaseConnection.closeConnection();
         return rowsAffected;
     }
+    */
 }

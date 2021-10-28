@@ -5,7 +5,7 @@
  */
 package com.ideas2it.employeemanagement.model;
 
-import java.time.LocalDate; 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -25,7 +25,7 @@ public class EmployeeDTO {
     private String email;
     private long phoneNumber;
     private LocalDate DOB;
-    private List<AddressDTO> addressDto = new ArrayList<>();
+    private List<AddressDTO> addressDto;
     
     public EmployeeDTO() {
         
@@ -41,8 +41,27 @@ public class EmployeeDTO {
      * @param email employee email
      * @param DOB date of birth of an employee
      */
-    public EmployeeDTO(int id, String name, double salary, String email
-                       , long phoneNumber, LocalDate DOB) {
+    public EmployeeDTO(String name, double salary, String email
+                       , long phoneNumber, LocalDate DOB, List<AddressDTO> addressDto) {
+        this.name = name;
+        this.salary = salary;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.DOB = DOB;
+        this.addressDto = addressDto;
+    }
+    
+    /**
+     * field value initialization 
+     * 
+     * @param name name of an employee
+     * @param salary salary of an employee
+     * @param phone number employee phone number
+     * @param email employee email
+     * @param DOB date of birth of an employee
+     */
+    public EmployeeDTO(int id, String name, double salary
+                   , String email, long phoneNumber, LocalDate DOB) {
         this.id = id;
         this.name = name;
         this.salary = salary;
@@ -51,8 +70,7 @@ public class EmployeeDTO {
         this.DOB = DOB;
     }
     
-    /**
-     * field value initialization 
+     /* field value initialization 
      * 
      * @param name name of an employee
      * @param salary salary of an employee

@@ -1,0 +1,33 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC  
+"-//Hibernate/Hibernate Mapping DTD//EN"  
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.ideas2it.employeemanagement.model">
+
+    <class name="Address" table = "employees_address">
+    
+        <meta attribute="Class-description">
+            This class Holds the address of an employee.
+        </meta>
+        
+        <id name="id" column="id" type="int">
+            <generator class="native"/>
+        </id>
+        
+        <property name="addressLine" column="addressLine"  type="string"
+                  not-null="true" lazy="true"/> 
+        <property name="city" column="city" type="string"
+                  not-null="true" lazy="true"/> 
+        <property name="pincode" column="pincode" type="string"
+                  not-null="true" lazy="true"/> 
+        <property name="state" column="state" type="string"
+                  not-null="true" lazy="true"/> 
+        <property name="country" column="country" type="string"
+                  not-null="true" lazy="true"/> 
+        
+        <many-to-one name = "employee" column = "employee_id"
+            class = "Employee"/>
+        
+    </class>
+</hibernate-mapping>

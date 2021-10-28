@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ideas2it.employeemanagement.model.Employee;
-import com.ideas2it.employeemanagement.connection.DataBaseConnection;
+import com.ideas2it.employeemanagement.model.Address;
 
 /**
  * <h1> Employee DAO</h1>
@@ -36,6 +36,7 @@ public interface EmployeeDaoInterface {
      * @return database empty or not
      */
     public int insertEmployee(Employee employee) throws SQLException;
+    //public int insertAddress(Employee employee) throws SQLException;
     
     /**
      * Updating all employee fields in the database
@@ -51,14 +52,14 @@ public interface EmployeeDaoInterface {
      * corresponding employee id
      *
      * @return Total number of rows deleted in database
-     */
+     *
     public int deleteEmployee(int id) throws SQLException;
     
     /**
      * Deleting all employees in the database
      *
      * @return Total number of rows updated in database
-     */
+     *
     public int deleteAllEmployee() throws SQLException;
     
     /**
@@ -82,14 +83,14 @@ public interface EmployeeDaoInterface {
      *
      * @return Total number of employees present
      */
-    public int getTotalEmployees() throws SQLException;
+    public long getTotalEmployees() throws SQLException;
     
     /** 
      * Checking the phone number already 
      * exist in the database 
      *
      * @return Phone number exist or not
-     */
+     *
     public boolean getPhoneNumber(long phoneNumber) throws SQLException;
     
     /** 
@@ -97,7 +98,7 @@ public interface EmployeeDaoInterface {
      * in the database 
      *
      * @return Email exist or not
-     */
+     *
     public boolean getEmail(String email) throws SQLException;
     
     /** 
@@ -105,6 +106,7 @@ public interface EmployeeDaoInterface {
      * in the database 
      *
      * @return Employee exist or not
-     */
+     *
     public boolean isEmployeeExist(int id) throws SQLException;
+    */
 }

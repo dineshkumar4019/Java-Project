@@ -28,13 +28,15 @@ public interface AddressDaoInterface {
      */
     public int insertAddress(Address address) throws SQLException;
     
+
+    
    /**
      * Getting all employee address by the employee id   
      * in the database
      *
      * @param employee id to get address
      * @return Single employee addresses
-     */
+     *
     public List<Address> getAddress(int id) throws SQLException;
     
     /**
@@ -43,7 +45,7 @@ public interface AddressDaoInterface {
      *
      * @param id address id to get address
      * @return Single employee address details
-     */
+     *
     public Address getAddressById(int id) throws SQLException;
 
     /** 
@@ -52,7 +54,7 @@ public interface AddressDaoInterface {
      *
      * @param id id of an employee
      * @return Address exist or not
-     */
+     *
     public boolean isAddressExist(int addressId) throws SQLException;
     
     /**
@@ -60,7 +62,7 @@ public interface AddressDaoInterface {
      *
      * @param address employee address details
      * @return Number of rows updated
-     */
+     *
     public int updateAddressFields(Address address) throws SQLException;
     
     /**
@@ -68,7 +70,7 @@ public interface AddressDaoInterface {
      *
      * @param id id of an employee
      * @return Total Addresses for an employee
-     */ 
+     *
     public int countAddress(int id) throws SQLException;
     
     /**
@@ -77,6 +79,7 @@ public interface AddressDaoInterface {
      *
      * @param id address id to delete address details
      * @return Total number of rows deleted in database
-     */
+     *
     public int deleteAddress(int addressId) throws SQLException;
+    */
 }

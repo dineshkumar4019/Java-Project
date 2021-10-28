@@ -29,7 +29,7 @@ public interface AddressServiceInterface {
      *
      * @param id employee id to count addresses
      * @return total addresses
-     */
+     *
     public int countAddress(int id) throws SQLException;
     
     /**
@@ -37,7 +37,7 @@ public interface AddressServiceInterface {
      *
      * @param id address id for checking existance
      * @return address exist or not
-     */ 
+     *
     public boolean isAddressExist(int addressId) throws SQLException;
     
     /**
@@ -78,14 +78,14 @@ public interface AddressServiceInterface {
      * @param addressDto employee address details to create
      * @return total employees created
      */
-    public int insertAddress(AddressDTO addressDto) throws SQLException;
+    //public int insertAddress(AddressDTO addressDto) throws SQLException;
     
     /**
      * Getting the particular address by employee id
      *
      * @param id employee id to get address
      * @return single employee address details
-     */ 
+     *
     public List<Address> getAddress(int id) throws SQLException;
     
     /**
@@ -93,7 +93,7 @@ public interface AddressServiceInterface {
      *
      * @param id address id to get addresses
      * @return single employee details
-     */ 
+     *
     public AddressDTO getAddressById(int addressId) throws SQLException;
     
     /**
@@ -101,7 +101,7 @@ public interface AddressServiceInterface {
      *
      * @param addressDto address details to update
      * @return number of rows updated
-     */
+     *
     public int updateAddressFields(AddressDTO addressDto) throws SQLException;
     
     /**
@@ -109,6 +109,7 @@ public interface AddressServiceInterface {
      *
      * @param id address id for deleting the address
      * @return total rows deleted
-     */
+     *
     public int deleteAddress(int addressId) throws SQLException;
+    */
 }

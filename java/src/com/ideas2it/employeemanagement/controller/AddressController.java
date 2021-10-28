@@ -30,7 +30,7 @@ public class AddressController {
      *
      * @param id address id for checking existance
      * @return address exist or not
-     */ 
+     *
     public boolean isAddressExist(int addressId) throws SQLException {
         return addressService.isAddressExist(addressId);
     }
@@ -40,7 +40,7 @@ public class AddressController {
      *
      * @param id address id to count addresses
      * @return total addresses for an employee
-     */ 
+     *
     public int countAddress(int id) throws SQLException {
         return addressService.countAddress(id);
     }
@@ -101,16 +101,16 @@ public class AddressController {
      * @param addressDto address details to be created
      * @return Number of rows created
      */
-    public int createAddress(AddressDTO addressDto) throws SQLException {
-        return addressService.insertAddress(addressDto);
-    }
+    //public int createAddress(AddressDTO addressDto) throws SQLException {
+    //    return addressService.insertAddress(addressDto);
+    //}
     
     /**
      * Getting the addessess by employee id
      *
      * @param id employee id to get
      * @return single employee details
-     */ 
+     *
     public List getAddress(int id) throws SQLException {
         return addressService.getAddress(id);
     }
@@ -120,7 +120,7 @@ public class AddressController {
      *
      * @param id address id to get address details
      * @return single employee address details
-     */ 
+     *
     public AddressDTO getAddressById(int addressId) throws SQLException {
         return addressService.getAddressById(addressId);
     }
@@ -139,7 +139,7 @@ public class AddressController {
      *
      * @param addressDto address details to update
      * @return number of rows updated
-     */
+     *
     public int updateAddressFields(AddressDTO addressDto) throws SQLException {
         return addressService.updateAddressFields(addressDto);
     }
@@ -159,8 +159,9 @@ public class AddressController {
      *
      * @param id address id for deleting the address
      * @return total rows deleted
-     */
+     *
     public int deleteAddress(int addressId) throws SQLException {
         return addressService.deleteAddress(addressId);
     }
+    */
 }

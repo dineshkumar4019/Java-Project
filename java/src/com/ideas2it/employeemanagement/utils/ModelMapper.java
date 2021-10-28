@@ -25,7 +25,7 @@ public class ModelMapper {
     /**
      *  Converts employee to employeeDto 
      */
-    public EmployeeDTO toEmployeeDto(Employee employee) {
+    public static EmployeeDTO toEmployeeDto(Employee employee) {
         List<AddressDTO> addressDto = new ArrayList<>();
         EmployeeDTO employeeDto = new EmployeeDTO();
         
@@ -44,29 +44,74 @@ public class ModelMapper {
         return employeeDto;
     }
     
+    public static List<EmployeeDTO> EmployeeToEmployeeDto(List<Employee> employees) {
+
+        List<EmployeeDTO> employeeDto = new ArrayList<>();
+        for (Employee employee : employees) {
+            employeeDto.add(toEmployeeDto(employee));
+        }
+        return employeeDto;
+    }
+    
     /**
      *  Converts address to addressDto 
      */
-    public AddressDTO toAddressDto(Address address) {
-        return new AddressDTO(address.getId(), address.getEmployeeId(), address.getAddress()
-                              , address.getCity(), address.getPincode()
-                              , address.getState(), address.getCountry());
+    public static AddressDTO toAddressDto(Address address) {
+        AddressDTO addressDto = new AddressDTO();
+        addressDto.setId(address.getId());
+        //addressDto.setEmployeeId(address.getEmployeeId());
+        addressDto.setAddressLine(address.getAddressLine());
+        addressDto.setCity(address.getCity());
+        addressDto.setPincode(address.getPincode());
+        addressDto.setState(address.getState());
+        addressDto.setCountry(address.getCountry());
+        return addressDto;
     }
     
     /**
      *  Converts employeeDto to employee 
      */
-    public Employee toEmployee(EmployeeDTO employeeDto) {
-        return new Employee(employeeDto.getId(), employeeDto.getName(), employeeDto.getSalary(), employeeDto.getEmail()
-                            , employeeDto.getPhoneNumber(), employeeDto.getDOB());
+    public static Employee toEmployee(EmployeeDTO employeeDto) {
+        List<Address> address = new ArrayList<>();
+        Employee employee = new Employee();
+        
+        employee.setId(employeeDto.getId());
+        employee.setName(employeeDto.getName());
+        employee.setSalary(employeeDto.getSalary());
+        employee.setEmail(employeeDto.getEmail());
+        employee.setPhoneNumber(employeeDto.getPhoneNumber());
+        employee.setDOB(employeeDto.getDOB());
+        if (null != employeeDto.getAddressDto()) {
+            for (AddressDTO addressDto : employeeDto.getAddressDto()) {
+                //addressDto.setEmployeeDto(employeeDto);
+                address.add(toAddress(addressDto));
+            }
+            employee.setAddress(address);
+        }
+        return employee;
+    }
+    
+    public static List<Employee> toEmployee(List<EmployeeDTO> employeeDtos) {
+
+        List<Employee> employees = new ArrayList<>();
+        for (EmployeeDTO employeeDto : employeeDtos) {
+            employees.add(toEmployee(employeeDto));
+        }
+        return employees;
     }
     
     /**
      *  Converts addressDto to address
      */
-    public Address toAddress(AddressDTO addressDto) {
-        return new Address(addressDto.getId(), addressDto.getEmployeeId(), addressDto.getAddress()
-                           , addressDto.getCity(), addressDto.getPincode()
-                           , addressDto.getState(), addressDto.getCountry());
+    public static Address toAddress(AddressDTO addressDto) {
+        Address address = new Address();
+        address.setId(addressDto.getId());
+        //address.setEmployee(toEmployee(addressDto.getEmployeeDto()));
+        address.setAddressLine(addressDto.getAddressLine());
+        address.setCity(addressDto.getCity());
+        address.setPincode(addressDto.getPincode());
+        address.setState(addressDto.getState());
+        address.setCountry(addressDto.getCountry());
+        return address;
     }
 }

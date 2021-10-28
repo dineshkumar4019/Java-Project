@@ -42,13 +42,14 @@ public class Employee {
      * @param DOB date of birth of an employee
      */
     public Employee(int id, String name, double salary, String email
-                    , long phoneNumber, LocalDate DOB) {
+                    , long phoneNumber, LocalDate DOB, List<Address> address) {
         this.id = id;
         this.name = name;
         this.salary = salary;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.DOB = DOB;
+        this.address = address;
     }
     
     /**
@@ -60,14 +61,15 @@ public class Employee {
      * @param email employee email
      * @param DOB date of birth of an employee
      */
-    //public Employee(String name, double salary
-     //              , String email, long phoneNumber, LocalDate DOB) {
-    //    this.name = name;
-    //    this.salary = salary;
-    //    this.email = email;
-    //    this.phoneNumber = phoneNumber;
-    //    this.DOB = DOB;
-    //}
+    public Employee(int id, String name, double salary
+                   , String email, long phoneNumber, LocalDate DOB) {
+        this.id = id;
+        this.name = name;
+        this.salary = salary;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.DOB = DOB;
+    }
       
     public int getId() {
         return id;

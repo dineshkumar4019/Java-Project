@@ -11,13 +11,17 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern; 
+import java.util.regex.Pattern;
+import org.hibernate.HibernateException;
 
 import com.ideas2it.employeemanagement.dao.impl.EmployeeDao;
 import com.ideas2it.employeemanagement.model.Employee;
 import com.ideas2it.employeemanagement.model.EmployeeDTO;
+import com.ideas2it.employeemanagement.model.Address;
+import com.ideas2it.employeemanagement.model.AddressDTO;
 import com.ideas2it.employeemanagement.service.EmployeeServiceInterface;
 import com.ideas2it.employeemanagement.utils.ModelMapper;
+
 
 /**
  * <h1> Employees service</h1>
@@ -38,7 +42,7 @@ public class EmployeeService implements EmployeeServiceInterface {
      *
      * @return total employees
      */
-    public int getTotalEmployees() throws SQLException {
+    public long getTotalEmployees() throws HibernateException {
         return employeeDao.getTotalEmployees();
     }
     
@@ -48,8 +52,40 @@ public class EmployeeService implements EmployeeServiceInterface {
      * @param id employee id for checking existance
      * @return employee exist or not
      */
-    public boolean isEmployeeExist(int id) throws SQLException {
-        return employeeDao.isEmployeeExist(id);
+    public boolean isEmployeeExist(int id) throws HibernateException {
+        boolean isExist = true;
+        
+        if(null == employeeDao.getEmployee(id)) {
+            isExist = false;
+        }
+        //for (Employee employee : getSingleEmployee(int id)) {
+        //    if (employee.getId() == id) {
+        //        isExist = true;
+        //    }
+        //}
+        return isExist;
+    }
+    
+    /**
+     * Checking an address exist in database by id
+     *
+     * @param id address id for checking existance
+     * @return address exist or not
+     */
+    public boolean isAddressExist(int addressId) throws HibernateException {
+        boolean isExist = true;
+        
+        if(null == employeeDao.getAddress(addressId)) {
+            isExist = false;
+        }
+        
+        //Employee employee = employeeDao.getEmployees();
+        //for (Address address :getSingleEmployee(id).getAddress()) {
+         //   if (address.getId() == addressId) {
+          //      isExist = true;
+           // }
+        //}
+        return isExist;
     }
     
     /**
@@ -78,8 +114,8 @@ public class EmployeeService implements EmployeeServiceInterface {
      * @param email email for checking existence
      * @return email exist or not
      */
-    public boolean isEmailExist(String email) throws SQLException {
-        return employeeDao.getEmail(email);
+    public boolean isEmailExist(String email) throws HibernateException {
+        return employeeDao.isEmailExist(email);
     }
     
     /**
@@ -100,8 +136,8 @@ public class EmployeeService implements EmployeeServiceInterface {
      * @param phoneNumber phoneNumber for checking existence
      * @return phoneNumber exist or not
      */
-    public boolean isPhoneNumberExist(long phoneNumber) throws SQLException {
-        return employeeDao.getPhoneNumber(phoneNumber);
+    public boolean isPhoneNumberExist(long phoneNumber) throws HibernateException {
+        return employeeDao.isPhoneNumberExist(phoneNumber);
     }
     
     /**
@@ -112,6 +148,46 @@ public class EmployeeService implements EmployeeServiceInterface {
      */
     public boolean validatePhoneNumber(String phoneNumber) {
         return Pattern.matches("^(0|[6-9][0-9]{9})$", phoneNumber);
+    }
+    
+    /**
+     * Validating the corresponding employee address  
+     *
+     * @param address employee address for validation
+     * @return address is valid or not
+     */  
+    public boolean validateAddress(String address) {
+        return Pattern.matches("^([A-Za-z0-9-,/])+{5,100}+$", address);
+    }
+    
+    /**
+     * Validating the corresponding employee city 
+     *
+     * @param city employee city for validation
+     * @return city is valid or not
+     */
+    public boolean validateCity(String city) {
+        return Pattern.matches("^[A-Za-z]+$", city);
+    }
+    
+    /**
+     * Validating the corresponding employee pincode
+     *
+     * @param pincode employee pincode for validation
+     * @return pincode is valid or not
+     */
+    public boolean validatePincode(String pincode) {
+        return Pattern.matches("^[0-9]{6}+$", pincode);
+    }
+    
+    /**
+     * Validating the corresponding employee state 
+     *
+     * @param state employee state for validation
+     * @return state is valid or not
+     */
+    public boolean validateState(String state) {
+        return Pattern.matches("^[A-Za-z]+$", state);
     }
     
     /**
@@ -146,9 +222,36 @@ public class EmployeeService implements EmployeeServiceInterface {
      * @param employeeDto employee details to be inserted in the database
      * @return Number of rows created
      */
-    public int createEmployee(EmployeeDTO employeeDto) throws SQLException {
-        return employeeDao.insertEmployee(modelMapper.toEmployee(employeeDto));
+    public int createEmployee(EmployeeDTO employeeDto) throws HibernateException {
+        List<Address> addresses = new ArrayList<>();
+        int id = employeeDao.insertEmployee(modelMapper.toEmployee(employeeDto));
+        return id;
     }
+    
+    /**
+     * Creating the employee and storing in database
+     *
+     * @param employeeDto employee details to be inserted in the database
+     * @return Number of rows created
+     */
+    public int insertAddress(AddressDTO addressDto) throws HibernateException {
+        Address address = modelMapper.toAddress(addressDto);
+        address.setEmployee(modelMapper.toEmployee(addressDto.getEmployeeDto()));
+        return employeeDao.insertAddress(address);
+        //List<Address> addresses = new ArrayList<>();
+        //Address address;
+        //for (AddressDTO entry : employeeDto.getAddress()) {
+        //    address = modelMapper.toAddress(entry);
+            //entry.setEmployeeDto(modelMapper.toEmployee(employeeDto.getEmployeeDto()));
+        //    address.setEmployee(modelMapper.toEmployee(entry.getEmployeeDto()));
+        //    addresses.add(address);
+        //}
+       // for (AddressDTO address : employeeDto.getAddressDto()) {
+      //      System.out.println(address.getEmployeeDto());
+     //   }
+    //    return employeeDao.insertAddress(modelMapper.toEmployee(employeeDto));
+    }
+    
     
     /**
      * Getting the particular employee by id in the database
@@ -156,8 +259,20 @@ public class EmployeeService implements EmployeeServiceInterface {
      * @param id employee id to get employee details
      * @return single employee details
      */
-    public EmployeeDTO getSingleEmployee(int id) throws SQLException {
+    public EmployeeDTO getSingleEmployee(int id) {
+        //EmployeeDTO employeeDto = null;
+        //Employee employee = employeeDao.getEmployee(id);
+       // employeeDto = modelMapper.toEmployeeDto(employeeDao.getEmployee(id))
+       // for (EmployeeDTO employeeDto : employeeDto.getAddress()) {
+       //if (null != employee) {
+       //    employeeDto = modelMapper.toEmployeeDto(employee);
+       //}
+            
         return modelMapper.toEmployeeDto(employeeDao.getEmployee(id));
+    }
+    
+    public AddressDTO getAddress(int id) {
+        return modelMapper.toAddressDto(employeeDao.getAddress(id));
     }
     
     /**
@@ -165,7 +280,7 @@ public class EmployeeService implements EmployeeServiceInterface {
      *
      * @return All employee details
      */
-    public List<EmployeeDTO> getAllEmployee() throws SQLException {
+    public List<EmployeeDTO> getAllEmployee() throws HibernateException {
         List<EmployeeDTO> employeeDto = new ArrayList<>();
         List <Employee> employeeData = employeeDao.getEmployees();
         
@@ -181,16 +296,24 @@ public class EmployeeService implements EmployeeServiceInterface {
      * @param employeeDto employee details to be update
      * @return Number of rows updated
      */
-    public int updateAllFields(EmployeeDTO employeeDto) throws SQLException {
-        return employeeDao.updateAllFields(modelMapper.toEmployee(employeeDto));
+    public int updateAllFields(EmployeeDTO employeeDto) throws HibernateException {
+        Employee employee = new Employee();
+        employee = modelMapper.toEmployee(employeeDto);
+        for (Address address : employee.getAddress()) {
+            address.setEmployee(employee);
+        }
+        return employeeDao.updateAllFields(employee);
     }
     
+    //public int updateAddressFields(AddressDTO addressDto)  throws SQLException {
+   //     return employeeDao.updateAddressFields(modelMapper.toAddress(addressDto));
+   // }
     /**
      * Updating the particular fields of an employee 
      *
      * @param employeeDto employee details to be update
      * @return Number of rows updated
-     */
+     *
     public int updateField(EmployeeDTO employeeDto) throws SQLException {
         return employeeDao.updateAllFields(modelMapper.toEmployee(employeeDto));
     }
@@ -201,7 +324,7 @@ public class EmployeeService implements EmployeeServiceInterface {
      * @param id id for deleting the employee
      * @return Number of rows deleted
      */
-    public int deleteSingleEmployee(int id) throws SQLException {
+    public int deleteSingleEmployee(int id) throws HibernateException {
         return employeeDao.deleteEmployee(id);
     }
      
@@ -210,7 +333,18 @@ public class EmployeeService implements EmployeeServiceInterface {
      *
      * @return Total employees deleted
      */
-    public int deleteAllEmployee() throws SQLException {
+    public int deleteAllEmployee() throws HibernateException {
         return employeeDao.deleteAllEmployee();
     }
+    
+    /**
+     * Deleting the required address
+     *
+     * @param id address id for deleting the address
+     * @return total rows deleted
+     */
+    public int deleteAddress(int addressId) throws HibernateException {
+        return employeeDao.deleteAddress(addressId);
+    }
+
 }

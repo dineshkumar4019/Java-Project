@@ -3,8 +3,8 @@
  *
  * Date: 27/08/2021
  */
-package com.ideas2it.employeemanagement.model; 
-
+package com.ideas2it.employeemanagement.model;
+ 
 /**
  * Employee address field creation and carries employee address
  * 
@@ -14,12 +14,12 @@ package com.ideas2it.employeemanagement.model;
  */
 public class Address {
     private int id;
-    private int employeeId;
-    private String address;
+    private String addressLine;
     private String city;
     private String pincode;
     private String state;
     private String country;
+    private Employee employee;
     
     public Address() {
         
@@ -34,11 +34,30 @@ public class Address {
      * @param state employee current living state
      * @param country employee current living country
      */
-    public Address(int id, int employeeId,String address, String city,
+    public Address(int id, String addressLine, String city,
                               String pincode, String state, String country) {
         this.id = id;
-        this.employeeId = employeeId;
-        this.address = address;
+        this.addressLine = addressLine;
+        this.city = city;
+        this.pincode = pincode;
+        this.state = state;
+        this.country = country;
+    }
+    
+    public Address(String addressLine, String city,
+                              String pincode, String state, String country) {
+                              
+        this.addressLine = addressLine;
+        this.city = city;
+        this.pincode = pincode;
+        this.state = state;
+        this.country = country;
+    }
+    
+    public Address(Employee employee, String addressLine, String city,
+                              String pincode, String state, String country) {
+        this.employee = employee;                      
+        this.addressLine = addressLine;
         this.city = city;
         this.pincode = pincode;
         this.state = state;
@@ -53,20 +72,20 @@ public class Address {
         this.id = id;
     }
     
-    public int getEmployeeId() {
-        return employeeId;
+    public Employee getEmployee() {
+        return employee;
     }
     
-    public void setEmployeeId(int employeeId) {
-        this.employeeId = employeeId;
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
     }
     
-    public String getAddress() {
-        return address;
+    public String getAddressLine() {
+        return addressLine;
     }
         
-    public void setAddress(String address) {
-        this.address = address;
+    public void setAddressLine(String addressLine) {
+        this.addressLine = addressLine;
     }
 
     public String getCity() {
@@ -99,21 +118,5 @@ public class Address {
         
     public void setCountry(String country) {
         this.country = country;
-    }
-     
-    /**
-     * displaying the respective employee address 
-     * 
-     * @return empolyee address
-     */
-    public String toString() {
-        return new StringBuilder().append("\n\tEmp Address ID:   ").append(getId())
-                   .append("\n\tEmp Id: ").append("\t  " + getEmployeeId())
-                   .append("\n\tEmp Address: ").append("\t  " + getAddress())
-                   .append("\n\tEmp City: ").append("\t  " + getCity())
-                   .append("\n\tEmp Pincode: ").append("\t  " + getPincode())
-                   .append("\n\tEmp State: ").append("\t  " + getState())
-                   .append("\n\tEmp Country: ").append("\t  " + getCountry())
-                   .toString();
     }
 }

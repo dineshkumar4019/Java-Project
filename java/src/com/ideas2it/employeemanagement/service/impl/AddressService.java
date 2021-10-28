@@ -40,7 +40,7 @@ public class AddressService implements AddressServiceInterface {
      *
      * @param id employee id to count addresses
      * @return total addresses
-     */
+     *
     public int countAddress(int id) throws SQLException {
         return addressDao.countAddress(id);
     }
@@ -50,7 +50,7 @@ public class AddressService implements AddressServiceInterface {
      *
      * @param id address id for checking existance
      * @return address exist or not
-     */ 
+     *
     public boolean isAddressExist(int addressId) throws SQLException {
         return addressDao.isAddressExist(addressId);
     }
@@ -60,7 +60,7 @@ public class AddressService implements AddressServiceInterface {
      *
      * @param address employee address for validation
      * @return address is valid or not
-     */     
+     */  
     public boolean validateAddress(String address) {
         return Pattern.matches("^([A-Za-z0-9-,/])+{5,100}+$", address);
     }
@@ -101,16 +101,16 @@ public class AddressService implements AddressServiceInterface {
      * @param addressDto employee address details to create
      * @return total employees created
      */
-    public int insertAddress(AddressDTO addressDto) throws SQLException {
-        return addressDao.insertAddress(modelMapper.toAddress(addressDto));
-    }
+    //public int insertAddress(AddressDTO addressDto) throws SQLException {
+    //    return addressDao.insertAddress(modelMapper.toAddress(addressDto));
+    //}
     
     /**
      * Getting the particular address by employee id
      *
      * @param id employee id to get address
      * @return single employee address details
-     */ 
+     *
     public List<Address> getAddress(int id) throws SQLException {
         return addressDao.getAddress(id);
     }
@@ -120,7 +120,7 @@ public class AddressService implements AddressServiceInterface {
      *
      * @param id address id to get addresses
      * @return single employee details
-     */ 
+     * 
     public AddressDTO getAddressById(int addressId) throws SQLException {
         return modelMapper.toAddressDto(addressDao.getAddressById(addressId));
     }
@@ -140,7 +140,7 @@ public class AddressService implements AddressServiceInterface {
      *
      * @param addressDto address details to update
      * @return number of rows updated
-     */
+     *
     public int updateAddressFields(AddressDTO addressDto) throws SQLException {
         return addressDao.updateAddressFields(modelMapper.toAddress(addressDto));
     }
@@ -160,8 +160,9 @@ public class AddressService implements AddressServiceInterface {
      *
      * @param id address id for deleting the address
      * @return total rows deleted
-     */
+     *
     public int deleteAddress(int addressId) throws SQLException {
         return addressDao.deleteAddress(addressId);
     }
+    */
 }

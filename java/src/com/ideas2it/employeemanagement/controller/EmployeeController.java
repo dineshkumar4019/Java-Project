@@ -6,10 +6,13 @@
 package com.ideas2it.employeemanagement.controller;
 
 import java.sql.SQLException;
+import org.hibernate.HibernateException;
 import java.time.LocalDate;
 import java.util.List;
+import org.hibernate.HibernateException;
 
 import com.ideas2it.employeemanagement.model.EmployeeDTO;
+import com.ideas2it.employeemanagement.model.AddressDTO;
 import com.ideas2it.employeemanagement.service.impl.EmployeeService;
 
 /**
@@ -30,7 +33,7 @@ public class EmployeeController {
      *
      * @return database empty or not
      */
-    public int getTotalEmployees() throws SQLException {
+    public long getTotalEmployees() throws HibernateException {
         return employeeService.getTotalEmployees();
     }
     
@@ -40,8 +43,18 @@ public class EmployeeController {
      * @param id employee id for checking existance
      * @return employee exist or not
      */
-    public boolean isEmployeeExist(int id) throws SQLException {
+    public boolean isEmployeeExist(int id) throws HibernateException {
         return employeeService.isEmployeeExist(id);
+    }
+    
+    /**
+     * Checking an address presences in database
+     *
+     * @param id address id for checking existance
+     * @return address exist or not
+     */
+    public boolean isAddressExist(int addressId) throws HibernateException {
+        return employeeService.isAddressExist(addressId);
     }
     
     /**
@@ -70,7 +83,7 @@ public class EmployeeController {
      * @param email email for checking existence
      * @return email exist or not
      */
-    public boolean isEmailExist(String email) throws SQLException {
+    public boolean isEmailExist(String email) throws HibernateException {
         return employeeService.isEmailExist(email);
     }
     
@@ -90,7 +103,7 @@ public class EmployeeController {
      * @param phoneNumber phoneNumber for checking existence
      * @return phoneNumber exist or not
      */
-    public boolean isPhoneNumberExist(long phoneNumber) throws SQLException {
+    public boolean isPhoneNumberExist(long phoneNumber) throws HibernateException {
         return employeeService.isPhoneNumberExist(phoneNumber);
     }
     
@@ -102,6 +115,56 @@ public class EmployeeController {
      */
     public boolean validatePhoneNumber(String phoneNumber) {
         return employeeService.validatePhoneNumber(phoneNumber);
+    }
+    
+    /**
+     * Validating the corresponding employee address 
+     *
+     * @param address employee address for validation
+     * @return address is valid or not
+     */  
+    public boolean validateAddress(String address) {
+        return employeeService.validateAddress(address);
+    }
+    
+    /**
+     * Validating the corresponding employee city 
+     *
+     * @param city employee city for validation
+     * @return city is valid or not
+     */
+    public boolean validateCity(String city) {
+        return employeeService.validateCity(city);
+    }
+    
+    /**
+     * Validating the corresponding employee pincode 
+     *
+     * @param pincode employee pincode for validation
+     * @return pincode is valid or not
+     */
+    public boolean validatePincode(String pincode) {
+        return employeeService.validatePincode(pincode);
+    }
+    
+    /**
+     * Validating the corresponding employee state 
+     *
+     * @param state employee state for validation
+     * @return state is valid or not
+     */
+    public boolean validateState(String state) {
+        return employeeService.validateState(state);
+    }
+    
+    /**
+     * Validating the corresponding employee country 
+     *
+     * @param country employee country for validation
+     * @return country is valid or not
+     */
+    public boolean validateCountry(String country) {
+        return employeeService.validateAddress(country);
     }
     
     /**
@@ -130,8 +193,18 @@ public class EmployeeController {
      * @param employeeDto employee details to be created
      * @return Number of employees added
      */
-    public int createEmployee(EmployeeDTO employeeDto) throws SQLException {
+    public int createEmployee(EmployeeDTO employeeDto) throws HibernateException {
         return employeeService.createEmployee(employeeDto);
+    }
+    
+    /**
+     * Creating the employee and storing in database
+     *
+     * @param employeeDto employee details to be created
+     * @return Number of employees added
+     */
+    public int insertAddress(AddressDTO addressDto ) throws HibernateException {
+        return employeeService.insertAddress(addressDto);
     }
     
     /**
@@ -140,8 +213,12 @@ public class EmployeeController {
      * @param id employee id to employee details
      * @return particular employee details
      */
-    public EmployeeDTO getSingleEmployee(int id) throws SQLException {
+    public EmployeeDTO getSingleEmployee(int id) {
         return employeeService.getSingleEmployee(id);
+    }
+    
+    public AddressDTO getAddress(int id) {
+        return employeeService.getAddress(id);
     }
     
     /**
@@ -149,7 +226,7 @@ public class EmployeeController {
      *
      * @return All employee details
      */
-    public List<EmployeeDTO> getAllEmployee() throws SQLException {
+    public List<EmployeeDTO> getAllEmployee() throws HibernateException {
         return employeeService.getAllEmployee();
     }
     
@@ -159,16 +236,26 @@ public class EmployeeController {
      * @param employeeDto employee details to be updated
      * @return Number of rows updated
      */
-    public int updateAllFields(EmployeeDTO employeeDto)  throws SQLException {
+    public int updateAllFields(EmployeeDTO employeeDto)  throws HibernateException {
         return employeeService.updateAllFields(employeeDto);
     }
+    
+    /**
+     * Updating the all fields of an employee 
+     *
+     * @param employeeDto employee details to be updated
+     * @return Number of rows updated
+     */
+    //public int updateAddressFields(AddressDTO addressDto)  throws SQLException {
+     //   return employeeService.updateAddressFields(addressDto);
+    //}
     
     /**
      * Updating the particular field of an employee 
      *
      * @param employeeDto employee details to be updated
      * @return Number of rows uodated
-     */
+     *
     public int updateField(EmployeeDTO employeeDto) throws SQLException {
         return employeeService.updateField(employeeDto);
     }
@@ -179,7 +266,7 @@ public class EmployeeController {
      * @param id id for deleting the employee
      * @return Number of rows deleted
      */
-    public int deleteSingleEmployee(int id) throws SQLException {
+    public int deleteSingleEmployee(int id) throws HibernateException {
         return employeeService.deleteSingleEmployee(id);
     }
     
@@ -188,7 +275,17 @@ public class EmployeeController {
      *
      * @return Number of rows deleted
      */
-    public int deleteAllEmployee() throws SQLException {
+    public int deleteAllEmployee() throws HibernateException {
         return employeeService.deleteAllEmployee();
+    }
+    
+    /**
+     * Deleting the required address
+     *
+     * @param id address id for deleting the address
+     * @return total rows deleted
+     */
+    public int deleteAddress(int addressId) throws HibernateException {
+        return employeeService.deleteAddress(addressId);
     }
 }

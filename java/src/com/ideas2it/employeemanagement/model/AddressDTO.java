@@ -15,12 +15,12 @@ package com.ideas2it.employeemanagement.model;
  */
 public class AddressDTO {
     private int id;
-    private int employeeId;
-    private String address;
+    private String addressLine;
     private String city;
     private String pincode;
     private String state;
     private String country;
+    private EmployeeDTO employeeDto;
     
     public AddressDTO() {
         
@@ -35,10 +35,10 @@ public class AddressDTO {
      * @param state employee current living state
      * @param country employee current living country
      */
-    public AddressDTO(int employeeId, String address, String city,
+    public AddressDTO(int id, String addressLine, String city,
                               String pincode, String state, String country) {
-        this.employeeId = employeeId;
-        this.address = address;
+        this.id = id;
+        this.addressLine = addressLine;
         this.city = city;
         this.pincode = pincode;
         this.state = state;
@@ -54,16 +54,34 @@ public class AddressDTO {
      * @param state employee current living state
      * @param country employee current living country
      */
-    public AddressDTO(int id, int employeeId, String address, String city,
+    public AddressDTO(String addressLine, String city,
                               String pincode, String state, String country) {
-        this.id = id;
-        this.employeeId = employeeId;
-        this.address = address;
+        this.addressLine = addressLine;
         this.city = city;
         this.pincode = pincode;
         this.state = state;
         this.country = country;
     }
+    
+    /**
+     * field value initialization 
+     * 
+     * @param address employee door no 
+     * @param city employee current living city
+     * @param pincode corresponding city pincode
+     * @param state employee current living state
+     * @param country employee current living country
+     */
+    public AddressDTO(EmployeeDTO employeeDto, String addressLine, String city,
+                              String pincode, String state, String country) {
+        this.employeeDto = employeeDto;
+        this.addressLine = addressLine;
+        this.city = city;
+        this.pincode = pincode;
+        this.state = state;
+        this.country = country;
+    }
+    
     
     public int getId() {
         return id;
@@ -73,20 +91,20 @@ public class AddressDTO {
         this.id = id;
     }
     
-    public int getEmployeeId() {
-        return employeeId;
+    public EmployeeDTO getEmployeeDto() {
+        return employeeDto;
     }
     
-    public void setEmployeeId(int employeeId) {
-        this.employeeId = employeeId;
+    public void setEmployeeDto(EmployeeDTO employeeDto) {
+       this.employeeDto = employeeDto;
     }
     
-    public String getAddress() {
-        return address;
+    public String getAddressLine() {
+        return addressLine;
     }
         
-    public void setAddress(String address) {
-        this.address = address;
+    public void setAddressLine(String addressLine) {
+        this.addressLine = addressLine;
     }
 
     public String getCity() {
@@ -120,18 +138,19 @@ public class AddressDTO {
     public void setCountry(String country) {
         this.country = country;
     }
-     
+    
     /**
      * displaying the respective employee address 
      * 
      * @return empolyee address
      */
     public String toString() {
-        return new StringBuilder().append("\n\tEmp Address: ").append(getAddress())
-                   .append("\n\tEmp City: ").append(getCity())
-                   .append("\n\tEmp Pincode: ").append(getPincode())
-                   .append("\n\tEmp State: ").append(getState())
-                   .append("\n\tEmp Country: ").append(getCountry())
+        return new StringBuilder().append("\n\tEmp Address ID:   ").append(getId())
+                   .append("\n\tEmp Address: ").append("\t  " + getAddressLine())
+                   .append("\n\tEmp City: ").append("\t  " + getCity())
+                   .append("\n\tEmp Pincode: ").append("\t  " + getPincode())
+                   .append("\n\tEmp State: ").append("\t  " + getState())
+                   .append("\n\tEmp Country: ").append("\t  " + getCountry())
                    .toString();
     }
 }

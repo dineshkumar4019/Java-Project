@@ -18,12 +18,16 @@ import java.util.List;
 import com.ideas2it.employeemanagement.dao.EmployeeDaoInterface;
 import com.ideas2it.employeemanagement.model.Employee;
 import com.ideas2it.employeemanagement.model.Address;
-import com.ideas2it.employeemanagement.connection.DataBaseConnection;
+import com.ideas2it.employeemanagement.connection.HibernateUtil;
 
-import org.hibernate.cfg.Configuration;
+
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
 import org.hibernate.HibernateException;
+import org.hibernate.Transaction;
+import org.hibernate.Query;
+
+import java.util.Iterator;
 
 /**
  * <h1> Employee DAO</h1>
@@ -36,7 +40,7 @@ import org.hibernate.HibernateException;
  * 
  */
 public class EmployeeDao implements EmployeeDaoInterface {
-    private DataBaseConnection dataBaseConnection = DataBaseConnection.getInstance();
+    private SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
     
     /**
      * Inserting the employee details from  user input
@@ -44,46 +48,40 @@ public class EmployeeDao implements EmployeeDaoInterface {
      *
      * @return Number of rows inserted
      */
-    public int insertEmployee(Employee employee) throws SQLException {
-        Connection connection = dataBaseConnection.getConnection();
-        int rowsAffected = 0;
-        int id;
+    public int insertEmployee(Employee employee) throws HibernateException {
+        List<Address> list = new ArrayList<>();
+        int id = 0;
         
-        String insert = "INSERT INTO employees VALUES(NULL,?, ?, ?, ?, ?)";
-        PreparedStatement statement = connection.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
-        
-        statement.setString(1, employee.getName());
-        statement.setDouble(2, employee.getSalary());
-        statement.setString(3, employee.getEmail());
-        statement.setLong(4, employee.getPhoneNumber());
-        statement.setDate(5, Date.valueOf(employee.getDOB()));
-        statement.executeUpdate();
-        ResultSet resultSet = statement.getGeneratedKeys();
-        resultSet.next();
-        id = resultSet.getInt(1);
-        dataBaseConnection.closeConnection();
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+            //for (Address address: employee.getAddress()) {
+            //    address.setEmployee(employee);
+            //    list.add(address);
+            //}
+            //employee.setAddress(list);
+        id = (Integer) session.save(employee);
+        transaction.commit();
+        session.close();
         return id;
     }
+    
     
     /**
      * Inserting the employee details from  user input
      * to the database
      *
      * @return Number of rows inserted
-     *
-    public int insertEmployee(Employee employee) {
+     */
+    public int insertAddress(Address address) throws HibernateException {
         int id = 0;
         
-        try {
-            Session session = factory.openSession();
-            id = (Integer) session.save(employee);
-            session.close();
-        } catch (HibernateException e) {
-            e.printStackTrace();
-        }
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        id = (Integer) session.save(address);
+        transaction.commit();
+        session.close();
         return id;
     }
-    */
     
    
     /**
@@ -92,52 +90,34 @@ public class EmployeeDao implements EmployeeDaoInterface {
      * @param employee employee details to update
      * @return Total number of rows updated in database
      */
-    public int updateAllFields(Employee employee) throws SQLException {
+    public int updateAllFields(Employee employee) throws HibernateException {
         int rowsAffected = 0;
-        Connection connection = dataBaseConnection.getConnection();
-        StringBuilder query = new StringBuilder();
-        PreparedStatement statement;
-
-        statement = connection.prepareStatement(query.append("UPDATE employees  SET name = ?,")
-                                                     .append("salary = ?, email = ?, phone_number = ?,")
-                                                     .append("DOB = ? WHERE id = ?")
-                                                     .toString());
         
-        statement.setString(1, employee.getName());
-        statement.setDouble(2, employee.getSalary());
-        statement.setString(3, employee.getEmail());
-        statement.setLong(4, employee.getPhoneNumber());
-        statement.setDate(5, Date.valueOf(employee.getDOB()));
-        statement.setInt(6, employee.getId());
-        rowsAffected = statement.executeUpdate();
-        dataBaseConnection.closeConnection();
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.merge(employee);
+        transaction.commit();
+        session.close();
         return rowsAffected;
     }
     
     /**
-     * Updating single employee fields in the database
+     * Updating all employee fields in the database
      *
      * @param employee employee details to update
      * @return Total number of rows updated in database
      */
-    public int updateField(Employee employee) throws SQLException {
+    public int updateAddressFields(Address address) throws HibernateException {
         int rowsAffected = 0;
-        StringBuilder query = new StringBuilder();
-        Connection connection = dataBaseConnection.getConnection();
         
-        String update = query.append("UPDATE employees  SET name = ?, salary = ?,") 
-                             .append("email = ?,phone_number = ?, DOB = ? WHERE id = ?")
-                             .toString();
-        PreparedStatement statement = connection.prepareStatement(update);
-      
-        statement.setString(1, employee.getName());
-        statement.setDouble(2, employee.getSalary());
-        statement.setString(3, employee.getEmail());
-        statement.setLong(4, employee.getPhoneNumber());
-        statement.setDate(5, Date.valueOf(employee.getDOB()));
-        statement.setInt(6, employee.getId());
-        rowsAffected = statement.executeUpdate();
-        dataBaseConnection.closeConnection();
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        //Employee employeeDetails = session.load(Employee.class, address.getEmployee());
+            //address.setEmployee(employeeDetails);
+            //employeeDetails.getAddress.add(address);
+        session.update(address);
+        transaction.commit();
+        session.close();
         return rowsAffected;
     }
     
@@ -148,19 +128,34 @@ public class EmployeeDao implements EmployeeDaoInterface {
      * @param id id of an employee to delete
      * @return Total number of rows deleted in database
      */
-    public int deleteEmployee(int id) throws SQLException {
+    public int deleteEmployee(int id) throws HibernateException {
         int rowsAffected = 0;
-        StringBuilder query = new StringBuilder();
-        Connection connection = dataBaseConnection.getConnection();
-        PreparedStatement statement;
+        Employee employee = null;
         
-        statement = connection.prepareStatement(query.append("DELETE FROM employees")
-                                                     .append(" WHERE id = ?")
-                                                     .toString());
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        employee = session.get(Employee.class, id);
+        session.delete(employee);         
+        transaction.commit();
+        return rowsAffected;
+    }
+    
+    /**
+     * Deleting particular employee in the database by 
+     * corresponding employee id
+     *
+     * @param id id of an employee to delete
+     * @return Total number of rows deleted in database
+     */
+    public int deleteAddress(int addressId) throws HibernateException {
+        int rowsAffected = 0;
+        Address address = null;
         
-        statement.setInt(1, id);
-        rowsAffected = statement.executeUpdate();
-        dataBaseConnection.closeConnection();
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        address = session.get(Address.class, addressId);
+        session.delete(address);         
+        transaction.commit();
         return rowsAffected;
     }
     
@@ -169,14 +164,17 @@ public class EmployeeDao implements EmployeeDaoInterface {
      *
      * @return Total number of rows deleted in database
      */
-    public int deleteAllEmployee() throws SQLException {
+    public int deleteAllEmployee() throws HibernateException {
         int rowsAffected = 0;
-        Connection connection = dataBaseConnection.getConnection();
-        PreparedStatement statement;
-        
-        statement = connection.prepareStatement("DELETE FROM employees");
-        rowsAffected = statement.executeUpdate();
-        dataBaseConnection.closeConnection();
+       
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction(); 
+            //String hql = String.format("delete from ",myTable);
+        Query query = session.createQuery("delete from Employee");
+        query.executeUpdate();
+            //Query deleteEmployee = session.createQuery("delete Employee");
+            //rowsAffected = deleteEmployee.executeUpdate();   
+        transaction.commit();
         return rowsAffected;
     }
     
@@ -187,99 +185,73 @@ public class EmployeeDao implements EmployeeDaoInterface {
      * @param id id of an employee to get
      * @return Single employee details
      */
-    public Employee getEmployee(int id) throws SQLException {
-        StringBuilder query = new StringBuilder();
-        Employee employee = new Employee();
-        Connection connection = dataBaseConnection.getConnection();
-        PreparedStatement statement;
+    public Employee getEmployee(int id) throws HibernateException {
+        Session session = sessionFactory.openSession();
+        Employee employee = null;
         
-        statement = connection.prepareStatement(query.append("SELECT * FROM employees")
-                                                     .append(" WHERE id = ?")
-                                                     .toString());
-        
-        statement.setInt(1,id);
-        ResultSet resultSet = statement.executeQuery();
-        if (resultSet.next()) {
-            employee = setEmployee(resultSet);
-        }
-        dataBaseConnection.closeConnection();
+            //Query query = session.createQuery("FROM Employee");
+        employee = (Employee)session.get(Employee.class, id);
         return employee;
+    }
+    
+    public Address getAddress(int addressId) throws HibernateException {
+        Address address = null;
+        Session session = sessionFactory.openSession();
+        
+            //Query query = session.createQuery("FROM Employee");
+        address = (Address) session.get(Address.class, addressId);
+        return address;
+    }
+    
+    /*
+        Employee employee = null;
+        List<Employee> employeeList = new ArrayList<>();
+        List<Address> addressList = new ArrayList<>();
+        List<Address> addresses = new ArrayList<>();
+        
+        try {
+            Session session = sessionFactory.openSession();
+            Transaction transaction = session.beginTransaction();
+            Query query1 = session.createQuery("FROM Employee e WHERE e.id = :id");
+            query1.setParameter("id", id);
+            employeeList = query1.getResultList();
+            //Query query2 = session.createQuery("SELECT a FROM Address a WHERE a.employee_id = :employee_id", Address.class);
+            //query2.setParameter("employee_id", id);
+            //addressList = query2.getResultList();
+            for (Employee employees : employeeList) {
+                for (Address address : addressList) {
+                    System.out.println(address);
+                    addresses.add(address);
+                }
+                employees.setAddress(addresses);
+            }           
+            transaction.commit();
+            for (Employee employeeDetails : employeeList) {
+                employee = employeeDetails;
+            }
+        } catch (HibernateException e) {
+            e.printStackTrace();
+        }
+        return employeeList.get(0);
     }
     /** 
      * Getting all employees details from the database 
      *
      * @return All employees and their details
      */
-    public List<Employee> getEmployees() throws SQLException {
-        StringBuilder query = new StringBuilder();
-        Connection connection = dataBaseConnection.getConnection();
-        List<Employee> employees = new ArrayList<>();
-        PreparedStatement statement;
+    public List<Employee> getEmployees() throws HibernateException {
+        List<Employee> employeeList = new ArrayList<>();
+        Session session = sessionFactory.openSession();
+        Employee employee = null;
         
-        statement = connection.prepareStatement(query.append("SELECT employees.id AS id, employees.name AS name,")
-                                                     .append(" employees.salary AS salary, employees.email")
-                                                     .append(" AS email, employees.phone_number AS phone_number,")
-                                                     .append(" employees.DOB AS DOB, employees_address.id AS")
-                                                     .append(" address_id, employees_address.address AS address,")
-                                                     .append(" employees_address.city AS city, employees_address.pincode AS pincode,")
-                                                     .append(" employees_address.state AS state, employees_address.country AS country")
-                                                     .append(" FROM employees LEFT JOIN employees_address ON")
-                                                     .append(" employees.id = employees_address.employee_id")
-                                                     .toString());
-        ResultSet resultSet = statement.executeQuery();
-        List<Integer> list = new ArrayList<>();
-        while (resultSet.next()) {
-            if (!list.contains(resultSet.getInt("id"))) {
-                list.add(resultSet.getInt("id"));
-                employees.add(setEmployee(resultSet));
-            }
-            for (Employee employee : employees) {
-                if (employee.getId() == resultSet.getInt("id")) {
-                    employee.getAddress().add(setAddress(resultSet));
-                }
-            }
+        Query query = session.createQuery("FROM Employee");
+        employeeList = query.list();
+        for (Employee emp: employeeList) {
+            System.out.println(emp.getAddress());
         }
-        dataBaseConnection.closeConnection();
-        return employees;
+        return employeeList;
     }
     
-    /**
-     * Assigning  values to respective fields from the resultSet for
-     * the purpose of "viewEmployee"
-     *
-     * @employyesSet employye details 
-     * @return Total number of rows updated in database
-     */
-    private Employee setEmployee(ResultSet employeesSet) throws SQLException {
-        Employee employee = new Employee();
-        
-        employee.setId(employeesSet.getInt(1));
-        employee.setName(employeesSet.getString(2));
-        employee.setSalary(employeesSet.getDouble(3));
-        employee.setEmail(employeesSet.getString(4));
-        employee.setPhoneNumber(employeesSet.getLong(5));
-        employee.setDOB(employeesSet.getDate(6).toLocalDate());
-        return employee;
-    }
-    
-    /**
-     * Assigning  values to respective fields from the resultSet for
-     * the purpose of "viewEmployee"
-     *
-     * @addressSet employye address details 
-     * @return Total number of rows updated in database
-     */
-    private Address setAddress(ResultSet addressSet) throws SQLException {
-        Address address= new Address();
-        
-        address.setId(addressSet.getInt("id"));
-        address.setAddress(addressSet.getString("address"));
-        address.setCity(addressSet.getString("city"));
-        address.setPincode(addressSet.getString("pincode"));
-        address.setState(addressSet.getString("state"));
-        address.setCountry(addressSet.getString("country"));
-        return address;
-    }
     
     /** 
      * Getting the total number of employees present
@@ -287,88 +259,33 @@ public class EmployeeDao implements EmployeeDaoInterface {
      *
      * @return Total number of employees present
      */
-    public int getTotalEmployees() throws SQLException {
-        int totalEmployees = 0;
-        Connection connection = dataBaseConnection.getConnection();
-        PreparedStatement statement;
+    public long getTotalEmployees() throws HibernateException {
+        long totalEmployees = 0;
         
-        statement = connection.prepareStatement("SELECT COUNT(*) FROM employees");
-        ResultSet resultSet = statement.executeQuery();
-        
-        if (resultSet.next()) {
-            totalEmployees = resultSet.getInt(1);
-        }
-        dataBaseConnection.closeConnection();
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        Query query = session.createQuery("SELECT COUNT(*) FROM Employee");
+        totalEmployees = (Long) query.list().get(0); 
+        transaction.commit();
         return totalEmployees;
     }
-    
-    /** 
-     * Checking the phone number already 
-     * exist in the database 
-     *
-     * @param phoneNumber phone number to find existance
-     * @return Phone number exist or not
-     */
-    public boolean getPhoneNumber(long phoneNumber) throws SQLException {
-        boolean isExist = false;
-        StringBuilder query = new StringBuilder();
-        Connection connection = dataBaseConnection.getConnection();
-        PreparedStatement statement;
-        
-        statement = connection.prepareStatement(query.append("SELECT phone_number")
-                                                     .append(" FROM employees WHERE phone_number = ?")
-                                                     .toString());
-        
-        statement.setLong(1, phoneNumber);
-        if (statement.executeQuery().next()) {
-            isExist = true;
-        }
-        dataBaseConnection.closeConnection();
-        return isExist;
-    }
-    
-    /** 
-     * Checking the email already exist
-     * in the database 
-     *
-     * @param email email to find existance
-     * @return Email exist or not
-     */
-    public boolean getEmail(String email) throws SQLException {
-        boolean isExist = false;
-        Connection connection = dataBaseConnection.getConnection();
-        PreparedStatement statement;
-        
-        statement = connection.prepareStatement("SELECT email FROM employees WHERE email = ?");
-        
-        statement.setString(1, email);
-        if (statement.executeQuery().next()) {
-             isExist = true;
-        }
-        dataBaseConnection.closeConnection();
-        return isExist;
-    }
-    
-    /** 
-     * Checking the employee already exist
-     * in the database 
-     *
-     * @param id id of an employee
-     * @return Employee exist or not
-     */
-    public boolean isEmployeeExist(int id) throws SQLException {
-        boolean isExist = false;
-        Connection connection = dataBaseConnection.getConnection();
-        PreparedStatement statement;
-        
-        statement = connection.prepareStatement("SELECT id FROM employees WHERE id = ?");
-        
-        statement.setInt(1, id);
-        if (statement.executeQuery().next()) {
-             isExist = true;
-        }
-        dataBaseConnection.closeConnection();
-        return isExist;
-    }
+
+    public boolean isEmailExist(String email) throws HibernateException {
+      Session session = sessionFactory.openSession();
+      Employee employee = null;
+      
+      Query query = session.createQuery("FROM Employee WHERE email = :email");
+      employee = (Employee) query.setParameter("email", email).uniqueResult();
+      return (null != employee) ? true : false;
+   }
+   
+   public boolean isPhoneNumberExist(long phoneNumber) throws HibernateException {
+      Session session = sessionFactory.openSession();
+      Employee employee = null;
+      
+      Query query = session.createQuery("FROM Employee WHERE phoneNumber = :phoneNumber");
+      employee = (Employee) query.setParameter("phoneNumber", phoneNumber).uniqueResult();
+      return (null != employee) ? true : false;
+   }
 }
 

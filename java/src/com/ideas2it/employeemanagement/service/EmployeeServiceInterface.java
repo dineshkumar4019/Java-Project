@@ -18,14 +18,14 @@ public interface EmployeeServiceInterface {
      *
      * @return database empty or not
      */
-    public int getTotalEmployees() throws SQLException;
+    public long getTotalEmployees() throws SQLException;
     
     /**
      * Checking an employee presences in database by id
      *
      * @param id employee id for checking existance
      * @return employee exist or not
-     */
+     *
     public boolean isEmployeeExist(int id) throws SQLException;
     
     /**
@@ -65,7 +65,7 @@ public interface EmployeeServiceInterface {
      *
      * @param phoneNumber phoneNumber for checking existence
      * @return phoneNumber exist or not
-     */
+     *
     public boolean isPhoneNumberExist(long phoneNumber) throws SQLException;
     
     /**
@@ -133,20 +133,21 @@ public interface EmployeeServiceInterface {
      */
     public int updateAllFields(EmployeeDTO employeeDto) throws SQLException;
     
-    public int updateField(EmployeeDTO employeeDto) throws SQLException;
+    //public int updateField(EmployeeDTO employeeDto) throws SQLException;
     
     /**
      * Deleting the required employee
      *
      * @param id id for deleting the employee
      * @return employee deleted
-     */
+     *
     public int deleteSingleEmployee(int id) throws SQLException;
     
     /**
      * Deleting all employees in the database
      *
      * @return Total employees deleted
-     */
+     *
     public int deleteAllEmployee() throws SQLException;
+    */
 }
