@@ -190,7 +190,7 @@ public class EmployeeDao implements EmployeeDaoInterface {
         totalEmployees = (Long) query.list().get(0); 
         transaction.commit();
         return totalEmployees;
-    }
+    } 
 
     public boolean isEmailExist(String email) throws HibernateException {
         Session session = sessionFactory.openSession();
