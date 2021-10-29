@@ -5,13 +5,10 @@
  */
 package com.ideas2it.employeemanagement.dao;
 
-import java.sql.Date;
 import java.time.LocalDate;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import org.hibernate.HibernateException;
 
 import com.ideas2it.employeemanagement.model.Employee;
 import com.ideas2it.employeemanagement.model.Address;
@@ -24,58 +21,81 @@ import com.ideas2it.employeemanagement.model.Address;
  *
  * @author	Dinesh Kumar
  * @version	1.0
- * @since   2021-08-27
  * 
  */
 public interface EmployeeDaoInterface {
-
+    
     /**
      * Inserting the employee details from  user input
      * to the database
      *
-     * @return database empty or not
+     * @return Number of rows inserted
      */
-    public int insertEmployee(Employee employee) throws SQLException;
-    //public int insertAddress(Employee employee) throws SQLException;
+    public int insertEmployee(Employee employee) throws HibernateException;
+    
+    /**
+     * Inserting the employee address details from  user input
+     * to the database
+     *
+     * @return Number of rows inserted
+     */
+    public int insertAddress(Address address) throws HibernateException;
     
     /**
      * Updating all employee fields in the database
      *
+     * @param employee employee details to update
      * @return Total number of rows updated in database
      */
-    public int updateAllFields(Employee employee) throws SQLException;
-    
-    //public int updateField(Employee employee) throws SQLException;
+    public int updateAllFields(Employee employee) throws HibernateException;
+
+    /**
+     * Deleting particular employee in the database by 
+     * corresponding employee id
+     *
+     * @param id id of an employee to delete
+     * @return Total number of rows deleted in database
+     */
+    public int deleteEmployee(int id) throws HibernateException;
     
     /**
      * Deleting particular employee in the database by 
      * corresponding employee id
      *
+     * @param id id of an employee to delete
      * @return Total number of rows deleted in database
-     *
-    public int deleteEmployee(int id) throws SQLException;
+     */
+    public int deleteAddress(int addressId) throws HibernateException;
     
     /**
      * Deleting all employees in the database
      *
-     * @return Total number of rows updated in database
-     *
-    public int deleteAllEmployee() throws SQLException;
-    
+     * @return Total number of rows deleted in database
+     */
+    public int deleteAllEmployee() throws HibernateException;
     /**
      * Getting the employee details from the database
      * by corresponding employee id 
      *
+     * @param id id of an employee to get
      * @return Single employee details
      */
-    public Employee getEmployee(int id) throws SQLException;
-    
+    public Employee getEmployee(int id) throws HibernateException;
+    /**
+     * Getting the address details from the database
+     * by corresponding address id 
+     *
+     * @param id id of an address to get
+     * @return Single address details
+     */
+    public Address getAddress(int addressId) throws HibernateException;
+ 
     /** 
      * Getting all employees details from the database 
      *
      * @return All employees and their details
      */
-    public List<Employee> getEmployees() throws SQLException;
+    public List<Employee> getEmployees() throws HibernateException;
     
     /** 
      * Getting the total number of employees present
@@ -83,30 +103,24 @@ public interface EmployeeDaoInterface {
      *
      * @return Total number of employees present
      */
-    public long getTotalEmployees() throws SQLException;
-    
+    public long getTotalEmployees() throws HibernateException;
+
     /** 
-     * Checking the phone number already 
-     * exist in the database 
+     * Checing the email already exist in the database
+     * for an employee
      *
-     * @return Phone number exist or not
-     *
-    public boolean getPhoneNumber(long phoneNumber) throws SQLException;
-    
+     * @param email email to check the existance
+     * @return email exist or not
+     */
+    public boolean isEmailExist(String email) throws HibernateException;
+   
     /** 
-     * Checking the email already exist
-     * in the database 
+     * Checing the phonenumber already exist in the database
+     * for an employee
      *
-     * @return Email exist or not
-     *
-    public boolean getEmail(String email) throws SQLException;
-    
-    /** 
-     * Checking the employee already exist
-     * in the database 
-     *
-     * @return Employee exist or not
-     *
-    public boolean isEmployeeExist(int id) throws SQLException;
-    */
+     * @param phoneNumber phone number to check the existance
+     * @return email exist or not
+     */
+   public boolean isPhoneNumberExist(long phoneNumber) throws HibernateException;
 }
+

@@ -48,9 +48,8 @@ public class EmployeeDao implements EmployeeDaoInterface {
         return id;
     }
     
-    
     /**
-     * Inserting the employee details from  user input
+     * Inserting the employee address details from  user input
      * to the database
      *
      * @return Number of rows inserted
@@ -64,7 +63,6 @@ public class EmployeeDao implements EmployeeDaoInterface {
         session.close();
         return id;
     }
-    
    
     /**
      * Updating all employee fields in the database
@@ -175,7 +173,6 @@ public class EmployeeDao implements EmployeeDaoInterface {
         return employeeList;
     }
     
-    
     /** 
      * Getting the total number of employees present
      * in the database
@@ -192,6 +189,13 @@ public class EmployeeDao implements EmployeeDaoInterface {
         return totalEmployees;
     } 
 
+    /** 
+     * Checing the email already exist in the database
+     * for an employee
+     *
+     * @param email email to check the existance
+     * @return email exist or not
+     */
     public boolean isEmailExist(String email) throws HibernateException {
         Session session = sessionFactory.openSession();
         Query query = session.createQuery("FROM Employee WHERE email = :email");
@@ -199,6 +203,13 @@ public class EmployeeDao implements EmployeeDaoInterface {
         return (null != employee) ? true : false;
    }
    
+    /** 
+     * Checing the phonenumber already exist in the database
+     * for an employee
+     *
+     * @param phoneNumber phone number to check the existance
+     * @return email exist or not
+     */
    public boolean isPhoneNumberExist(long phoneNumber) throws HibernateException {
       Session session = sessionFactory.openSession();
       Query query = session.createQuery("FROM Employee WHERE phoneNumber = :phoneNumber");

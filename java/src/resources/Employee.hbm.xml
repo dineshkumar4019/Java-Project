@@ -26,7 +26,7 @@
         <property name="DOB" column="DOB" type="LocalDate"
                   not-null="true" lazy="true"/>
         
-        <bag name = "address" cascade = "all" inverse = "true" lazy = "false" fetch = "select">
+        <bag name = "address" cascade = "all" inverse = "true" lazy = "true" fetch = "select">
         <key column = "employee_id" on-delete="cascade"/>
         <one-to-many class="Address"/>
         </bag>
