@@ -31,45 +31,6 @@ public class EmployeeDTO {
         
     }
     
-    /**
-     * field value initialization
-     * 
-     * @param id unique representation of an employee
-     * @param name name of an employee
-     * @param salary salary of an employee
-     * @param phone number employee phone number
-     * @param email employee email
-     * @param DOB date of birth of an employee
-     */
-    public EmployeeDTO(String name, double salary, String email
-                       , long phoneNumber, LocalDate DOB, List<AddressDTO> addressDto) {
-        this.name = name;
-        this.salary = salary;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.DOB = DOB;
-        this.addressDto = addressDto;
-    }
-    
-    /**
-     * field value initialization 
-     * 
-     * @param name name of an employee
-     * @param salary salary of an employee
-     * @param phone number employee phone number
-     * @param email employee email
-     * @param DOB date of birth of an employee
-     */
-    public EmployeeDTO(int id, String name, double salary
-                   , String email, long phoneNumber, LocalDate DOB) {
-        this.id = id;
-        this.name = name;
-        this.salary = salary;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.DOB = DOB;
-    }
-    
      /* field value initialization 
      * 
      * @param name name of an employee

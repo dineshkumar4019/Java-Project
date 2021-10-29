@@ -25,44 +25,7 @@ public class AddressDTO {
     public AddressDTO() {
         
     }
-    
-    /**
-     * field value initialization 
-     * 
-     * @param address employee door no 
-     * @param city employee current living city
-     * @param pincode corresponding city pincode
-     * @param state employee current living state
-     * @param country employee current living country
-     */
-    public AddressDTO(int id, String addressLine, String city,
-                              String pincode, String state, String country) {
-        this.id = id;
-        this.addressLine = addressLine;
-        this.city = city;
-        this.pincode = pincode;
-        this.state = state;
-        this.country = country;
-    }
-    
-    /**
-     * field value initialization 
-     * 
-     * @param address employee door no 
-     * @param city employee current living city
-     * @param pincode corresponding city pincode
-     * @param state employee current living state
-     * @param country employee current living country
-     */
-    public AddressDTO(String addressLine, String city,
-                              String pincode, String state, String country) {
-        this.addressLine = addressLine;
-        this.city = city;
-        this.pincode = pincode;
-        this.state = state;
-        this.country = country;
-    }
-    
+
     /**
      * field value initialization 
      * 

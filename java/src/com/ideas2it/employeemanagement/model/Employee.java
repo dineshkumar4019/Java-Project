@@ -51,25 +51,6 @@ public class Employee {
         this.DOB = DOB;
         this.address = address;
     }
-    
-    /**
-     * field value initialization 
-     * 
-     * @param name name of an employee
-     * @param salary salary of an employee
-     * @param phone number employee phone number
-     * @param email employee email
-     * @param DOB date of birth of an employee
-     */
-    public Employee(int id, String name, double salary
-                   , String email, long phoneNumber, LocalDate DOB) {
-        this.id = id;
-        this.name = name;
-        this.salary = salary;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.DOB = DOB;
-    }
       
     public int getId() {
         return id;
@@ -125,20 +106,5 @@ public class Employee {
     
     public void setAddress(List<Address> address) {
         this.address = address;
-    }
-    
-    /**
-     * displaying the respective employee details 
-     * 
-     * @return empolyee details
-     */
-    public String toString() {
-        return new StringBuilder().append("\n\tEmp Id: ").append(getId())
-                   .append("\n\tEmp Name: ").append(getName())
-                   .append("\n\tEmp salary: ").append(getSalary())
-                   .append("\n\tEmp email: ").append(getEmail())
-                   .append("\n\tEmp phone number: ").append(getPhoneNumber())
-                   .append("\n\tEmp Date of birth: ").append(getDOB())
-                   .toString();
     }
 }

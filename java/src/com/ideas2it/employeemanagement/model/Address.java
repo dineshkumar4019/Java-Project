@@ -34,26 +34,6 @@ public class Address {
      * @param state employee current living state
      * @param country employee current living country
      */
-    public Address(int id, String addressLine, String city,
-                              String pincode, String state, String country) {
-        this.id = id;
-        this.addressLine = addressLine;
-        this.city = city;
-        this.pincode = pincode;
-        this.state = state;
-        this.country = country;
-    }
-    
-    public Address(String addressLine, String city,
-                              String pincode, String state, String country) {
-                              
-        this.addressLine = addressLine;
-        this.city = city;
-        this.pincode = pincode;
-        this.state = state;
-        this.country = country;
-    }
-    
     public Address(Employee employee, String addressLine, String city,
                               String pincode, String state, String country) {
         this.employee = employee;                      
