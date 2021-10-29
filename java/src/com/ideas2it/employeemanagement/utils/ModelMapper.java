@@ -59,7 +59,6 @@ public class ModelMapper {
     public static AddressDTO toAddressDto(Address address) {
         AddressDTO addressDto = new AddressDTO();
         addressDto.setId(address.getId());
-        //addressDto.setEmployeeId(address.getEmployeeId());
         addressDto.setAddressLine(address.getAddressLine());
         addressDto.setCity(address.getCity());
         addressDto.setPincode(address.getPincode());
@@ -83,7 +82,6 @@ public class ModelMapper {
         employee.setDOB(employeeDto.getDOB());
         if (null != employeeDto.getAddressDto()) {
             for (AddressDTO addressDto : employeeDto.getAddressDto()) {
-                //addressDto.setEmployeeDto(employeeDto);
                 address.add(toAddress(addressDto));
             }
             employee.setAddress(address);
@@ -106,7 +104,6 @@ public class ModelMapper {
     public static Address toAddress(AddressDTO addressDto) {
         Address address = new Address();
         address.setId(addressDto.getId());
-        //address.setEmployee(toEmployee(addressDto.getEmployeeDto()));
         address.setAddressLine(addressDto.getAddressLine());
         address.setCity(addressDto.getCity());
         address.setPincode(addressDto.getPincode());
