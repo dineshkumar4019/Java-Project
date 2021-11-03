@@ -7,14 +7,17 @@ package com.ideas2it.employeemanagement.view;
 
 import java.time.format.DateTimeParseException;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
+import java.util.HashSet;
 import org.hibernate.HibernateException;
 
 import com.ideas2it.employeemanagement.controller.EmployeeController;
-import com.ideas2it.employeemanagement.model.EmployeeDTO;
 import com.ideas2it.employeemanagement.model.AddressDTO;
+import com.ideas2it.employeemanagement.model.EmployeeDTO;
+import com.ideas2it.employeemanagement.model.ProjectDTO;
 
 /**
  * <h1> Employees view</h1>
@@ -37,10 +40,9 @@ public class EmployeeView {
      */
     public void choosingOperation() {
         int userOperationChoice;
-        int id;
         
         do {
-            System.out.println("\n\t**1.Insert 2.Display 3.Update 4.Delete 5.Exit**");
+            System.out.println("\n\t**1.Insert 2.Display 3.Update 4.Delete 5.Assign projects 6:UnAssign projects 7.Exit**");
             userOperationChoice = getAndValidateChoice();
             
             switch(userOperationChoice) {
@@ -57,12 +59,18 @@ public class EmployeeView {
                     deleteEmployee();
                     break;
                 case 5:
-                    System.out.println("\t**Exited successfully**");
+                    assignProject();
+                    break;
+                case 6:
+                    unAssignProject();
+                    break;
+                case 7:
+                    System.out.println("\t**Exited successfully from Employees**");
                     break;
                 default :
                     System.out.println("\t**Wrong choice**\n\t**Enter choice Again**");
             }
-        } while (5 != userOperationChoice);
+        } while (7 != userOperationChoice);
     }
     
     /**
@@ -92,9 +100,10 @@ public class EmployeeView {
      * 
      * @return proper format of id
      */
-    private int getAndValidateId() {
+    private EmployeeDTO getAndValidateEmployee() {
         boolean isValidId = false;
-        int id = 0;
+        int id;
+        EmployeeDTO employeeDto = null;
         
         while (!isValidId) {
             try {
@@ -102,6 +111,7 @@ public class EmployeeView {
                 if (!employeeController.isEmployeeExist(id)) {
                     System.out.println("\n\tEmpoloyee id doesn't exist\n\t**Enter id again**");
                 } else {
+                    employeeDto = employeeController.getSingleEmployee(id);
                     isValidId = true;
                 }
             } catch (NumberFormatException e) {
@@ -110,7 +120,7 @@ public class EmployeeView {
                 e.printStackTrace();
             }
         }
-        return id;
+        return employeeDto;
     }
     
     /**
@@ -321,14 +331,15 @@ public class EmployeeView {
      * @param id employee id to view
      */
     private void viewEmployee() {
-        int id;
-        
-        System.out.println("Enter Employee id to view:");
-        id = getAndValidateId();
-        EmployeeDTO employeeDto = employeeController.getSingleEmployee(id);
-        System.out.println(employeeDto);
-        for (AddressDTO entry : employeeDto.getAddressDto()) {
-            System.out.println(entry);
+        try {
+            System.out.println("Enter Employee id to view:");
+            EmployeeDTO employeeDto = getAndValidateEmployee();
+            System.out.println(employeeDto);
+            for (AddressDTO entry : employeeDto.getAddressDto()) {
+                System.out.println(entry);
+            }
+        } catch (HibernateException e) {
+            e.printStackTrace();
         }
     }
     
@@ -533,32 +544,32 @@ public class EmployeeView {
      */
     private void updateEmployee() {
         int UpdateChoice = 0;
-        int id;
+        EmployeeDTO employeeDto;
         
         if (0 == getTotalEmployees()) {
             System.out.println("\n\tNo employees to update");
         } else {
             System.out.println("Enter the employee id to update: ");
-            id = getAndValidateId();
+            employeeDto = getAndValidateEmployee();
             System.out.println("1:Update all\n2:Update specific field\n3:Update all address field"
                                + "\n4:update specific address field\n5:Add address to employee ");
             do {
                 UpdateChoice = getAndValidateChoice();                
                 switch (UpdateChoice) {
                     case 1:
-                        updateAllFields(id);
+                        updateAllFields(employeeDto);
                         break;
                     case 2:
-                        updateField(id);
+                        updateField(employeeDto);
                         break;
                     case 3:
-                        updateAddressFields(id);
+                        updateAddressFields(employeeDto);
                         break;
                     case 4:
-                        updateAddessField(id);
+                        updateAddessField(employeeDto);
                         break;
                     case 5:
-                        createAddress(employeeController.getSingleEmployee(id));
+                        createAddress(employeeDto);
                         break;
                     default :
                         System.out.println("\t**Wrong choice**\n\t**Enter choice again**");
@@ -572,20 +583,13 @@ public class EmployeeView {
      *
      * @param id employee id to update
      */
-    private void updateAllFields(int id) {
+    private void updateAllFields(EmployeeDTO employeeDto) {
         try {
-            String name = getAndValidateName();
-            double salary = getAndValidateSalary();
-            String email = getAndValidateEmail();
-            long phoneNumber = getAndValidatePhoneNumber();
-            LocalDate DOB = getAndValidateDOB();
-            EmployeeDTO employeeDto = employeeController.getSingleEmployee(id);
-            employeeDto.setName(name);
-            employeeDto.setSalary(salary);
-            employeeDto.setEmail(email);
-            employeeDto.setPhoneNumber(phoneNumber);
-            employeeDto.setDOB(DOB);
-            
+            employeeDto.setName(getAndValidateName());
+            employeeDto.setSalary(getAndValidateSalary());
+            employeeDto.setEmail(getAndValidateEmail());
+            employeeDto.setPhoneNumber(getAndValidatePhoneNumber());
+            employeeDto.setDOB(getAndValidateDOB());
             if (1 == employeeController.updateAllFields(employeeDto)) {
                 System.out.println("\n\t***Details updated Successfully***");
             } else {
@@ -601,20 +605,17 @@ public class EmployeeView {
      * 
      * @param id employee id to update
      */
-    private void updateField(int id) {
+    private void updateField(EmployeeDTO employeeDto) {
         double salary;
         long phoneNumber;
         int employeeField;
         String name;
         String email;
         LocalDate DOB;
-        EmployeeDTO employeeDto;
-        
+                
         System.out.println("Select field to update\n1:Name\n2:Salary\n3:Email\n4:Phone\n5:DOB");
         try {
             employeeField = getAndValidateChoice();
-            employeeDto = employeeController.getSingleEmployee(id);
-            employeeDto.setId(id);
             do {
                 switch (employeeField) {
                     case 1:
@@ -671,37 +672,25 @@ public class EmployeeView {
      *
      * @param id employee id to update the address
      */
-    public void updateAddressFields(int employeeId) {
+    public void updateAddressFields(EmployeeDTO employeeDto) {
         int addressId;
-        String addressLine;
-        String city;
-        String pincode;
-        String state;
-        String country;
-        EmployeeDTO employeeDto;
         AddressDTO addressDto = new AddressDTO();
         
         try {  
-            employeeDto = employeeController.getSingleEmployee(employeeId);
             for (AddressDTO entry : employeeDto.getAddressDto()) {
                 System.out.println(entry);
             }
             System.out.println("Enter addres Id to update");
             addressId = getAndValidateAddressId();
-            addressLine = getAndValidateAddress();
-            city = getAndValidateCity();
-            pincode = getAndValidatePincode();
-            state = getAndValidateState();
-            country = getAndValidateCountry();
-            
+           
             for (AddressDTO address : employeeDto.getAddressDto()) {
                 if(addressId == address.getId()) {
                     address.setEmployeeDto(employeeDto);
-                    address.setAddressLine(addressLine);
-                    address.setCity(city);
-                    address.setPincode(pincode);
-                    address.setState(state);
-                    address.setCountry(country);
+                    address.setAddressLine(getAndValidateAddress());
+                    address.setCity(getAndValidateCity());
+                    address.setPincode(getAndValidatePincode());
+                    address.setState(getAndValidateState());
+                    address.setCountry(getAndValidateCountry());
                 }
             }
             if (1 == employeeController.updateAllFields(employeeDto)) {
@@ -719,7 +708,7 @@ public class EmployeeView {
      *
      * @param id employee id to update the address
      */
-    public void updateAddessField(int employeeId) {
+    public void updateAddessField(EmployeeDTO employeeDto) {
         int addressField;
         int addressId = 0;
         String address;
@@ -727,12 +716,9 @@ public class EmployeeView {
         String pincode;
         String state;
         String country;
-        EmployeeDTO employeeDto;
         AddressDTO addressDto = new AddressDTO();
         
         try {
-            employeeDto = employeeController.getSingleEmployee(employeeId);
-            
             for (AddressDTO entry : employeeDto.getAddressDto()) {
                 System.out.println(entry);
             }
@@ -798,12 +784,12 @@ public class EmployeeView {
     }
     
     /**
-     * Selecting the ways to delete all employee details
+     * Selecting the ways to delete the employee details
      *
      */
     private void deleteEmployee() {
         int DeleteChoice;
-        int id;
+        EmployeeDTO employeeDto;
         
         if (0 == getTotalEmployees()) {
             System.out.println("\tNo employee to delete");
@@ -817,18 +803,18 @@ public class EmployeeView {
                         break;
                     case 2:
                         System.out.println("Enter Employee id to delete:");
-                        id = getAndValidateId();
-                        deleteSingleEmployee(id);
+                        employeeDto = getAndValidateEmployee();
+                        deleteSingleEmployee(employeeDto.getId());
                         break;
                     case 3:
                         System.out.println("Enter Employee id to delete:");
-                        id = getAndValidateId();
-                        deleteAddress(id);
+                        employeeDto = getAndValidateEmployee();
+                        deleteAddress(employeeDto.getId());
                         break;
                     default:
                         System.out.println("\t**Wrong choice**\n\t**Enter choice again**");
                 }
-            }  while (4 < DeleteChoice);
+            }  while (3 < DeleteChoice);
         }
     }
     
@@ -889,7 +875,104 @@ public class EmployeeView {
             e.printStackTrace();
         }
     }
-       
+    
+    private boolean validateIds(String[] ids) {// move to service
+        boolean isValid = true;
+        
+        try {
+            for (String id : ids) {
+                Integer.parseInt(id);
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("\n\tID must be in numbers");
+            isValid = false;
+        }
+        return isValid;
+    } 
+     
+    private void assignProject() {
+        int employeeId;
+        String[] ids;
+        Set<ProjectDTO> selectedProjects = new HashSet<>();
+        System.out.println("Enter the Employee Id to assign project");
+        EmployeeDTO employeeDto = getAndValidateEmployee();
+        List<ProjectDTO> projects = employeeController.getAllProjects();
+        List<ProjectDTO> toRemove = new ArrayList<>();
+        
+        if (null != employeeDto.getProjectsDto()) {
+            for (ProjectDTO existing : employeeDto.getProjectsDto()) {
+                for (ProjectDTO available : projects) {
+                    if (existing.getId() == available.getId()) {
+                        toRemove.add(available);
+                    }
+                }
+            }
+            projects.removeAll(toRemove);
+        }
+        
+        System.out.println("\n\t**Available Projects*");
+        for (ProjectDTO projectDto : projects) {
+            System.out.println("\n\tProject Id-->" + projectDto.getId() 
+                               + "\tProject name:-->" + projectDto.getName());
+        }
+        do {
+            System.out.println("Enter Project id to assign(eg--> 1,2,4)");
+            String projectIds = scanner.nextLine();
+            ids = projectIds.split(",");
+        } while (!validateIds(ids));
+        
+        for (ProjectDTO available : projects) {
+            for (String id : ids) {
+                if (Integer.parseInt(id) == available.getId()) {
+                    selectedProjects.add(available);
+                }
+            }
+        }
+        if (null != employeeDto.getProjectsDto()) {
+            for (ProjectDTO projectDto : selectedProjects) {
+                employeeDto.getProjectsDto().add(projectDto);
+            }
+        } else {
+            employeeDto.setProjectsDto(selectedProjects);
+        }
+        employeeController.updateAllFields(employeeDto);
+    }
+    
+    private void unAssignProject() {
+        int employeeId;
+        String[] ids;
+        Set<ProjectDTO> set = new HashSet<>();
+        Set<ProjectDTO> toRemove = new HashSet<>();
+        
+        System.out.println("Enter the Employee Id to unAssign project");
+        EmployeeDTO employeeDto = getAndValidateEmployee();
+        if (null != employeeDto.getProjectsDto()) {
+            set =  employeeDto.getProjectsDto();
+            for (ProjectDTO projectDto : set) {
+                System.out.println("\n\tProject Id-->" + projectDto.getId() 
+                               + "\tProject name:-->" + projectDto.getName());
+            }
+        }// else {
+       //     System.out.println("\n\t**No projects to unassign for this employee**");
+        //}
+        
+        do {
+            System.out.println("Enter Project id to assign(eg--> 1,2,4)");
+            String projectIds = scanner.nextLine();
+            ids = projectIds.split(",");
+        } while (!validateIds(ids));
+        
+        for (ProjectDTO projectDto : set) {
+            for (String id: ids) {
+                if (Integer.parseInt(id) == projectDto.getId()) {
+                    toRemove.add(projectDto);
+                }
+            }
+        }
+        set.removeAll(toRemove); 
+        employeeDto.setProjectsDto(set); 
+        employeeController.updateAllFields(employeeDto);
+    }
     /**
      * Getting total employees present in the database
      *
@@ -904,5 +987,5 @@ public class EmployeeView {
             e.printStackTrace();
         }
         return totalEmployees;
-    }
+    } 
 }

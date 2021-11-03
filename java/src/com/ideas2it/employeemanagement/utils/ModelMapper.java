@@ -7,11 +7,15 @@ package com.ideas2it.employeemanagement.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
+import com.ideas2it.employeemanagement.model.Address;
+import com.ideas2it.employeemanagement.model.AddressDTO;
 import com.ideas2it.employeemanagement.model.Employee;
 import com.ideas2it.employeemanagement.model.EmployeeDTO;
-import com.ideas2it.employeemanagement.model.AddressDTO;
-import com.ideas2it.employeemanagement.model.Address;
+import com.ideas2it.employeemanagement.model.Project;
+import com.ideas2it.employeemanagement.model.ProjectDTO;
 
 /**
  * Converts employee to employeeDto and vice versa,
@@ -43,16 +47,7 @@ public class ModelMapper {
         }
         return employeeDto;
     }
-    
-    public static List<EmployeeDTO> EmployeeToEmployeeDto(List<Employee> employees) {
-
-        List<EmployeeDTO> employeeDto = new ArrayList<>();
-        for (Employee employee : employees) {
-            employeeDto.add(toEmployeeDto(employee));
-        }
-        return employeeDto;
-    }
-    
+   
     /**
      *  Converts address to addressDto 
      */
@@ -72,6 +67,7 @@ public class ModelMapper {
      */
     public static Employee toEmployee(EmployeeDTO employeeDto) {
         List<Address> address = new ArrayList<>();
+        Set<Project> projects = new HashSet<>();
         Employee employee = new Employee();
         
         employee.setId(employeeDto.getId());
@@ -86,6 +82,13 @@ public class ModelMapper {
             }
             employee.setAddress(address);
         }
+        if (null != employeeDto.getProjectsDto()) {
+            for (ProjectDTO projectDto : employeeDto.getProjectsDto()) {
+                projects.add(toProject(projectDto));
+            }
+            employee.setProjects(projects);
+        }
+        
         return employee;
     } 
     
@@ -99,7 +102,7 @@ public class ModelMapper {
     }
     
     /**
-     *  Converts addressDto to address
+     * Converts addressDto to address
      */
     public static Address toAddress(AddressDTO addressDto) {
         Address address = new Address();
@@ -110,5 +113,32 @@ public class ModelMapper {
         address.setState(addressDto.getState());
         address.setCountry(addressDto.getCountry());
         return address;
+    }
+    
+    /**
+     * Converts projectDto to project
+     */
+    public static Project toProject(ProjectDTO projectDto) {
+        Project project = new Project();
+        
+        project.setId(projectDto.getId());
+        project.setName(projectDto.getName());
+        project.setDescription(projectDto.getDescription());
+        project.setManager(projectDto.getManager());
+        project.setStatus(projectDto.getStatus());
+        return project;
+    }
+    
+    /**
+     * Converts project to projectDto
+     */
+    public static ProjectDTO toProjectDto(Project project) {
+        ProjectDTO projectDto = new ProjectDTO();
+        projectDto.setId(project.getId());
+        projectDto.setName(project.getName());
+        projectDto.setDescription(project.getDescription());
+        projectDto.setManager(project.getManager());
+        projectDto.setStatus(project.getStatus());
+        return projectDto;
     }
 }

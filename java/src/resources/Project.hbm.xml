@@ -1,0 +1,37 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC  
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"  
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.ideas2it.employeemanagement.model">
+
+    <class name="Project" table = "projects">
+    
+        <meta attribute="Class-description">
+            This class Holds the projects detail.
+        </meta>
+    
+        <id name="id" column="id" type="int" >
+            <generator class="native"/>
+        </id>
+    
+        <property name="name" column="name"  type="string"
+                  not-null="true" lazy="true"/> 
+        <property name="description" column="description" type="string"
+                  not-null="true" lazy="true"/>
+        <property name="manager" column="manager" type="string"
+                  not-null="true" lazy="true" unique="true"/>
+        <property name="status" column="status">
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">com.ideas2it.employeemanagement.model.ProjectStatus</param>
+                <param name="useNamed">true</param>
+            </type>
+        </property>
+    
+        <set name="employees" table="employee_project" fetch = "join">
+            <key column="project_id"/>
+            <many-to-many column="employee_id" class="Employee" />
+        </set>
+    </class>
+</hibernate-mapping>
+        

@@ -108,12 +108,12 @@ public class AddressDTO {
      * @return empolyee address
      */
     public String toString() {
-        return new StringBuilder().append("\n\tEmp Address ID:   ").append(getId())
-                   .append("\n\tEmp Address: ").append("\t  " + getAddressLine())
-                   .append("\n\tEmp City: ").append("\t  " + getCity())
-                   .append("\n\tEmp Pincode: ").append("\t  " + getPincode())
-                   .append("\n\tEmp State: ").append("\t  " + getState())
-                   .append("\n\tEmp Country: ").append("\t  " + getCountry())
+        return new StringBuilder().append("\n\tEmp Address ID: ").append(getId())
+                   .append("\n\tEmp Address:\t").append(getAddressLine())
+                   .append("\n\tEmp City:\t").append(getCity())
+                   .append("\n\tEmp Pincode:\t").append(getPincode())
+                   .append("\n\tEmp State:\t").append(getState())
+                   .append("\n\tEmp Country: \t").append(getCountry())
                    .toString();
     }
 }

@@ -6,8 +6,9 @@
 package com.ideas2it.employeemanagement.model;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 import com.ideas2it.employeemanagement.model.Address;
 
@@ -26,6 +27,7 @@ public class EmployeeDTO {
     private long phoneNumber;
     private LocalDate DOB;
     private List<AddressDTO> addressDto;
+    private Set<ProjectDTO> projectsDto;
     
     public EmployeeDTO() {
         
@@ -104,17 +106,25 @@ public class EmployeeDTO {
         this.addressDto = addressDto;
     }
     
+    public Set<ProjectDTO> getProjectsDto() {
+        return projectsDto;
+    }
+    
+    public void setProjectsDto(Set<ProjectDTO> projectsDto) {
+        this.projectsDto = projectsDto;
+    }
+    
     /**
      * displaying the respective employee details 
      * 
      * @return empolyee details
      */
     public String toString() {
-        return new StringBuilder().append("\n\tEmp Id: ").append(getId())
-                   .append("\n\tEmp Name: ").append(getName())
-                   .append("\n\tEmp salary: ").append(getSalary())
-                   .append("\n\tEmp email: ").append(getEmail())
-                   .append("\n\tEmp phone number: ").append(getPhoneNumber())
+        return new StringBuilder().append("\n\tEmp Id:\t\t   ").append(getId())
+                   .append("\n\tEmp Name:\t   ").append(getName())
+                   .append("\n\tEmp salary:\t   ").append(getSalary())
+                   .append("\n\tEmp email:\t   ").append(getEmail())
+                   .append("\n\tEmp phone number:  ").append(getPhoneNumber())
                    .append("\n\tEmp Date of birth: ").append(getDOB())
                    .toString();
     }

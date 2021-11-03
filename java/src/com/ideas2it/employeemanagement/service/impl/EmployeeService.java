@@ -10,14 +10,18 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 import java.util.regex.Pattern;
 import org.hibernate.HibernateException;
 
 import com.ideas2it.employeemanagement.dao.impl.EmployeeDao;
-import com.ideas2it.employeemanagement.model.Employee;
-import com.ideas2it.employeemanagement.model.EmployeeDTO;
 import com.ideas2it.employeemanagement.model.Address;
 import com.ideas2it.employeemanagement.model.AddressDTO;
+import com.ideas2it.employeemanagement.model.Employee;
+import com.ideas2it.employeemanagement.model.EmployeeDTO;
+import com.ideas2it.employeemanagement.model.Project;
+import com.ideas2it.employeemanagement.model.ProjectDTO;
 import com.ideas2it.employeemanagement.service.EmployeeServiceInterface;
 import com.ideas2it.employeemanagement.utils.ModelMapper;
 
@@ -209,7 +213,6 @@ public class EmployeeService implements EmployeeServiceInterface {
      * @return Number of rows created
      */
     public int createEmployee(EmployeeDTO employeeDto) throws HibernateException {
-        List<Address> addresses = new ArrayList<>();
         int id = employeeDao.insertEmployee(modelMapper.toEmployee(employeeDto));
         
         return id;
@@ -234,12 +237,30 @@ public class EmployeeService implements EmployeeServiceInterface {
      * @param id employee id to get employee details
      * @return single employee details
      */
-    public EmployeeDTO getSingleEmployee(int id) {  
-        return modelMapper.toEmployeeDto(employeeDao.getEmployee(id));
+    public EmployeeDTO getSingleEmployee(int id) throws HibernateException {
+        Employee employee = employeeDao.getEmployee(id);
+        EmployeeDTO employeeDto = modelMapper.toEmployeeDto(employee);
+        Set<ProjectDTO> set = new HashSet<>();
+        
+        for (Project project : employee.getProjects()) {
+            set.add(modelMapper.toProjectDto(project));
+        }
+        employeeDto.setProjectsDto(set);
+        return employeeDto;
     }
     
-    public AddressDTO getAddress(int id) {
+    public AddressDTO getAddress(int id) throws HibernateException {
         return modelMapper.toAddressDto(employeeDao.getAddress(id));
+    }
+    
+    /**
+     * Getting all projects details in the database
+     *
+     * @return All projects details
+     */
+    public List<ProjectDTO> getAllProjects() throws HibernateException {
+        ProjectService projectService = new ProjectService();
+        return projectService.getAllProjects();
     }
     
     /**
@@ -249,9 +270,8 @@ public class EmployeeService implements EmployeeServiceInterface {
      */
     public List<EmployeeDTO> getAllEmployee() throws HibernateException {
         List<EmployeeDTO> employeeDto = new ArrayList<>();
-        List <Employee> employeeData = employeeDao.getEmployees();
         
-        for (Employee employee: employeeData) {
+        for (Employee employee: employeeDao.getEmployees()) {
             employeeDto.add(modelMapper.toEmployeeDto(employee));
         }
         return employeeDto;
@@ -265,10 +285,17 @@ public class EmployeeService implements EmployeeServiceInterface {
      */
     public int updateAllFields(EmployeeDTO employeeDto) throws HibernateException {
         Employee employee = new Employee();
+        Set<Project> set = new HashSet<>();
         employee = modelMapper.toEmployee(employeeDto);
         for (Address address : employee.getAddress()) {
             address.setEmployee(employee);
         }
+        //if (null != employeeDto.getProjectsDto()) {
+        //    for (ProjectDTO projectDto : employeeDto.getProjectsDto()) {
+       //         set.add(modelMapper.toProject(projectDto));
+       //     }
+       //     employee.setProjects(set);
+        //}
         return employeeDao.updateAllFields(employee);
     }
     

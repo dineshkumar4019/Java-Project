@@ -9,8 +9,9 @@ import java.time.LocalDate;
 import java.util.List;
 import org.hibernate.HibernateException;
 
-import com.ideas2it.employeemanagement.model.EmployeeDTO;
 import com.ideas2it.employeemanagement.model.AddressDTO;
+import com.ideas2it.employeemanagement.model.EmployeeDTO;
+import com.ideas2it.employeemanagement.model.ProjectDTO;
 import com.ideas2it.employeemanagement.service.impl.EmployeeService;
 
 /**
@@ -27,9 +28,9 @@ public class EmployeeController {
     private EmployeeService employeeService = new EmployeeService();
     
     /**
-     * Checking employees is present in the database 
+     * Getting total employees is present in the database 
      *
-     * @return database empty or not
+     * @return total employees
      */
     public long getTotalEmployees() throws HibernateException {
         return employeeService.getTotalEmployees();
@@ -208,14 +209,29 @@ public class EmployeeController {
     /**
      * Getting the particular employee by id
      *
-     * @param id employee id to employee details
+     * @param id employee id to get employee details
      * @return particular employee details
      */
-    public EmployeeDTO getSingleEmployee(int id) {
+    public EmployeeDTO getSingleEmployee(int id) throws HibernateException {
         return employeeService.getSingleEmployee(id);
     }
     
-    public AddressDTO getAddress(int id) {
+    /**
+     * Getting all projects in the database
+     *
+     * @return All projects details
+     */
+    public List<ProjectDTO> getAllProjects() throws HibernateException {
+        return employeeService.getAllProjects();
+    }
+    
+    /**
+     * Getting the particular address by id
+     *
+     * @param id address id to get employee details
+     * @return particular address details
+     */
+    public AddressDTO getAddress(int id) throws HibernateException {
         return employeeService.getAddress(id);
     }
     

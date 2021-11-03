@@ -26,10 +26,15 @@
         <property name="DOB" column="DOB" type="LocalDate"
                   not-null="true" lazy="true"/>
         
-        <bag name = "address" cascade = "all" inverse = "true" lazy = "true" fetch = "select">
+        <bag name = "address" cascade = "all" lazy = "false" fetch = "select">
         <key column = "employee_id" on-delete="cascade"/>
         <one-to-many class="Address"/>
         </bag>
+        
+        <set name="projects" table="employee_project" fetch = "join">
+            <key column="employee_id" />
+            <many-to-many column="project_id" class="Project" />
+        </set>
         
     </class>
 </hibernate-mapping>

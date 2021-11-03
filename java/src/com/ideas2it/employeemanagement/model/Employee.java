@@ -6,8 +6,9 @@
 package com.ideas2it.employeemanagement.model;
 
 import java.time.LocalDate; 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 import com.ideas2it.employeemanagement.model.Address;
 
@@ -26,6 +27,7 @@ public class Employee {
     private long phoneNumber;
     private LocalDate DOB;
     private List<Address> address;
+    private Set<Project> projects;
     
     public Employee() {
         
@@ -106,5 +108,13 @@ public class Employee {
     
     public void setAddress(List<Address> address) {
         this.address = address;
+    }
+    
+    public Set<Project> getProjects() {
+        return projects;
+    }
+    
+    public void setProjects(Set<Project> projects) {
+        this.projects = projects;
     }
 }

@@ -8,6 +8,7 @@
     <session-factory>
         <property name="hbm2ddl.auto">update</property>
         <property name="show_sql">true</property>
+        <property name="format_sql">true</property>
         <property name="dialect">org.hibernate.dialect.MySQL8Dialect</property>
         <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
         <property name="connection.url">jdbc:mysql://localhost:3306/employees_record</property>
@@ -16,5 +17,6 @@
          
         <mapping resource="resources/Employee.hbm.xml"></mapping>
         <mapping resource="resources/Address.hbm.xml"></mapping>
+        <mapping resource="resources/Project.hbm.xml"></mapping>
     </session-factory>
 </hibernate-configuration>

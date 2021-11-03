@@ -98,6 +98,7 @@ public class EmployeeDao implements EmployeeDaoInterface {
         query.setParameter("id", id);
         rowsAffected = query.executeUpdate();
         transaction.commit();
+        session.close();
         return rowsAffected;
     }
     
@@ -116,6 +117,7 @@ public class EmployeeDao implements EmployeeDaoInterface {
         query.setParameter("id", addressId);
         rowsAffected = query.executeUpdate();        
         transaction.commit();
+        session.close();
         return rowsAffected;
     }
     
@@ -128,9 +130,10 @@ public class EmployeeDao implements EmployeeDaoInterface {
         int rowsAffected = 0;
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction(); 
-        Query query = session.createQuery("delete from Employee");
+        Query query = session.createQuery("DELETE FROM Employee");
         rowsAffected = query.executeUpdate();
         transaction.commit();
+        session.close();
         return rowsAffected;
     }
     
@@ -143,7 +146,8 @@ public class EmployeeDao implements EmployeeDaoInterface {
      */
     public Employee getEmployee(int id) throws HibernateException {
         Session session = sessionFactory.openSession();
-        Employee employee = (Employee)session.get(Employee.class, id);
+        Employee employee = (Employee) session.get(Employee.class, id);
+        session.close();
         return employee;
     }
     
@@ -157,6 +161,7 @@ public class EmployeeDao implements EmployeeDaoInterface {
     public Address getAddress(int addressId) throws HibernateException {
         Session session = sessionFactory.openSession();
         Address address = (Address) session.get(Address.class, addressId);
+        session.close();
         return address;
     }
  
@@ -170,6 +175,7 @@ public class EmployeeDao implements EmployeeDaoInterface {
         Session session = sessionFactory.openSession();
         Query query = session.createQuery("FROM Employee");
         employeeList = query.list();
+        session.close();
         return employeeList;
     }
     
@@ -186,6 +192,7 @@ public class EmployeeDao implements EmployeeDaoInterface {
         Query query = session.createQuery("SELECT COUNT(*) FROM Employee");
         totalEmployees = (Long) query.list().get(0); 
         transaction.commit();
+        session.close();
         return totalEmployees;
     } 
 
@@ -200,6 +207,7 @@ public class EmployeeDao implements EmployeeDaoInterface {
         Session session = sessionFactory.openSession();
         Query query = session.createQuery("FROM Employee WHERE email = :email");
         Employee employee = (Employee) query.setParameter("email", email).uniqueResult();
+        session.close();
         return (null != employee) ? true : false;
    }
    
@@ -214,6 +222,7 @@ public class EmployeeDao implements EmployeeDaoInterface {
       Session session = sessionFactory.openSession();
       Query query = session.createQuery("FROM Employee WHERE phoneNumber = :phoneNumber");
       Employee employee = (Employee) query.setParameter("phoneNumber", phoneNumber).uniqueResult();
+      session.close();
       return (null != employee) ? true : false;
    }
 }
