@@ -14,6 +14,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import com.ideas2it.employeemanagement.connection.HibernateUtil;
+import com.ideas2it.employeemanagement.dao.ProjectDaoInterface;
 import com.ideas2it.employeemanagement.model.Project;
 
 /**
@@ -26,7 +27,7 @@ import com.ideas2it.employeemanagement.model.Project;
  * @version	1.0
  * 
  */
-public class ProjectDao {
+public class ProjectDao implements ProjectDaoInterface {
     private SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
     
     /**
@@ -56,7 +57,6 @@ public class ProjectDao {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         Project newProject = (Project) session.merge(project);
-        //session.update(project);
         transaction.commit();
         session.close();
         if (newProject.getId() == project.getId()) {

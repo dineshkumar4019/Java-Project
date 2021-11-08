@@ -41,7 +41,8 @@ import com.ideas2it.employeemanagement.model.ProjectStatus;
         int userOperationChoice;
         
         do {
-            System.out.println("\n\t**1.Create 2.Display 3.Update 4.Delete 5:Assign Employee 6:Unassign Employee 7.Exit **");
+            System.out.println("\n\t**1.Create 2.Display 3.Update 4.Delete" 
+                               + " 5:Assign Employee 6:Unassign Employee 7.Exit **");
             userOperationChoice = getAndValidateChoice();
             
             switch(userOperationChoice) {
@@ -97,11 +98,12 @@ import com.ideas2it.employeemanagement.model.ProjectStatus;
      * Checking the project id present in database 
      * and validating the existing id
      * 
-     * @return proper format of id
+     * @return details of the project
      */
-    private int getAndValidateId() {
+    private ProjectDTO getAndValidateProject() {
         boolean isValidId = false;
         int id = 0;
+        ProjectDTO projectDto = null;
         
         while (!isValidId) {
             try {
@@ -109,6 +111,7 @@ import com.ideas2it.employeemanagement.model.ProjectStatus;
                 if (!projectController.isProjectExist(id)) {
                     System.out.println("\n\tproject id doesn't exist\n\t**Enter id again**");
                 } else {
+                    projectDto = projectController.getSingleProject(id);
                     isValidId = true;
                 }
             } catch (NumberFormatException e) {
@@ -117,7 +120,7 @@ import com.ideas2it.employeemanagement.model.ProjectStatus;
                 e.printStackTrace();
             }
         }
-        return id;
+        return projectDto;
     }
     
     /**
@@ -146,6 +149,11 @@ import com.ideas2it.employeemanagement.model.ProjectStatus;
         }
    }
    
+   /**
+     * Selecting the status of the project
+     * 
+     * @return projectStatus status of the project
+     */
    private ProjectStatus getStatus() {
        int userChoice;
        ProjectStatus status = null;
@@ -274,12 +282,9 @@ import com.ideas2it.employeemanagement.model.ProjectStatus;
      * @param id project id to view
      */
     private void viewProject() {
-        int id = 0;
-        
         try {
             System.out.println("Enter Project id to view:");
-            id = getAndValidateId();
-            ProjectDTO projectDto = projectController.getSingleProject(id);
+            ProjectDTO projectDto = getAndValidateProject();
             System.out.println(projectDto);
             for (EmployeeDTO entry : projectDto.getEmployeesDto()) {
                 System.out.println(entry);
@@ -311,22 +316,22 @@ import com.ideas2it.employeemanagement.model.ProjectStatus;
      */
     private void updateProject() {
         int UpdateChoice = 0;
-        int id = 0;
+        ProjectDTO projectDto;
         
         if (0 == getTotalProjects()) {
             System.out.println("\n\tNo projects to update");
         } else {
             System.out.println("Enter the project id to update: ");
-            id = getAndValidateId();
+            projectDto = getAndValidateProject();
             System.out.println("1:Update all project fields\n2:Update specific project field");
             do {
                 UpdateChoice = getAndValidateChoice();
                 switch (UpdateChoice) {
                     case 1:
-                        updateAllFields(id);
+                        updateAllFields(projectDto);
                         break;
                     case 2:
-                        updateField(id);
+                        updateField(projectDto);
                         break;
                     default :
                         System.out.println("\t**Wrong choice**\n\t**Enter choice again**");
@@ -340,10 +345,8 @@ import com.ideas2it.employeemanagement.model.ProjectStatus;
      *
      * @param id project id to update
      */
-    private void updateAllFields(int id) {
+    private void updateAllFields(ProjectDTO projectDto) {
         try {
-            ProjectDTO projectDto = projectController.getSingleProject(id);
-            
             projectDto.setId(projectDto.getId());
             projectDto.setName(getAndValidateName());
             projectDto.setDescription(getAndValidateDescription());
@@ -364,18 +367,15 @@ import com.ideas2it.employeemanagement.model.ProjectStatus;
      * 
      * @param id project id to update
      */
-    private void updateField(int id) {
+    private void updateField(ProjectDTO projectDto) {
         int projectField;
         String name;
         String description;
         String manager;
-        ProjectDTO projectDto;
         
         System.out.println("Select project field to update\n1:Name\n2:Description\n3:Manager\n4:Update status");
         try {
             projectField = getAndValidateChoice();
-            projectDto = projectController.getSingleProject(id);
-            projectDto.setId(id);
             do {
                 switch (projectField) {
                     case 1:
@@ -439,8 +439,8 @@ import com.ideas2it.employeemanagement.model.ProjectStatus;
                         break;
                     case 2:
                         System.out.println("Enter Project id to delete:");
-                        id = getAndValidateId();
-                        deleteSingleProject(id);
+                        ProjectDTO projectDto = getAndValidateProject();
+                        deleteSingleProject(projectDto.getId());
                         break;
                     default:
                         System.out.println("\t**Wrong choice**\n\t**Enter choice again**");
@@ -481,30 +481,18 @@ import com.ideas2it.employeemanagement.model.ProjectStatus;
         }
     }
     
-    private boolean validateIds(String[] ids) {// move to service
-        boolean isValid = true;
-        //int id;
-        
-        try {
-            for (String id : ids) {
-                Integer.parseInt(id);
-            }
-        } catch (NumberFormatException e) {
-            System.out.println("\n\tID must be in numbers");
-            isValid = false;
-        }
-        return isValid;
-    }
-    
+    /**
+     * Assiging the employees to the project 
+     */
     private void assignEmployee() {
         int employeeId;
         String[] ids;
         Set<EmployeeDTO> selectedEmployees = new HashSet<>();
-        System.out.println("Enter the Project Id to assign employee");
-        employeeId = getAndValidateId();
-        ProjectDTO projectDto = projectController.getSingleProject(employeeId);
-        List<EmployeeDTO> employees = projectController.getAllEmployees();
         List<EmployeeDTO> toRemove = new ArrayList<>();
+        
+        System.out.println("Enter the Project Id to assign employee");
+        ProjectDTO projectDto = getAndValidateProject();
+        List<EmployeeDTO> employees = projectController.getAllEmployees();
         
         if (null != projectDto.getEmployeesDto()) {
             for (EmployeeDTO existing : projectDto.getEmployeesDto()) {
@@ -525,7 +513,7 @@ import com.ideas2it.employeemanagement.model.ProjectStatus;
             System.out.println("Enter Employee ids to assign(eg--> 1,2,4)");
             String employeeIds = scanner.nextLine();
             ids = employeeIds.split(",");
-        } while (!validateIds(ids));
+        } while (!projectController.validateIds(ids));
         
         for (EmployeeDTO available : employees) {
             for (String id : ids) {
@@ -540,6 +528,9 @@ import com.ideas2it.employeemanagement.model.ProjectStatus;
         projectController.updateAllFields(projectDto);
     }
      
+    /**
+     * Unassiging the employees to the project 
+     */ 
     private void unAssignEmployee() {
         int projectId;
         String[] ids;
@@ -547,35 +538,34 @@ import com.ideas2it.employeemanagement.model.ProjectStatus;
         Set<EmployeeDTO> toRemove = new HashSet<>();
         
         System.out.println("Enter the Project Id to unAssign project");
-        projectId = getAndValidateId();
-        ProjectDTO projectDto = projectController.getSingleProject(projectId);
-        if (null != projectDto.getEmployeesDto()) {
+        ProjectDTO projectDto = getAndValidateProject();
+        if (0 != projectDto.getEmployeesDto().size()) {
             set =  projectDto.getEmployeesDto();
             for (EmployeeDTO employeeDto : set) {
                 System.out.println("\n\tEmployee Id-->" + employeeDto.getId() 
                                + "\tEmployee name:-->" + employeeDto.getName());
             }
-        }// else {
-       //     System.out.println("\n\t**No projects to unassign for this employee**");
-        //}
         
-        do {
-            System.out.println("Enter Employee id to assign(eg--> 1,2,4)");
-            String employeeIds = scanner.nextLine();
-            ids = employeeIds.split(",");
-        } while (!validateIds(ids));
+            do {
+                System.out.println("Enter Employee id to unassign(eg--> 1,2,4)");
+                String employeeIds = scanner.nextLine();
+                ids = employeeIds.split(",");
+            } while (!projectController.validateIds(ids));
         
-        for (EmployeeDTO employeeDto : set) {
-            for (String id: ids) {
-                if (Integer.parseInt(id) == employeeDto.getId()) {
-                    toRemove.add(employeeDto);
+            for (EmployeeDTO employeeDto : set) {
+                for (String id : ids) {
+                    if (Integer.parseInt(id) == employeeDto.getId()) {
+                        toRemove.add(employeeDto);
+                    }
                 }
             }
+            set.removeAll(toRemove); 
+            projectDto.setEmployeesDto(set); 
+            projectController.updateAllFields(projectDto);
+        } else {
+            System.out.println("\n\t**No Projects for this employee to unassign**");
         }
-        set.removeAll(toRemove); 
-        projectDto.setEmployeesDto(set); 
-        projectController.updateAllFields(projectDto);
-    } 
+    }
      
     /**
      * Getting total projects present in the database

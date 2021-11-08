@@ -25,9 +25,9 @@ public class HibernateUtil {
     }
    
     /**
-     * Creating
+     * Creating session factory for the database connection
      *
-     * @return
+     * @return session factory
      */
     public static SessionFactory getSessionFactory() {
         if (null == sessionFactory) {

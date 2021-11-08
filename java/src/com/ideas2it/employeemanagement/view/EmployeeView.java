@@ -42,7 +42,8 @@ public class EmployeeView {
         int userOperationChoice;
         
         do {
-            System.out.println("\n\t**1.Insert 2.Display 3.Update 4.Delete 5.Assign projects 6:UnAssign projects 7.Exit**");
+            System.out.println("\n\t**1.Insert 2.Display 3.Update 4.Delete"
+                               + " 5.Assign projects 6:UnAssign projects 7.Exit**");
             userOperationChoice = getAndValidateChoice();
             
             switch(userOperationChoice) {
@@ -98,7 +99,7 @@ public class EmployeeView {
      * Checking the employee id present in database 
      * and validating the existing id
      * 
-     * @return proper format of id
+     * @return details of an employee
      */
     private EmployeeDTO getAndValidateEmployee() {
         boolean isValidId = false;
@@ -874,22 +875,11 @@ public class EmployeeView {
         } catch (HibernateException e) {
             e.printStackTrace();
         }
-    }
-    
-    private boolean validateIds(String[] ids) {// move to service
-        boolean isValid = true;
-        
-        try {
-            for (String id : ids) {
-                Integer.parseInt(id);
-            }
-        } catch (NumberFormatException e) {
-            System.out.println("\n\tID must be in numbers");
-            isValid = false;
-        }
-        return isValid;
     } 
      
+    /**
+     * Assiging the projects to an employee
+     */ 
     private void assignProject() {
         int employeeId;
         String[] ids;
@@ -919,7 +909,7 @@ public class EmployeeView {
             System.out.println("Enter Project id to assign(eg--> 1,2,4)");
             String projectIds = scanner.nextLine();
             ids = projectIds.split(",");
-        } while (!validateIds(ids));
+        } while (!employeeController.validateIds(ids));
         
         for (ProjectDTO available : projects) {
             for (String id : ids) {
@@ -938,6 +928,9 @@ public class EmployeeView {
         employeeController.updateAllFields(employeeDto);
     }
     
+    /**
+     * Unassiging the employees to the project 
+     */
     private void unAssignProject() {
         int employeeId;
         String[] ids;
@@ -946,33 +939,34 @@ public class EmployeeView {
         
         System.out.println("Enter the Employee Id to unAssign project");
         EmployeeDTO employeeDto = getAndValidateEmployee();
-        if (null != employeeDto.getProjectsDto()) {
+        if (0 != employeeDto.getProjectsDto().size()) {
             set =  employeeDto.getProjectsDto();
             for (ProjectDTO projectDto : set) {
                 System.out.println("\n\tProject Id-->" + projectDto.getId() 
                                + "\tProject name:-->" + projectDto.getName());
             }
-        }// else {
-       //     System.out.println("\n\t**No projects to unassign for this employee**");
-        //}
         
-        do {
-            System.out.println("Enter Project id to assign(eg--> 1,2,4)");
-            String projectIds = scanner.nextLine();
-            ids = projectIds.split(",");
-        } while (!validateIds(ids));
+            do {
+                System.out.println("Enter Project id to unassign(eg--> 1,2,4)");
+                String projectIds = scanner.nextLine();
+                ids = projectIds.split(",");
+            } while (!employeeController.validateIds(ids));
         
-        for (ProjectDTO projectDto : set) {
-            for (String id: ids) {
-                if (Integer.parseInt(id) == projectDto.getId()) {
-                    toRemove.add(projectDto);
+            for (ProjectDTO projectDto : set) {
+                for (String id: ids) {
+                    if (Integer.parseInt(id) == projectDto.getId()) {
+                        toRemove.add(projectDto);
+                    }
                 }
             }
+            set.removeAll(toRemove); 
+            employeeDto.setProjectsDto(set); 
+            employeeController.updateAllFields(employeeDto);
+        } else {
+            System.out.println("\n\t**No Projects for this employee to unassign**");
         }
-        set.removeAll(toRemove); 
-        employeeDto.setProjectsDto(set); 
-        employeeController.updateAllFields(employeeDto);
     }
+        
     /**
      * Getting total employees present in the database
      *

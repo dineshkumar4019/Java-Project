@@ -66,6 +66,16 @@ public class ProjectController {
     }
     
     /**
+     * validate ids of employees 
+     *
+     * @param ids ids of employees
+     * @return ids valid or not
+     */
+    public boolean validateIds(String[] ids) {
+        return projectService.validateIds(ids);
+    }
+    
+    /**
      * Creating new project and storing in database
      *
      * @param projectDto project details to be created

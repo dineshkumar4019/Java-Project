@@ -181,6 +181,26 @@ public class EmployeeService implements EmployeeServiceInterface {
     }
     
     /**
+     * validate ids of projects 
+     *
+     * @param ids ids of projects
+     * @return ids valid or not
+     */
+    public boolean validateIds(String[] ids) {
+        boolean isValid = true;
+        
+        try {
+            for (String id : ids) {
+                Integer.parseInt(id);
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("\n\tID must be in numbers");
+            isValid = false;
+        }
+        return isValid;
+    }
+    
+    /**
      * getting the age of an employee
      *
      * @param DOB date of birth for the age

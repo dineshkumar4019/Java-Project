@@ -19,6 +19,7 @@ import com.ideas2it.employeemanagement.model.EmployeeDTO;
 import com.ideas2it.employeemanagement.model.Project;
 import com.ideas2it.employeemanagement.model.ProjectDTO;
 import com.ideas2it.employeemanagement.utils.ModelMapper;
+import com.ideas2it.employeemanagement.service.ProjectServiceInterface;
 import com.ideas2it.employeemanagement.service.impl.EmployeeService;
 
 /**
@@ -31,7 +32,7 @@ import com.ideas2it.employeemanagement.service.impl.EmployeeService;
  * @since   2021-08-27
  * 
  */
-public class ProjectService {
+public class ProjectService implements ProjectServiceInterface {
     private ProjectDao projectDao = new ProjectDao();
     private ModelMapper modelMapper  = new ModelMapper();
     
@@ -49,7 +50,6 @@ public class ProjectService {
         }
         return isExist;
     }
-    
     
     /**
      * Get and validate user input
@@ -94,6 +94,26 @@ public class ProjectService {
         String regex = "^[a-zA-Z0-9 ]+{3,30}+$";
         return isValidInput(regex, description);   
     }
+    
+    /**
+     * validate ids of employees 
+     *
+     * @param ids ids of employees
+     * @return ids valid or not
+     */
+    public boolean validateIds(String[] ids) {
+        boolean isValid = true;
+        
+        try {
+            for (String id : ids) {
+                Integer.parseInt(id);
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("\n\tID must be in numbers");
+            isValid = false;
+        }
+        return isValid;
+    }  
     
     /**
      * Creating the employee and storing in database
@@ -194,5 +214,4 @@ public class ProjectService {
     public long getTotalProjects() throws HibernateException {
         return projectDao.getTotalProjects();
     }
-    
 }

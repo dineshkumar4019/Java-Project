@@ -44,7 +44,6 @@ public class Project {
         this.description = description;
         this.manager = manager;
         this.status = status;
-        //this.employees = employees;
     }
       
     public int getId() {

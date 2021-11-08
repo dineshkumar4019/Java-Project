@@ -92,15 +92,6 @@ public class ModelMapper {
         return employee;
     } 
     
-    public static List<Employee> toEmployee(List<EmployeeDTO> employeeDtos) {
-
-        List<Employee> employees = new ArrayList<>();
-        for (EmployeeDTO employeeDto : employeeDtos) {
-            employees.add(toEmployee(employeeDto));
-        }
-        return employees;
-    }
-    
     /**
      * Converts addressDto to address
      */

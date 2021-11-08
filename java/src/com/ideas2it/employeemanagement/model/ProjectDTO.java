@@ -40,12 +40,10 @@ public class ProjectDTO {
      */
     public ProjectDTO(String name, String description, String manager
                     , ProjectStatus status) {
-        //this.id = id;
         this.name = name;
         this.description = description;
         this.manager = manager;
         this.status = status;
-        //this.employeesDto = employeesDto;
     }
       
     public int getId() {

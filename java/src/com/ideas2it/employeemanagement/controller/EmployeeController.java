@@ -167,6 +167,16 @@ public class EmployeeController {
     }
     
     /**
+     * validate ids of projects 
+     *
+     * @param ids ids of projects
+     * @return ids valid or not
+     */
+    public boolean validateIds(String[] ids) {
+        return employeeService.validateIds(ids);
+    }
+    
+    /**
      * converting the String to local date format
      * 
      * @param DOB date of birth to convert to local date format
