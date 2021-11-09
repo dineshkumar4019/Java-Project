@@ -10,10 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
-import org.hibernate.HibernateException;
 
 import com.ideas2it.employeemanagement.controller.EmployeeController;
 import com.ideas2it.employeemanagement.controller.ProjectController;
+import com.ideas2it.employeemanagement.exception.EMSException;
 import com.ideas2it.employeemanagement.model.EmployeeDTO;
 import com.ideas2it.employeemanagement.model.ProjectDTO;
 import com.ideas2it.employeemanagement.model.ProjectStatus;
@@ -116,8 +116,8 @@ import com.ideas2it.employeemanagement.model.ProjectStatus;
                 }
             } catch (NumberFormatException e) {
                 System.out.println("\n\tID must be in numbers\n\t**Enter id Again**");
-            } catch (HibernateException e) {
-                e.printStackTrace();
+            } catch (EMSException exception) {
+                System.out.println("\n\t**" + exception + "**");
             }
         }
         return projectDto;
@@ -144,8 +144,8 @@ import com.ideas2it.employeemanagement.model.ProjectStatus;
             } else {
                 System.out.println("\n\t**Project creation failed!!!**");
             }
-        } catch (HibernateException e) {
-            e.printStackTrace();
+        } catch (EMSException exception) {
+            System.out.println("\n\t**" + exception + "**");
         }
    }
    
@@ -253,25 +253,28 @@ import com.ideas2it.employeemanagement.model.ProjectStatus;
         int ViewChoice;
         int id;
         
-        if (0 == getTotalProjects()) {
-            System.out.println("\tNo projects to view");
-        } else {
-            System.out.println("1:Display all projects\n2:display projects by id");
-            do {
-                ViewChoice = getAndValidateChoice();  
+        try {
+            if (0 == projectController.getAllProjects().size()) {
+                System.out.println("\tNo projects to view");
+            } else {
+                System.out.println("1:Display all projects\n2:display projects by id");
+                do {
+                    ViewChoice = getAndValidateChoice();  
                               
-                switch (ViewChoice) {
-                    case 1:
-                        viewAllProjects();
-                        break;
-                    case 2:
-                        viewProject();
-                        break;
-                    default :
-                        System.out.println("\t**Wrong choice**\n\t**Enter choice again**");
-                }
+                    switch (ViewChoice) {
+                        case 1:
+                            viewAllProjects();
+                            break;
+                        case 2:
+                            viewProject();
+                            break;
+                        default :
+                            System.out.println("\t**Wrong choice**\n\t**Enter choice again**");
+                    }
+                } while (2 < ViewChoice);
             }
-              while (2 < ViewChoice);
+        } catch (EMSException exception) {
+            System.out.println("\n\t**" + exception + "**");
         }
     }
     
@@ -282,15 +285,11 @@ import com.ideas2it.employeemanagement.model.ProjectStatus;
      * @param id project id to view
      */
     private void viewProject() {
-        try {
-            System.out.println("Enter Project id to view:");
-            ProjectDTO projectDto = getAndValidateProject();
-            System.out.println(projectDto);
-            for (EmployeeDTO entry : projectDto.getEmployeesDto()) {
-                System.out.println(entry);
-            }
-        } catch (HibernateException e) {
-            e.printStackTrace();
+        System.out.println("Enter Project id to view:");
+        ProjectDTO projectDto = getAndValidateProject();
+        System.out.println(projectDto);
+        for (EmployeeDTO entry : projectDto.getEmployeesDto()) {
+            System.out.println(entry);
         }
     }
     
@@ -304,8 +303,8 @@ import com.ideas2it.employeemanagement.model.ProjectStatus;
             for(ProjectDTO project : projectDto) {
                 System.out.println(project);
             }
-        } catch (HibernateException e) {
-            e.printStackTrace();
+        } catch (EMSException exception) {
+            System.out.println("\n\t**" + exception + "**");
         }
     }
     
@@ -318,25 +317,29 @@ import com.ideas2it.employeemanagement.model.ProjectStatus;
         int UpdateChoice = 0;
         ProjectDTO projectDto;
         
-        if (0 == getTotalProjects()) {
-            System.out.println("\n\tNo projects to update");
-        } else {
-            System.out.println("Enter the project id to update: ");
-            projectDto = getAndValidateProject();
-            System.out.println("1:Update all project fields\n2:Update specific project field");
-            do {
-                UpdateChoice = getAndValidateChoice();
-                switch (UpdateChoice) {
-                    case 1:
-                        updateAllFields(projectDto);
-                        break;
-                    case 2:
-                        updateField(projectDto);
-                        break;
-                    default :
-                        System.out.println("\t**Wrong choice**\n\t**Enter choice again**");
-                }
-            } while (2 < UpdateChoice);
+        try {
+            if (0 == projectController.getAllProjects().size()) {
+                System.out.println("\n\tNo projects to update");
+            } else {
+                System.out.println("Enter the project id to update: ");
+                projectDto = getAndValidateProject();
+                System.out.println("1:Update all project fields\n2:Update specific project field");
+                do {
+                    UpdateChoice = getAndValidateChoice();
+                    switch (UpdateChoice) {
+                        case 1:
+                            updateAllFields(projectDto);
+                            break;
+                        case 2:
+                            updateField(projectDto);
+                            break;
+                        default :
+                            System.out.println("\t**Wrong choice**\n\t**Enter choice again**");
+                    }
+                } while (2 < UpdateChoice);
+            }
+        } catch (EMSException exception) {
+            System.out.println("\n\t**" + exception + "**");
         }
     }
     
@@ -357,8 +360,8 @@ import com.ideas2it.employeemanagement.model.ProjectStatus;
             } else {
                 System.out.println("\n\t***Details not updated***");
             }
-        } catch (HibernateException e) {
-            e.printStackTrace();
+        } catch (EMSException exception) {
+            System.out.println("\n\t**" + exception + "**");
         }
     }
     
@@ -414,8 +417,8 @@ import com.ideas2it.employeemanagement.model.ProjectStatus;
                         System.out.println("\n\t**Wrong field**\n\t**Select the field between the range");
                 }
             } while (4 < projectField);
-        } catch (HibernateException e) {
-            e.printStackTrace();
+        } catch (EMSException exception) {
+            System.out.println("\n\t**" + exception + "**");
         }
     }
     
@@ -427,25 +430,29 @@ import com.ideas2it.employeemanagement.model.ProjectStatus;
         int DeleteChoice;
         int id;
         
-        if (0 == getTotalProjects()) {
-            System.out.println("\tNo project to delete");
-        } else {
-            System.out.println("1:Delete all projects\n2:Delete project by id");
-            do {
-                DeleteChoice = getAndValidateChoice();                
-                switch (DeleteChoice) {
-                    case 1:
-                        deleteAllProject();
-                        break;
-                    case 2:
-                        System.out.println("Enter Project id to delete:");
-                        ProjectDTO projectDto = getAndValidateProject();
-                        deleteSingleProject(projectDto.getId());
-                        break;
-                    default:
-                        System.out.println("\t**Wrong choice**\n\t**Enter choice again**");
-                }
-            }  while (2 < DeleteChoice);
+        try {
+            if (0 == projectController.getAllProjects().size()) {
+                System.out.println("\tNo project to delete");
+            } else {
+                System.out.println("1:Delete all projects\n2:Delete project by id");
+                do {
+                    DeleteChoice = getAndValidateChoice();                
+                    switch (DeleteChoice) {
+                        case 1:
+                            deleteAllProject();
+                            break;
+                        case 2:
+                            System.out.println("Enter Project id to delete:");
+                            ProjectDTO projectDto = getAndValidateProject();
+                            deleteSingleProject(projectDto.getId());
+                            break;
+                        default:
+                            System.out.println("\t**Wrong choice**\n\t**Enter choice again**");
+                    }
+                } while (2 < DeleteChoice);
+            }
+        } catch (EMSException exception) {
+            System.out.println("\n\t**" + exception + "**");
         }
     }
     
@@ -461,8 +468,8 @@ import com.ideas2it.employeemanagement.model.ProjectStatus;
             } else {
                 System.out.println("\n\t**Projects not deleted**");
             }
-        } catch (HibernateException e) {
-            e.printStackTrace();
+        } catch (EMSException exception) {
+            System.out.println("\n\t**" + exception + "**");
         }
     }
     
@@ -471,13 +478,13 @@ import com.ideas2it.employeemanagement.model.ProjectStatus;
      */
     private void deleteAllProject() {
         try {
-            if (getTotalProjects() == projectController.deleteAllProject()) {
+            if (projectController.getAllProjects().size() == projectController.deleteAllProject()) {
                 System.out.println("\n\t**Deleted succesfully**");
             } else {
                 System.out.println("\n\t**projects not deleted*");
             }
-        } catch (HibernateException e) {
-            e.printStackTrace();
+        } catch (EMSException exception) {
+            System.out.println("\n\t**" + exception + "**");
         }
     }
     
@@ -489,43 +496,49 @@ import com.ideas2it.employeemanagement.model.ProjectStatus;
         String[] ids;
         Set<EmployeeDTO> selectedEmployees = new HashSet<>();
         List<EmployeeDTO> toRemove = new ArrayList<>();
+        List<EmployeeDTO> employees = new ArrayList<>();
         
         System.out.println("Enter the Project Id to assign employee");
         ProjectDTO projectDto = getAndValidateProject();
-        List<EmployeeDTO> employees = projectController.getAllEmployees();
         
-        if (null != projectDto.getEmployeesDto()) {
-            for (EmployeeDTO existing : projectDto.getEmployeesDto()) {
-                for (EmployeeDTO available : employees) {
-                    if (existing.getId() == available.getId()) {
-                        toRemove.add(available);
+        try {
+            employees = projectController.getAllEmployees();
+        
+            if (null != projectDto.getEmployeesDto()) {
+                for (EmployeeDTO existing : projectDto.getEmployeesDto()) {
+                    for (EmployeeDTO available : employees) {
+                        if (existing.getId() == available.getId()) {
+                            toRemove.add(available);
+                        }
+                    }
+                }
+                employees.removeAll(toRemove);
+            }
+            System.out.println("\n\t**Available Employees*");
+            for (EmployeeDTO employeeDto : employees) {
+                System.out.println("\n\tEmployee Id-->" + employeeDto.getId() 
+                                   + "\tEmployee name:-->" + employeeDto.getName());
+            }
+            do {
+                System.out.println("Enter Employee ids to assign(eg--> 1,2,4)");
+                String employeeIds = scanner.nextLine();
+                ids = employeeIds.split(",");
+            } while (!projectController.validateIds(ids));
+        
+            for (EmployeeDTO available : employees) {
+                for (String id : ids) {
+                    if (Integer.parseInt(id) == available.getId()) {
+                        selectedEmployees.add(available);
                     }
                 }
             }
-            employees.removeAll(toRemove);
-        }
-        System.out.println("\n\t**Available Employees*");
-        for (EmployeeDTO employeeDto : employees) {
-            System.out.println("\n\tEmployee Id-->" + employeeDto.getId() 
-                               + "\tEmployee name:-->" + employeeDto.getName());
-        }
-        do {
-            System.out.println("Enter Employee ids to assign(eg--> 1,2,4)");
-            String employeeIds = scanner.nextLine();
-            ids = employeeIds.split(",");
-        } while (!projectController.validateIds(ids));
-        
-        for (EmployeeDTO available : employees) {
-            for (String id : ids) {
-                if (Integer.parseInt(id) == available.getId()) {
-                    selectedEmployees.add(available);
-                }
+            for (EmployeeDTO employeeDto : selectedEmployees) {
+                projectDto.getEmployeesDto().add(employeeDto);
             }
+            projectController.updateAllFields(projectDto);
+        } catch (EMSException exception) {
+            System.out.println("\n\t**" + exception + "**");
         }
-        for (EmployeeDTO employeeDto : selectedEmployees) {
-            projectDto.getEmployeesDto().add(employeeDto);
-        }
-        projectController.updateAllFields(projectDto);
     }
      
     /**
@@ -561,25 +574,13 @@ import com.ideas2it.employeemanagement.model.ProjectStatus;
             }
             set.removeAll(toRemove); 
             projectDto.setEmployeesDto(set); 
-            projectController.updateAllFields(projectDto);
+            try {
+                projectController.updateAllFields(projectDto);
+            } catch (EMSException exception) {
+                System.out.println("\n\t**" + exception + "**");
+            }
         } else {
             System.out.println("\n\t**No Projects for this employee to unassign**");
         }
-    }
-     
-    /**
-     * Getting total projects present in the database
-     *
-     * @return total projects in the database
-     */
-    private long getTotalProjects() { 
-        long totalProjects = 0;
-        
-        try {
-            totalProjects = projectController.getTotalProjects();
-        } catch (HibernateException e) {
-            e.printStackTrace();
-        }
-        return totalProjects;
     }
 }

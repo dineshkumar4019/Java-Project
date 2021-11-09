@@ -9,24 +9,25 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.ideas2it.employeemanagement.exception.EMSException;
 import com.ideas2it.employeemanagement.model.Employee;
 import com.ideas2it.employeemanagement.model.EmployeeDTO;
 
 public interface EmployeeServiceInterface {
     /**
-     * Checking any empolyee  details present in database
-     *
-     * @return database empty or not
-     */
-    public long getTotalEmployees() throws SQLException;
-    
-    /**
      * Checking an employee presences in database by id
      *
      * @param id employee id for checking existance
      * @return employee exist or not
+     */
+    public boolean isEmployeeExist(int id) throws EMSException;
+    
+    /**
+     * Checking if employees present in database
      *
-    public boolean isEmployeeExist(int id) throws SQLException;
+     * @return database empty or not
+     */
+    public long isDataBaseEmpty() throws EMSException;
     
     /**
      * Validating the corresponding employee name  
@@ -49,8 +50,8 @@ public interface EmployeeServiceInterface {
      *
      * @param email email for checking existence
      * @return email exist or not
-     *
-    public boolean isEmailExist(String email) throws SQLException;
+     */
+    public boolean isEmailExist(String email) throws EMSException;
     
     /**
      * Validating the corresponding employee email 
@@ -65,8 +66,8 @@ public interface EmployeeServiceInterface {
      *
      * @param phoneNumber phoneNumber for checking existence
      * @return phoneNumber exist or not
-     *
-    public boolean isPhoneNumberExist(long phoneNumber) throws SQLException;
+     */
+    public boolean isPhoneNumberExist(long phoneNumber) throws EMSException;
     
     /**
      * Validating the corresponding employee phoneNumber 
@@ -103,7 +104,7 @@ public interface EmployeeServiceInterface {
      * @param DOB date of birth of an employee
      * @return employee created or not
      */
-    public int createEmployee(EmployeeDTO employeeDto) throws SQLException;
+    public int createEmployee(EmployeeDTO employeeDto) throws EMSException;
     
     /**
      * Getting the particular employee by id in database
@@ -111,14 +112,14 @@ public interface EmployeeServiceInterface {
      * @param id employee id to get
      * @return single employee details
      */
-    public EmployeeDTO getSingleEmployee(int id) throws SQLException;
+    public EmployeeDTO getSingleEmployee(int id) throws EMSException;
     
     /**
      * Getting all employee in the database
      *
      * @return All employee details
      */
-    public List<EmployeeDTO> getAllEmployee() throws SQLException;
+    public List<EmployeeDTO> getAllEmployee() throws EMSException;
     
     /**
      * Updating the all fields of an employee 
@@ -131,23 +132,20 @@ public interface EmployeeServiceInterface {
      * @param DOB date of birth of an employee to update
      * @return All employee fields updated or not
      */
-    public int updateAllFields(EmployeeDTO employeeDto) throws SQLException;
-    
-    //public int updateField(EmployeeDTO employeeDto) throws SQLException;
+    public int updateAllFields(EmployeeDTO employeeDto) throws EMSException;
     
     /**
      * Deleting the required employee
      *
      * @param id id for deleting the employee
      * @return employee deleted
-     *
-    public int deleteSingleEmployee(int id) throws SQLException;
+     */
+    public int deleteSingleEmployee(int id) throws EMSException;
     
     /**
      * Deleting all employees in the database
      *
      * @return Total employees deleted
-     *
-    public int deleteAllEmployee() throws SQLException;
-    */
+     */
+    public int deleteAllEmployee() throws EMSException;
 }

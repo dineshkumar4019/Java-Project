@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.HashSet;
-import org.hibernate.HibernateException;
 
 import com.ideas2it.employeemanagement.controller.EmployeeController;
+import com.ideas2it.employeemanagement.exception.EMSException;
 import com.ideas2it.employeemanagement.model.AddressDTO;
 import com.ideas2it.employeemanagement.model.EmployeeDTO;
 import com.ideas2it.employeemanagement.model.ProjectDTO;
@@ -117,8 +117,8 @@ public class EmployeeView {
                 }
             } catch (NumberFormatException e) {
                 System.out.println("\n\tID must be in numbers\n\t**Enter id Again**");
-            } catch (HibernateException e) {
-                e.printStackTrace();
+            } catch (EMSException exception) {
+                System.out.println("\n\t**" + exception + "**");
             }
         }
         return employeeDto;
@@ -145,8 +145,8 @@ public class EmployeeView {
                 }
             } catch (NumberFormatException e) {
                 System.out.println("\n\tAddress ID must be in numbers\n\t**Enter id Again**");
-            } catch (HibernateException e) {
-                e.printStackTrace();
+            } catch (EMSException exception) {
+                System.out.println("\n\t**" + exception + "**");
             }
         }
         return addressId;
@@ -229,8 +229,8 @@ public class EmployeeView {
                 } else {
                     System.out.println("\n\t**Entered email already exist**");
                 }
-            } catch (HibernateException e) {
-                e.printStackTrace();
+            } catch (EMSException exception) {
+                System.out.println("\n\t**" + exception + "**");
             }
         }
         return email;
@@ -256,8 +256,8 @@ public class EmployeeView {
                     } else {
                         System.out.println("\n\t**Entered number already exist**");
                     }
-                } catch (HibernateException e) {
-                    e.printStackTrace();
+                } catch (EMSException exception) {
+                    System.out.println("\n\t**" + exception + "**");
                 }
             } else {
                 System.out.println("\n\tEnter phone number correctly!!!\n\t*PhoneNumber must be 10 numbers*");
@@ -303,27 +303,30 @@ public class EmployeeView {
         int ViewChoice;
         int id;
         
-        if (0 == getTotalEmployees()) {
-            System.out.println("\tNo employee to view");
-        } else {
-            System.out.println("1:Display all\n2:display by id");
-            do {
-                ViewChoice = getAndValidateChoice();  
+        try {
+            if (0 == employeeController.isDataBaseEmpty()) {
+                System.out.println("\tNo employee to view");
+            } else {
+                System.out.println("1:Display all\n2:display by id");
+                do {
+                    ViewChoice = getAndValidateChoice();  
                               
-                switch (ViewChoice) {
-                    case 1:
-                        viewAllEmployee();
-                        break;
-                    case 2:
-                        viewEmployee();
-                        break;
-                    default :
-                        System.out.println("\t**Wrong choice**\n\t**Enter choice again**");
-                }
+                    switch (ViewChoice) {
+                        case 1:
+                            viewAllEmployee();
+                            break;
+                        case 2:
+                            viewEmployee();
+                            break;
+                        default :
+                            System.out.println("\t**Wrong choice**\n\t**Enter choice again**");
+                    }
+                } while (2 < ViewChoice);
             }
-              while (2 < ViewChoice);
+        } catch (EMSException exception) {
+            System.out.println("\n\t**" + exception + "**");
         }
-    }
+    }       
     
     /**
      * displaying the particular employee details and address
@@ -332,15 +335,11 @@ public class EmployeeView {
      * @param id employee id to view
      */
     private void viewEmployee() {
-        try {
-            System.out.println("Enter Employee id to view:");
-            EmployeeDTO employeeDto = getAndValidateEmployee();
-            System.out.println(employeeDto);
-            for (AddressDTO entry : employeeDto.getAddressDto()) {
-                System.out.println(entry);
-            }
-        } catch (HibernateException e) {
-            e.printStackTrace();
+        System.out.println("Enter Employee id to view:");
+        EmployeeDTO employeeDto = getAndValidateEmployee();
+        System.out.println(employeeDto);
+        for (AddressDTO entry : employeeDto.getAddressDto()) {
+            System.out.println(entry);
         }
     }
     
@@ -358,8 +357,8 @@ public class EmployeeView {
                 }
                 System.out.println("*".repeat(40));
             }
-        } catch (HibernateException e) {
-            e.printStackTrace();
+        } catch (EMSException exception) {
+            System.out.println("\n\t**" + exception + "**");
         }
     }
     
@@ -387,8 +386,8 @@ public class EmployeeView {
             } else {
                 System.out.println("\n\t**Employee creation failed!!!**");
             }
-        } catch (HibernateException e) {
-            e.printStackTrace();
+        } catch (EMSException exception) {
+            System.out.println("\n\t**" + exception + "**");
         }
         return employeeDto;
    }
@@ -533,8 +532,8 @@ public class EmployeeView {
             } else {
                 System.out.println("\n\t**Address creation failed!!!**");
             }
-        } catch (HibernateException e) {
-             e.printStackTrace();
+        } catch (EMSException exception) {
+             System.out.println("\n\t**" + exception + "**");
         }
     }
     
@@ -547,35 +546,39 @@ public class EmployeeView {
         int UpdateChoice = 0;
         EmployeeDTO employeeDto;
         
-        if (0 == getTotalEmployees()) {
-            System.out.println("\n\tNo employees to update");
-        } else {
-            System.out.println("Enter the employee id to update: ");
-            employeeDto = getAndValidateEmployee();
-            System.out.println("1:Update all\n2:Update specific field\n3:Update all address field"
-                               + "\n4:update specific address field\n5:Add address to employee ");
-            do {
-                UpdateChoice = getAndValidateChoice();                
-                switch (UpdateChoice) {
-                    case 1:
-                        updateAllFields(employeeDto);
-                        break;
-                    case 2:
-                        updateField(employeeDto);
-                        break;
-                    case 3:
-                        updateAddressFields(employeeDto);
-                        break;
-                    case 4:
-                        updateAddessField(employeeDto);
-                        break;
-                    case 5:
-                        createAddress(employeeDto);
-                        break;
-                    default :
-                        System.out.println("\t**Wrong choice**\n\t**Enter choice again**");
-                }
-            } while (5 < UpdateChoice);
+        try {
+            if (0 == employeeController.isDataBaseEmpty()) {
+                System.out.println("\n\tNo employees to update");
+            } else {
+                System.out.println("Enter the employee id to update: ");
+                employeeDto = getAndValidateEmployee();
+                System.out.println("1:Update all\n2:Update specific field\n3:Update all address field"
+                                   + "\n4:update specific address field\n5:Add address to employee ");
+                do {
+                    UpdateChoice = getAndValidateChoice();                
+                    switch (UpdateChoice) {
+                        case 1:
+                            updateAllFields(employeeDto);
+                            break;
+                        case 2:
+                            updateField(employeeDto);
+                            break;
+                        case 3:
+                            updateAddressFields(employeeDto);
+                            break;
+                        case 4:
+                            updateAddessField(employeeDto);
+                            break;
+                        case 5:
+                            createAddress(employeeDto);
+                            break;
+                        default :
+                            System.out.println("\t**Wrong choice**\n\t**Enter choice again**");
+                    }
+                } while (5 < UpdateChoice);
+            }
+        } catch (EMSException exception) {
+            System.out.println("\n\t**" + exception + "**");
         }
     }
     
@@ -596,8 +599,8 @@ public class EmployeeView {
             } else {
                 System.out.println("\n\t***Details not updated***");
             }
-        } catch (HibernateException e) {
-            e.printStackTrace();
+        } catch (EMSException exception) {
+            System.out.println("\n\t**" + exception + "**");
         }
     }
     
@@ -663,8 +666,8 @@ public class EmployeeView {
                         System.out.println("\n\t**Wrong field**\n\t**Select the field between the range");
                 }
             } while (5 < employeeField);
-        } catch (HibernateException e) {
-            e.printStackTrace();
+        } catch (EMSException exception) {
+            System.out.println("\n\t**" + exception + "**");
         }
     }
     
@@ -699,8 +702,8 @@ public class EmployeeView {
             } else {
                 System.out.println("\n\t***Address not updated***");
             }
-        } catch (HibernateException e) {
-            e.printStackTrace();
+        } catch (EMSException exception) {
+           System.out.println("\n\t**" + exception + "**");
         }
     }
     
@@ -779,8 +782,8 @@ public class EmployeeView {
                         System.out.println("\n\t**Wrong field**\n\t**Select the field between the range");
                 }
             } while (5 < addressField);
-        } catch (HibernateException e) {
-            e.printStackTrace();
+        } catch (EMSException exception) {
+            System.out.println("\n\t**" + exception + "**");
         }
     }
     
@@ -792,32 +795,37 @@ public class EmployeeView {
         int DeleteChoice;
         EmployeeDTO employeeDto;
         
-        if (0 == getTotalEmployees()) {
-            System.out.println("\tNo employee to delete");
-        } else {
-            System.out.println("1:Delete all\n2:Delete by id\n3:Delete address");
-            do {
-                DeleteChoice = getAndValidateChoice();                
-                switch (DeleteChoice) {
-                    case 1:
-                        deleteAllEmployee();
-                        break;
-                    case 2:
-                        System.out.println("Enter Employee id to delete:");
-                        employeeDto = getAndValidateEmployee();
-                        deleteSingleEmployee(employeeDto.getId());
-                        break;
-                    case 3:
-                        System.out.println("Enter Employee id to delete:");
-                        employeeDto = getAndValidateEmployee();
-                        deleteAddress(employeeDto.getId());
-                        break;
-                    default:
-                        System.out.println("\t**Wrong choice**\n\t**Enter choice again**");
-                }
-            }  while (3 < DeleteChoice);
+        try {
+            if (0 == employeeController.isDataBaseEmpty()) {
+                System.out.println("\tNo employee to delete");
+            } else {
+                System.out.println("1:Delete all\n2:Delete by id\n3:Delete address");
+                do {
+                    DeleteChoice = getAndValidateChoice();                
+                    switch (DeleteChoice) {
+                        case 1:
+                            deleteAllEmployee();
+                            break;
+                        case 2:
+                            System.out.println("Enter Employee id to delete:");
+                            employeeDto = getAndValidateEmployee();
+                            deleteSingleEmployee(employeeDto.getId());
+                            break;
+                        case 3:
+                            System.out.println("Enter Employee id to delete:");
+                            employeeDto = getAndValidateEmployee();
+                            deleteAddress(employeeDto.getId());
+                            break;
+                        default:
+                            System.out.println("\t**Wrong choice**\n\t**Enter choice again**");
+                    }
+                } while (3 < DeleteChoice);
+            }
+        } catch (EMSException exception) {
+             System.out.println("\n\t**" + exception + "**");
         }
     }
+        
     
     /**
      * Deleting the required employee by id
@@ -831,8 +839,8 @@ public class EmployeeView {
             } else {
                 System.out.println("\n\t**Employee not deleted**");
             }
-        } catch (HibernateException e) {
-            e.printStackTrace();
+        } catch (EMSException exception) {
+            System.out.println("\n\t**" + exception + "**");
         }
     }
 
@@ -841,13 +849,13 @@ public class EmployeeView {
      */
     private void deleteAllEmployee() {
         try {
-            if (getTotalEmployees() == employeeController.deleteAllEmployee()) {
+            if (employeeController.isDataBaseEmpty() == employeeController.deleteAllEmployee()) {
                 System.out.println("\n\t**Deleted succesfully**");
             } else {
                 System.out.println("\n\t**Employee not deleted*");
             }
-        } catch (HibernateException e) {
-            e.printStackTrace();
+        } catch (EMSException exception) {
+            System.out.println("\n\t**" + exception + "**");
         }
     }
     
@@ -872,8 +880,8 @@ public class EmployeeView {
              } else {
                 System.out.println("\n\t**Address not deleted**");
              }
-        } catch (HibernateException e) {
-            e.printStackTrace();
+        } catch (EMSException exception) {
+            System.out.println("\n\t**" + exception + "**");
         }
     } 
      
@@ -886,46 +894,51 @@ public class EmployeeView {
         Set<ProjectDTO> selectedProjects = new HashSet<>();
         System.out.println("Enter the Employee Id to assign project");
         EmployeeDTO employeeDto = getAndValidateEmployee();
-        List<ProjectDTO> projects = employeeController.getAllProjects();
-        List<ProjectDTO> toRemove = new ArrayList<>();
         
-        if (null != employeeDto.getProjectsDto()) {
-            for (ProjectDTO existing : employeeDto.getProjectsDto()) {
-                for (ProjectDTO available : projects) {
-                    if (existing.getId() == available.getId()) {
-                        toRemove.add(available);
+        try {
+            List<ProjectDTO> projects = employeeController.getAllProjects();
+            List<ProjectDTO> toRemove = new ArrayList<>();
+        
+            if (null != employeeDto.getProjectsDto()) {
+                for (ProjectDTO existing : employeeDto.getProjectsDto()) {
+                    for (ProjectDTO available : projects) {
+                        if (existing.getId() == available.getId()) {
+                            toRemove.add(available);
+                        }
+                    }
+                }
+                projects.removeAll(toRemove);
+            }
+        
+            System.out.println("\n\t**Available Projects*");
+            for (ProjectDTO projectDto : projects) {
+                System.out.println("\n\tProject Id-->" + projectDto.getId() 
+                                   + "\tProject name:-->" + projectDto.getName());
+            }
+            do {
+                System.out.println("Enter Project id to assign(eg--> 1,2,4)");
+                String projectIds = scanner.nextLine();
+                ids = projectIds.split(",");
+            } while (!employeeController.validateIds(ids));
+        
+            for (ProjectDTO available : projects) {
+                for (String id : ids) {
+                    if (Integer.parseInt(id) == available.getId()) {
+                        selectedProjects.add(available);
                     }
                 }
             }
-            projects.removeAll(toRemove);
-        }
-        
-        System.out.println("\n\t**Available Projects*");
-        for (ProjectDTO projectDto : projects) {
-            System.out.println("\n\tProject Id-->" + projectDto.getId() 
-                               + "\tProject name:-->" + projectDto.getName());
-        }
-        do {
-            System.out.println("Enter Project id to assign(eg--> 1,2,4)");
-            String projectIds = scanner.nextLine();
-            ids = projectIds.split(",");
-        } while (!employeeController.validateIds(ids));
-        
-        for (ProjectDTO available : projects) {
-            for (String id : ids) {
-                if (Integer.parseInt(id) == available.getId()) {
-                    selectedProjects.add(available);
+            if (null != employeeDto.getProjectsDto()) {
+                for (ProjectDTO projectDto : selectedProjects) {
+                    employeeDto.getProjectsDto().add(projectDto);
                 }
+            } else {
+                employeeDto.setProjectsDto(selectedProjects);
             }
+            employeeController.updateAllFields(employeeDto);
+        } catch (EMSException exception) {
+            System.out.println("\n\t**" + exception + "**");
         }
-        if (null != employeeDto.getProjectsDto()) {
-            for (ProjectDTO projectDto : selectedProjects) {
-                employeeDto.getProjectsDto().add(projectDto);
-            }
-        } else {
-            employeeDto.setProjectsDto(selectedProjects);
-        }
-        employeeController.updateAllFields(employeeDto);
     }
     
     /**
@@ -960,26 +973,14 @@ public class EmployeeView {
                 }
             }
             set.removeAll(toRemove); 
-            employeeDto.setProjectsDto(set); 
-            employeeController.updateAllFields(employeeDto);
+            employeeDto.setProjectsDto(set);
+            try {
+                employeeController.updateAllFields(employeeDto);
+            } catch (EMSException exception) {
+                System.out.println("\n\t**" + exception + "**");
+            }
         } else {
             System.out.println("\n\t**No Projects for this employee to unassign**");
         }
     }
-        
-    /**
-     * Getting total employees present in the database
-     *
-     * @return total employees in the database
-     */
-    private long getTotalEmployees() {
-        long totalEmployees = 0;
-        
-        try {
-            totalEmployees = employeeController.getTotalEmployees();
-        } catch (HibernateException e) {
-            e.printStackTrace();
-        }
-        return totalEmployees;
-    } 
 }

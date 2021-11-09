@@ -15,7 +15,9 @@ import org.hibernate.Transaction;
 
 import com.ideas2it.employeemanagement.connection.HibernateUtil;
 import com.ideas2it.employeemanagement.dao.ProjectDaoInterface;
+import com.ideas2it.employeemanagement.exception.EMSException;
 import com.ideas2it.employeemanagement.model.Project;
+import com.ideas2it.employeemanagement.utils.Constants;
 
 /**
  * <h1> Project DAO</h1>
@@ -36,13 +38,23 @@ public class ProjectDao implements ProjectDaoInterface {
      *
      * @return Number of rows inserted
      */
-    public int insertProject(Project project) throws HibernateException {
+    public int insertProject(Project project) throws EMSException {
         int id = 0;
+        Transaction transaction = null;
         Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        id = (Integer) session.save(project);
-        transaction.commit();
-        session.close();
+        
+        try {
+            transaction = session.beginTransaction();
+            id = (Integer) session.save(project);
+            transaction.commit();
+        } catch (HibernateException exception) {
+            if (null != transaction) {
+                transaction.rollback();
+            }
+            throw new EMSException(Constants.ERROR_CODE_010);
+        } finally {
+            session.close();
+        }
         return id;
     }
     
@@ -52,15 +64,25 @@ public class ProjectDao implements ProjectDaoInterface {
      * @param proejct project details to update
      * @return Total number of rows updated in database
      */
-    public int updateAllFields(Project project) throws HibernateException {
+    public int updateAllFields(Project project) throws EMSException {
         int projectUpdated = 0;
+        Transaction transaction = null;
         Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        Project newProject = (Project) session.merge(project);
-        transaction.commit();
-        session.close();
-        if (newProject.getId() == project.getId()) {
-            projectUpdated = 1;
+        
+        try {
+            transaction = session.beginTransaction();
+            Project newProject = (Project) session.merge(project);
+            transaction.commit();
+            if (newProject.getId() == project.getId()) {
+                projectUpdated = 1;
+            }
+        } catch (HibernateException exception) {
+            if (null != transaction) {
+                transaction.rollback();
+            }
+            throw new EMSException(Constants.ERROR_CODE_011);
+        } finally {
+            session.close();
         }
         return projectUpdated;
     }
@@ -72,10 +94,16 @@ public class ProjectDao implements ProjectDaoInterface {
      * @param id id of an project to get
      * @return Single project details
      */
-    public Project getProject(int id) throws HibernateException {
+    public Project getProject(int id) throws EMSException {
+        Project project = null;
         Session session = sessionFactory.openSession();
-        Project project = (Project) session.get(Project.class, id);
-        session.close();
+        try {
+            project = (Project) session.get(Project.class, id);
+        } catch (HibernateException exception) {
+            throw new EMSException(Constants.ERROR_CODE_012);
+        } finally {
+            session.close();
+        }
         return project;
     }
     
@@ -84,12 +112,18 @@ public class ProjectDao implements ProjectDaoInterface {
      *
      * @return All employees and their details
      */
-    public List<Project> getAllProject() throws HibernateException {
+    public List<Project> getAllProject() throws EMSException {
         List<Project> projectList = new ArrayList<>();
         Session session = sessionFactory.openSession();
-        Query query = session.createQuery("FROM Project");
-        projectList = query.list();
-        session.close();
+        
+        try {
+            Query query = session.createQuery("FROM Project");
+            projectList = query.list();
+        } catch (HibernateException exception) {
+            throw new EMSException(Constants.ERROR_CODE_012);
+        } finally {
+            session.close();
+        }
         return projectList;
     }
     
@@ -100,15 +134,25 @@ public class ProjectDao implements ProjectDaoInterface {
      * @param id id of an project to delete
      * @return Total number of rows deleted in database
      */
-    public int deleteProject(int id) throws HibernateException {
+    public int deleteProject(int id) throws EMSException {
         int rowsAffected = 0;
+        Transaction transaction = null;
         Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        Query query = session.createQuery("DELETE FROM Project p WHERE p.id = :id");
-        query.setParameter("id", id);
-        rowsAffected = query.executeUpdate();
-        transaction.commit();
-        session.close();
+        
+        try {
+            transaction = session.beginTransaction();
+            Query query = session.createQuery("DELETE FROM Project p WHERE p.id = :id");
+            query.setParameter("id", id);
+            rowsAffected = query.executeUpdate();
+            transaction.commit();
+        } catch (HibernateException exception) {
+            if (null != transaction) {
+                transaction.rollback();
+            }
+            throw new EMSException(Constants.ERROR_CODE_013);
+        } finally {
+            session.close();
+        }
         return rowsAffected;
     }
     
@@ -117,31 +161,24 @@ public class ProjectDao implements ProjectDaoInterface {
      *
      * @return Total number of rows deleted in database
      */
-    public int deleteAllProject() throws HibernateException {
+    public int deleteAllProject() throws EMSException {
         int rowsAffected = 0;
+        Transaction transaction = null;
         Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction(); 
-        Query query = session.createQuery("DELETE FROM Project");
-        rowsAffected = query.executeUpdate();
-        transaction.commit();
-        session.close();
+        
+        try { 
+            transaction = session.beginTransaction(); 
+            Query query = session.createQuery("DELETE FROM Project");
+            rowsAffected = query.executeUpdate();
+            transaction.commit();
+        } catch (HibernateException exception) {
+            if (null != transaction) {
+                transaction.rollback();
+            }
+            throw new EMSException(Constants.ERROR_CODE_013);
+        } finally {
+            session.close();
+        }
         return rowsAffected;
-    }
-    
-    /** 
-     * Getting the total number of projects present
-     * in the database
-     *
-     * @return Total number of projects present
-     */
-    public long getTotalProjects() throws HibernateException {
-        long totalProjects = 0;
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        Query query = session.createQuery("SELECT COUNT(*) FROM Project");
-        totalProjects = (Long) query.list().get(0); 
-        transaction.commit();
-        session.close();
-        return totalProjects;
     }
 }

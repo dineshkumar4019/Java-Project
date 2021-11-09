@@ -8,6 +8,7 @@ package com.ideas2it.employeemanagement.controller;
 import java.util.List;
 import org.hibernate.HibernateException;
 
+import com.ideas2it.employeemanagement.exception.EMSException;
 import com.ideas2it.employeemanagement.model.ProjectDTO;
 import com.ideas2it.employeemanagement.model.EmployeeDTO;
 import com.ideas2it.employeemanagement.service.impl.ProjectService;
@@ -31,8 +32,17 @@ public class ProjectController {
      * @param id project id for checking existance
      * @return project exist or not
      */
-    public boolean isProjectExist(int id) throws HibernateException {
+    public boolean isProjectExist(int id) throws EMSException {
         return projectService.isProjectExist(id);
+    }
+    
+    /**
+     * Checking if projects present in database
+     *
+     * @return database empty or not
+     */
+    public long isDataBaseEmpty() throws EMSException {
+        return projectService.isDataBaseEmpty();
     }
     
     /**
@@ -81,7 +91,7 @@ public class ProjectController {
      * @param projectDto project details to be created
      * @return Number of projects added
      */
-    public int createProject(ProjectDTO projectDto) throws HibernateException {
+    public int createProject(ProjectDTO projectDto) throws EMSException {
         return projectService.createProject(projectDto);
     }
     /**
@@ -90,7 +100,7 @@ public class ProjectController {
      * @param id project id to get project details
      * @return particular project details
      */
-    public ProjectDTO getSingleProject(int id) {
+    public ProjectDTO getSingleProject(int id) throws EMSException {
         return projectService.getSingleProject(id);
     }
     
@@ -99,7 +109,7 @@ public class ProjectController {
      *
      * @return All projects details
      */
-    public List<ProjectDTO> getAllProjects() throws HibernateException {
+    public List<ProjectDTO> getAllProjects() throws EMSException {
         return projectService.getAllProjects();
     }
     
@@ -108,7 +118,7 @@ public class ProjectController {
      *
      * @return All employees details
      */
-    public List<EmployeeDTO> getAllEmployees() throws HibernateException {
+    public List<EmployeeDTO> getAllEmployees() throws EMSException {
         return projectService.getAllEmployees();
     }
     
@@ -118,7 +128,7 @@ public class ProjectController {
      * @param projectDto project details to be updated
      * @return Number of rows updated
      */
-    public int updateAllFields(ProjectDTO projectDto)  throws HibernateException {
+    public int updateAllFields(ProjectDTO projectDto)  throws EMSException {
         return projectService.updateAllFields(projectDto);
     }
     
@@ -128,7 +138,7 @@ public class ProjectController {
      * @param id id for deleting the project
      * @return Number of rows deleted
      */
-    public int deleteSingleProject(int id) throws HibernateException {
+    public int deleteSingleProject(int id) throws EMSException {
         return projectService.deleteSingleProject(id);
     }
     
@@ -137,16 +147,7 @@ public class ProjectController {
      *
      * @return Number of rows deleted
      */
-    public int deleteAllProject() throws HibernateException {
+    public int deleteAllProject() throws EMSException {
         return projectService.deleteAllProject();
-    }
-    
-    /**
-     * Getting total projects is present in the database 
-     *
-     * @return total projects
-     */
-    public long getTotalProjects() throws HibernateException {
-        return projectService.getTotalProjects();
     }
 }

@@ -13,6 +13,7 @@ import com.ideas2it.employeemanagement.model.AddressDTO;
 import com.ideas2it.employeemanagement.model.EmployeeDTO;
 import com.ideas2it.employeemanagement.model.ProjectDTO;
 import com.ideas2it.employeemanagement.service.impl.EmployeeService;
+import com.ideas2it.employeemanagement.exception.EMSException;
 
 /**
  * <h1> Employees controller</h1>
@@ -28,22 +29,22 @@ public class EmployeeController {
     private EmployeeService employeeService = new EmployeeService();
     
     /**
-     * Getting total employees is present in the database 
-     *
-     * @return total employees
-     */
-    public long getTotalEmployees() throws HibernateException {
-        return employeeService.getTotalEmployees();
-    }
-    
-    /**
      * Checking an employee presences in database
      *
      * @param id employee id for checking existance
      * @return employee exist or not
      */
-    public boolean isEmployeeExist(int id) throws HibernateException {
+    public boolean isEmployeeExist(int id) throws EMSException {
         return employeeService.isEmployeeExist(id);
+    }
+    
+    /**
+     * Checking if employees present in database
+     *
+     * @return database empty or not
+     */
+    public long isDataBaseEmpty() throws EMSException {
+        return employeeService.isDataBaseEmpty();
     }
     
     /**
@@ -52,7 +53,7 @@ public class EmployeeController {
      * @param id address id for checking existance
      * @return address exist or not
      */
-    public boolean isAddressExist(int addressId) throws HibernateException {
+    public boolean isAddressExist(int addressId) throws EMSException {
         return employeeService.isAddressExist(addressId);
     }
     
@@ -82,7 +83,7 @@ public class EmployeeController {
      * @param email email for checking existence
      * @return email exist or not
      */
-    public boolean isEmailExist(String email) throws HibernateException {
+    public boolean isEmailExist(String email) throws EMSException {
         return employeeService.isEmailExist(email);
     }
     
@@ -102,7 +103,7 @@ public class EmployeeController {
      * @param phoneNumber phoneNumber for checking existence
      * @return phoneNumber exist or not
      */
-    public boolean isPhoneNumberExist(long phoneNumber) throws HibernateException {
+    public boolean isPhoneNumberExist(long phoneNumber) throws EMSException {
         return employeeService.isPhoneNumberExist(phoneNumber);
     }
     
@@ -202,7 +203,7 @@ public class EmployeeController {
      * @param employeeDto employee details to be created
      * @return Number of employees added
      */
-    public int createEmployee(EmployeeDTO employeeDto) throws HibernateException {
+    public int createEmployee(EmployeeDTO employeeDto) throws EMSException {
         return employeeService.createEmployee(employeeDto);
     }
     
@@ -212,7 +213,7 @@ public class EmployeeController {
      * @param employeeDto employee details to be created
      * @return Number of employees added
      */
-    public int insertAddress(AddressDTO addressDto ) throws HibernateException {
+    public int insertAddress(AddressDTO addressDto ) throws EMSException {
         return employeeService.insertAddress(addressDto);
     }
     
@@ -222,7 +223,7 @@ public class EmployeeController {
      * @param id employee id to get employee details
      * @return particular employee details
      */
-    public EmployeeDTO getSingleEmployee(int id) throws HibernateException {
+    public EmployeeDTO getSingleEmployee(int id) throws EMSException {
         return employeeService.getSingleEmployee(id);
     }
     
@@ -231,7 +232,7 @@ public class EmployeeController {
      *
      * @return All projects details
      */
-    public List<ProjectDTO> getAllProjects() throws HibernateException {
+    public List<ProjectDTO> getAllProjects() throws EMSException {
         return employeeService.getAllProjects();
     }
     
@@ -241,7 +242,7 @@ public class EmployeeController {
      * @param id address id to get employee details
      * @return particular address details
      */
-    public AddressDTO getAddress(int id) throws HibernateException {
+    public AddressDTO getAddress(int id) throws EMSException {
         return employeeService.getAddress(id);
     }
     
@@ -250,7 +251,7 @@ public class EmployeeController {
      *
      * @return All employee details
      */
-    public List<EmployeeDTO> getAllEmployee() throws HibernateException {
+    public List<EmployeeDTO> getAllEmployee() throws EMSException {
         return employeeService.getAllEmployee();
     }
     
@@ -260,7 +261,7 @@ public class EmployeeController {
      * @param employeeDto employee details to be updated
      * @return Number of rows updated
      */
-    public int updateAllFields(EmployeeDTO employeeDto)  throws HibernateException {
+    public int updateAllFields(EmployeeDTO employeeDto)  throws EMSException {
         return employeeService.updateAllFields(employeeDto);
     }
     
@@ -270,7 +271,7 @@ public class EmployeeController {
      * @param id id for deleting the employee
      * @return Number of rows deleted
      */
-    public int deleteSingleEmployee(int id) throws HibernateException {
+    public int deleteSingleEmployee(int id) throws EMSException {
         return employeeService.deleteSingleEmployee(id);
     }
     
@@ -279,7 +280,7 @@ public class EmployeeController {
      *
      * @return Number of rows deleted
      */
-    public int deleteAllEmployee() throws HibernateException {
+    public int deleteAllEmployee() throws EMSException {
         return employeeService.deleteAllEmployee();
     }
     
@@ -289,7 +290,7 @@ public class EmployeeController {
      * @param id address id for deleting the address
      * @return total rows deleted
      */
-    public int deleteAddress(int addressId) throws HibernateException {
+    public int deleteAddress(int addressId) throws EMSException {
         return employeeService.deleteAddress(addressId);
     }
 }

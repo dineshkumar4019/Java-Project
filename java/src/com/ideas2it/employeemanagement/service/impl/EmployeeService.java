@@ -23,6 +23,7 @@ import com.ideas2it.employeemanagement.model.EmployeeDTO;
 import com.ideas2it.employeemanagement.model.Project;
 import com.ideas2it.employeemanagement.model.ProjectDTO;
 import com.ideas2it.employeemanagement.service.EmployeeServiceInterface;
+import com.ideas2it.employeemanagement.exception.EMSException;
 import com.ideas2it.employeemanagement.utils.ModelMapper;
 
 /**
@@ -38,23 +39,14 @@ import com.ideas2it.employeemanagement.utils.ModelMapper;
 public class EmployeeService implements EmployeeServiceInterface {
     private EmployeeDao employeeDao = new EmployeeDao();
     private ModelMapper modelMapper  = new ModelMapper();
-       
-    /**
-     * Getting the total employees present in the database
-     *
-     * @return total employees
-     */
-    public long getTotalEmployees() throws HibernateException {
-        return employeeDao.getTotalEmployees();
-    }
-    
+
     /**
      * Checking an employee exist in database by id
      *
      * @param id employee id for checking existance
      * @return employee exist or not
      */
-    public boolean isEmployeeExist(int id) throws HibernateException {
+    public boolean isEmployeeExist(int id) throws EMSException {
         boolean isExist = true;
         
         if(null == employeeDao.getEmployee(id)) {
@@ -64,12 +56,21 @@ public class EmployeeService implements EmployeeServiceInterface {
     }
     
     /**
+     * Checking if employees present in database
+     *
+     * @return database empty or not
+     */
+    public long isDataBaseEmpty() throws EMSException {
+        return getAllEmployee().size();
+    }
+    
+    /**
      * Checking an address exist in database by id
      *
      * @param id address id for checking existance
      * @return address exist or not
      */
-    public boolean isAddressExist(int addressId) throws HibernateException {
+    public boolean isAddressExist(int addressId) throws EMSException {
         boolean isExist = true;
         
         if(null == employeeDao.getAddress(addressId)) {
@@ -104,7 +105,7 @@ public class EmployeeService implements EmployeeServiceInterface {
      * @param email email for checking existence
      * @return email exist or not
      */
-    public boolean isEmailExist(String email) throws HibernateException {
+    public boolean isEmailExist(String email) throws EMSException {
         return employeeDao.isEmailExist(email);
     }
     
@@ -126,7 +127,7 @@ public class EmployeeService implements EmployeeServiceInterface {
      * @param phoneNumber phoneNumber for checking existence
      * @return phoneNumber exist or not
      */
-    public boolean isPhoneNumberExist(long phoneNumber) throws HibernateException {
+    public boolean isPhoneNumberExist(long phoneNumber) throws EMSException {
         return employeeDao.isPhoneNumberExist(phoneNumber);
     }
     
@@ -232,7 +233,7 @@ public class EmployeeService implements EmployeeServiceInterface {
      * @param employeeDto employee details to be inserted in the database
      * @return Number of rows created
      */
-    public int createEmployee(EmployeeDTO employeeDto) throws HibernateException {
+    public int createEmployee(EmployeeDTO employeeDto) throws EMSException {
         int id = employeeDao.insertEmployee(modelMapper.toEmployee(employeeDto));
         
         return id;
@@ -244,7 +245,7 @@ public class EmployeeService implements EmployeeServiceInterface {
      * @param employeeDto employee details to be inserted in the database
      * @return Number of rows created
      */
-    public int insertAddress(AddressDTO addressDto) throws HibernateException {
+    public int insertAddress(AddressDTO addressDto) throws EMSException {
         Address address = modelMapper.toAddress(addressDto);
         address.setEmployee(modelMapper.toEmployee(addressDto.getEmployeeDto()));
         return employeeDao.insertAddress(address);
@@ -257,7 +258,7 @@ public class EmployeeService implements EmployeeServiceInterface {
      * @param id employee id to get employee details
      * @return single employee details
      */
-    public EmployeeDTO getSingleEmployee(int id) throws HibernateException {
+    public EmployeeDTO getSingleEmployee(int id) throws EMSException {
         Employee employee = employeeDao.getEmployee(id);
         EmployeeDTO employeeDto = modelMapper.toEmployeeDto(employee);
         Set<ProjectDTO> set = new HashSet<>();
@@ -269,7 +270,7 @@ public class EmployeeService implements EmployeeServiceInterface {
         return employeeDto;
     }
     
-    public AddressDTO getAddress(int id) throws HibernateException {
+    public AddressDTO getAddress(int id) throws EMSException {
         return modelMapper.toAddressDto(employeeDao.getAddress(id));
     }
     
@@ -278,7 +279,7 @@ public class EmployeeService implements EmployeeServiceInterface {
      *
      * @return All projects details
      */
-    public List<ProjectDTO> getAllProjects() throws HibernateException {
+    public List<ProjectDTO> getAllProjects() throws EMSException {
         ProjectService projectService = new ProjectService();
         return projectService.getAllProjects();
     }
@@ -288,7 +289,7 @@ public class EmployeeService implements EmployeeServiceInterface {
      *
      * @return All employee details
      */
-    public List<EmployeeDTO> getAllEmployee() throws HibernateException {
+    public List<EmployeeDTO> getAllEmployee() throws EMSException {
         List<EmployeeDTO> employeeDto = new ArrayList<>();
         
         for (Employee employee: employeeDao.getEmployees()) {
@@ -303,7 +304,7 @@ public class EmployeeService implements EmployeeServiceInterface {
      * @param employeeDto employee details to be update
      * @return Number of rows updated
      */
-    public int updateAllFields(EmployeeDTO employeeDto) throws HibernateException {
+    public int updateAllFields(EmployeeDTO employeeDto) throws EMSException {
         Employee employee = new Employee();
         Set<Project> set = new HashSet<>();
         employee = modelMapper.toEmployee(employeeDto);
@@ -325,7 +326,7 @@ public class EmployeeService implements EmployeeServiceInterface {
      * @param id id for deleting the employee
      * @return Number of rows deleted
      */
-    public int deleteSingleEmployee(int id) throws HibernateException {
+    public int deleteSingleEmployee(int id) throws EMSException {
         return employeeDao.deleteEmployee(id);
     }
      
@@ -334,7 +335,7 @@ public class EmployeeService implements EmployeeServiceInterface {
      *
      * @return Total employees deleted
      */
-    public int deleteAllEmployee() throws HibernateException {
+    public int deleteAllEmployee() throws EMSException {
         return employeeDao.deleteAllEmployee();
     }
     
@@ -344,7 +345,7 @@ public class EmployeeService implements EmployeeServiceInterface {
      * @param id address id for deleting the address
      * @return total rows deleted
      */
-    public int deleteAddress(int addressId) throws HibernateException {
+    public int deleteAddress(int addressId) throws EMSException {
         return employeeDao.deleteAddress(addressId);
     }
 }

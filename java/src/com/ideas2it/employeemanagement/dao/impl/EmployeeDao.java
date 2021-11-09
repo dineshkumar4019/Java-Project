@@ -16,8 +16,10 @@ import org.hibernate.Transaction;
 
 import com.ideas2it.employeemanagement.connection.HibernateUtil;
 import com.ideas2it.employeemanagement.dao.EmployeeDaoInterface;
+import com.ideas2it.employeemanagement.exception.EMSException;
 import com.ideas2it.employeemanagement.model.Employee;
 import com.ideas2it.employeemanagement.model.Address;
+import com.ideas2it.employeemanagement.utils.Constants;
 
 /**
  * <h1> Employee DAO</h1>
@@ -38,13 +40,23 @@ public class EmployeeDao implements EmployeeDaoInterface {
      *
      * @return Number of rows inserted
      */
-    public int insertEmployee(Employee employee) throws HibernateException {
+    public int insertEmployee(Employee employee) throws EMSException {
         int id = 0;
+        Transaction transaction = null;
         Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        id = (Integer) session.save(employee);
-        transaction.commit();
-        session.close();
+        
+        try {
+            transaction = session.beginTransaction();
+            id = (Integer) session.save(employee);
+            transaction.commit();
+        } catch (HibernateException exception) {
+            if (null != transaction) {
+                transaction.rollback();
+            }
+            throw new EMSException(Constants.ERROR_CODE_001);
+        } finally {
+            session.close();
+        }
         return id;
     }
     
@@ -54,13 +66,23 @@ public class EmployeeDao implements EmployeeDaoInterface {
      *
      * @return Number of rows inserted
      */
-    public int insertAddress(Address address) throws HibernateException {
+    public int insertAddress(Address address) throws EMSException {
         int id = 0;
+        Transaction transaction = null;
         Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        id = (Integer) session.save(address);
-        transaction.commit();
-        session.close();
+        
+        try { 
+            transaction = session.beginTransaction();
+            id = (Integer) session.save(address);
+            transaction.commit();
+        } catch (HibernateException exception) {
+            if (null != transaction) {
+                transaction.rollback();
+            }
+            throw new EMSException(Constants.ERROR_CODE_002);
+        } finally {
+            session.close();
+        }
         return id;
     }
    
@@ -70,15 +92,25 @@ public class EmployeeDao implements EmployeeDaoInterface {
      * @param employee employee details to update
      * @return Total number of rows updated in database
      */
-    public int updateAllFields(Employee employee) throws HibernateException {
+    public int updateAllFields(Employee employee) throws EMSException {
         int employeeUpdated = 0;
+        Transaction transaction = null;
         Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        Employee newEmployee = (Employee) session.merge(employee);
-        transaction.commit();
-        session.close();
-        if (newEmployee.getId() == employee.getId()) {
-            employeeUpdated = 1;
+        
+        try {
+            transaction = session.beginTransaction();
+            Employee newEmployee = (Employee) session.merge(employee);
+            transaction.commit();
+            if (newEmployee.getId() == employee.getId()) {
+                employeeUpdated = 1;
+            }
+        } catch (HibernateException exception) {
+            if (null != transaction) {
+                transaction.rollback();
+            }
+            throw new EMSException(Constants.ERROR_CODE_003);
+        } finally {
+            session.close();
         }
         return employeeUpdated;
     }
@@ -90,15 +122,25 @@ public class EmployeeDao implements EmployeeDaoInterface {
      * @param id id of an employee to delete
      * @return Total number of rows deleted in database
      */
-    public int deleteEmployee(int id) throws HibernateException {
+    public int deleteEmployee(int id) throws EMSException {
         int rowsAffected = 0;
+        Transaction transaction = null;
         Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        Query query = session.createQuery("DELETE FROM Employee e WHERE e.id = :id");
-        query.setParameter("id", id);
-        rowsAffected = query.executeUpdate();
-        transaction.commit();
-        session.close();
+        
+        try {
+            transaction = session.beginTransaction();
+            Query query = session.createQuery("DELETE FROM Employee e WHERE e.id = :id");
+            query.setParameter("id", id);
+            rowsAffected = query.executeUpdate();
+            transaction.commit();
+        } catch (HibernateException exception) {
+            if (null != transaction) {
+                transaction.rollback();
+            }
+            throw new EMSException(Constants.ERROR_CODE_004);
+        } finally {
+            session.close();
+        } 
         return rowsAffected;
     }
     
@@ -109,15 +151,25 @@ public class EmployeeDao implements EmployeeDaoInterface {
      * @param id id of an employee to delete
      * @return Total number of rows deleted in database
      */
-    public int deleteAddress(int addressId) throws HibernateException {
+    public int deleteAddress(int addressId) throws EMSException {
         int rowsAffected = 0; 
+        Transaction transaction = null;
         Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        Query query = session.createQuery("DELETE FROM Address e WHERE e.id = :id");
-        query.setParameter("id", addressId);
-        rowsAffected = query.executeUpdate();        
-        transaction.commit();
-        session.close();
+        
+        try {
+            transaction = session.beginTransaction();
+            Query query = session.createQuery("DELETE FROM Address e WHERE e.id = :id");
+            query.setParameter("id", addressId);
+            rowsAffected = query.executeUpdate();        
+            transaction.commit();
+        } catch (HibernateException exception) {
+            if (null != transaction) {
+                transaction.rollback();
+            }
+            throw new EMSException(Constants.ERROR_CODE_005);
+        } finally {
+            session.close();
+        } 
         return rowsAffected;
     }
     
@@ -126,14 +178,24 @@ public class EmployeeDao implements EmployeeDaoInterface {
      *
      * @return Total number of rows deleted in database
      */
-    public int deleteAllEmployee() throws HibernateException {
+    public int deleteAllEmployee() throws EMSException {
         int rowsAffected = 0;
+        Transaction transaction = null;
         Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction(); 
-        Query query = session.createQuery("DELETE FROM Employee");
-        rowsAffected = query.executeUpdate();
-        transaction.commit();
-        session.close();
+        
+        try {
+            transaction = session.beginTransaction(); 
+            Query query = session.createQuery("DELETE FROM Employee");
+            rowsAffected = query.executeUpdate();
+            transaction.commit();
+        } catch (HibernateException exception) {
+            if (null != transaction) {
+                transaction.rollback();
+            }
+            throw new EMSException(Constants.ERROR_CODE_004);
+        } finally {
+            session.close();
+        } 
         return rowsAffected;
     }
     
@@ -144,10 +206,17 @@ public class EmployeeDao implements EmployeeDaoInterface {
      * @param id id of an employee to get
      * @return Single employee details
      */
-    public Employee getEmployee(int id) throws HibernateException {
+    public Employee getEmployee(int id) throws EMSException {
+        Employee employee = null;
         Session session = sessionFactory.openSession();
-        Employee employee = (Employee) session.get(Employee.class, id);
-        session.close();
+        
+        try {
+            employee = (Employee) session.get(Employee.class, id);
+        } catch (HibernateException exception) {
+            throw new EMSException(Constants.ERROR_CODE_006);
+        } finally {
+            session.close();
+        }
         return employee;
     }
     
@@ -158,10 +227,17 @@ public class EmployeeDao implements EmployeeDaoInterface {
      * @param id id of an address to get
      * @return Single address details
      */
-    public Address getAddress(int addressId) throws HibernateException {
+    public Address getAddress(int addressId) throws EMSException {
+        Address address = null;
         Session session = sessionFactory.openSession();
-        Address address = (Address) session.get(Address.class, addressId);
-        session.close();
+        
+        try {
+            address = (Address) session.get(Address.class, addressId);
+        } catch (HibernateException exception) {
+            throw new EMSException(Constants.ERROR_CODE_007);
+        } finally {
+            session.close();
+        }
         return address;
     }
  
@@ -170,30 +246,19 @@ public class EmployeeDao implements EmployeeDaoInterface {
      *
      * @return All employees and their details
      */
-    public List<Employee> getEmployees() throws HibernateException {
+    public List<Employee> getEmployees() throws EMSException {
         List<Employee> employeeList = new ArrayList<>();
         Session session = sessionFactory.openSession();
-        Query query = session.createQuery("FROM Employee");
-        employeeList = query.list();
-        session.close();
+        
+        try {
+            Query query = session.createQuery("FROM Employee");
+            employeeList = query.list();
+        } catch (HibernateException exception) {
+            throw new EMSException(Constants.ERROR_CODE_006);
+        } finally {
+            session.close();
+        }
         return employeeList;
-    }
-    
-    /** 
-     * Getting the total number of employees present
-     * in the database
-     *
-     * @return Total number of employees present
-     */
-    public long getTotalEmployees() throws HibernateException {
-        long totalEmployees = 0;
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        Query query = session.createQuery("SELECT COUNT(*) FROM Employee");
-        totalEmployees = (Long) query.list().get(0); 
-        transaction.commit();
-        session.close();
-        return totalEmployees;
     } 
 
     /** 
@@ -203,11 +268,18 @@ public class EmployeeDao implements EmployeeDaoInterface {
      * @param email email to check the existance
      * @return email exist or not
      */
-    public boolean isEmailExist(String email) throws HibernateException {
+    public boolean isEmailExist(String email) throws EMSException {
+        Employee employee = null;
         Session session = sessionFactory.openSession();
-        Query query = session.createQuery("FROM Employee WHERE email = :email");
-        Employee employee = (Employee) query.setParameter("email", email).uniqueResult();
-        session.close();
+        
+        try {
+            Query query = session.createQuery("FROM Employee WHERE email = :email");
+            employee = (Employee) query.setParameter("email", email).uniqueResult();
+        } catch (HibernateException exception) {
+            throw new EMSException(Constants.ERROR_CODE_008);
+        } finally {
+            session.close();
+        }
         return (null != employee) ? true : false;
    }
    
@@ -218,11 +290,18 @@ public class EmployeeDao implements EmployeeDaoInterface {
      * @param phoneNumber phone number to check the existance
      * @return email exist or not
      */
-   public boolean isPhoneNumberExist(long phoneNumber) throws HibernateException {
+   public boolean isPhoneNumberExist(long phoneNumber) throws EMSException {
+      Employee employee = null;
       Session session = sessionFactory.openSession();
-      Query query = session.createQuery("FROM Employee WHERE phoneNumber = :phoneNumber");
-      Employee employee = (Employee) query.setParameter("phoneNumber", phoneNumber).uniqueResult();
-      session.close();
+      
+      try {
+          Query query = session.createQuery("FROM Employee WHERE phoneNumber = :phoneNumber");
+          employee = (Employee) query.setParameter("phoneNumber", phoneNumber).uniqueResult();
+      } catch (HibernateException exception) {
+            throw new EMSException(Constants.ERROR_CODE_008);
+        } finally {
+            session.close();
+        }
       return (null != employee) ? true : false;
    }
 }

@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 import org.hibernate.HibernateException;
 
 import com.ideas2it.employeemanagement.dao.impl.ProjectDao;
+import com.ideas2it.employeemanagement.exception.EMSException;
 import com.ideas2it.employeemanagement.model.Employee;
 import com.ideas2it.employeemanagement.model.EmployeeDTO;
 import com.ideas2it.employeemanagement.model.Project;
@@ -42,13 +43,22 @@ public class ProjectService implements ProjectServiceInterface {
      * @param id project id for checking existance
      * @return project exist or not
      */
-    public boolean isProjectExist(int id) throws HibernateException {
+    public boolean isProjectExist(int id) throws EMSException {
         boolean isExist = true;
         
         if(null == projectDao.getProject(id)) {
             isExist = false;
         }
         return isExist;
+    }
+    
+    /**
+     * Checking if projects present in database
+     *
+     * @return database empty or not
+     */
+    public long isDataBaseEmpty() throws EMSException {
+        return getAllProjects().size();
     }
     
     /**
@@ -121,7 +131,7 @@ public class ProjectService implements ProjectServiceInterface {
      * @param employeeDto employee details to be inserted in the database
      * @return Number of rows created
      */
-    public int createProject(ProjectDTO projectDto) throws HibernateException {
+    public int createProject(ProjectDTO projectDto) throws EMSException {
         return projectDao.insertProject(modelMapper.toProject(projectDto));
     }
     
@@ -131,7 +141,7 @@ public class ProjectService implements ProjectServiceInterface {
      * @param id project id to get project details
      * @return single project details
      */
-    public ProjectDTO getSingleProject(int id) throws HibernateException {
+    public ProjectDTO getSingleProject(int id) throws EMSException {
         Project project = projectDao.getProject(id);
         ProjectDTO projectDto = modelMapper.toProjectDto(project);
         Set<EmployeeDTO> set = new HashSet<>();
@@ -148,7 +158,7 @@ public class ProjectService implements ProjectServiceInterface {
      *
      * @return All projects details
      */
-    public List<ProjectDTO> getAllProjects() throws HibernateException {
+    public List<ProjectDTO> getAllProjects() throws EMSException {
         List<ProjectDTO> projects = new ArrayList<>();
         Set<EmployeeDTO> employees = new HashSet<>();
         
@@ -164,7 +174,7 @@ public class ProjectService implements ProjectServiceInterface {
      *
      * @return All employees details
      */
-    public List<EmployeeDTO> getAllEmployees() throws HibernateException {
+    public List<EmployeeDTO> getAllEmployees() throws EMSException {
         EmployeeService employeeService = new EmployeeService();
         return employeeService.getAllEmployee();
     }
@@ -175,7 +185,7 @@ public class ProjectService implements ProjectServiceInterface {
      * @param projectDto projects details to be update
      * @return Number of rows updated
      */
-    public int updateAllFields(ProjectDTO projectDto) throws HibernateException {
+    public int updateAllFields(ProjectDTO projectDto) throws EMSException {
         Set<Employee> set = new HashSet<>();
         Project project = modelMapper.toProject(projectDto);
         if (null != projectDto.getEmployeesDto()) {
@@ -193,7 +203,7 @@ public class ProjectService implements ProjectServiceInterface {
      * @param id id for deleting the project
      * @return Number of rows deleted
      */
-    public int deleteSingleProject(int id) throws HibernateException {
+    public int deleteSingleProject(int id) throws EMSException {
         return projectDao.deleteProject(id);
     }
     
@@ -202,16 +212,7 @@ public class ProjectService implements ProjectServiceInterface {
      *
      * @return Total projects deleted
      */
-    public int deleteAllProject() throws HibernateException {
+    public int deleteAllProject() throws EMSException {
         return projectDao.deleteAllProject();
-    }
-    
-    /**
-     * Getting the total projects present in the database
-     *
-     * @return total projects
-     */
-    public long getTotalProjects() throws HibernateException {
-        return projectDao.getTotalProjects();
     }
 }
