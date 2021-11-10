@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Configuration>
+    
+    <Appenders>
+        <File name="File" fileName="EMSLogs.log">
+            <PatternLayout pattern="%d{yyyy-MMM-dd HH:mm:ss a} [%t] %-5level %logger{36} - %msg%n" />
+        </File>
+    </Appenders>
+    
+    <Loggers>
+        <Logger name="org.hibernate" level="info" additivity="false">
+            <AppenderRef ref="File"/>
+        </Logger>
+        
+        <Logger name="com.ideas2it.employeemanagement.logger.EMSLogger" level="info" additivity="false">
+            <AppenderRef ref="File"/>
+        </Logger>
+        
+        <Root level="error">
+          <AppenderRef ref="File"/>
+        </Root>
+    </Loggers>
+</Configuration>
+    

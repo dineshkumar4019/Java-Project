@@ -16,6 +16,7 @@ import org.hibernate.Transaction;
 import com.ideas2it.employeemanagement.connection.HibernateUtil;
 import com.ideas2it.employeemanagement.dao.ProjectDaoInterface;
 import com.ideas2it.employeemanagement.exception.EMSException;
+import com.ideas2it.employeemanagement.logger.EMSLogger;
 import com.ideas2it.employeemanagement.model.Project;
 import com.ideas2it.employeemanagement.utils.Constants;
 
@@ -51,6 +52,7 @@ public class ProjectDao implements ProjectDaoInterface {
             if (null != transaction) {
                 transaction.rollback();
             }
+            EMSLogger.logger.error(exception);
             throw new EMSException(Constants.ERROR_CODE_010);
         } finally {
             session.close();
@@ -80,6 +82,7 @@ public class ProjectDao implements ProjectDaoInterface {
             if (null != transaction) {
                 transaction.rollback();
             }
+            EMSLogger.logger.error(exception);
             throw new EMSException(Constants.ERROR_CODE_011);
         } finally {
             session.close();
@@ -100,6 +103,7 @@ public class ProjectDao implements ProjectDaoInterface {
         try {
             project = (Project) session.get(Project.class, id);
         } catch (HibernateException exception) {
+            EMSLogger.logger.error(exception);
             throw new EMSException(Constants.ERROR_CODE_012);
         } finally {
             session.close();
@@ -149,6 +153,7 @@ public class ProjectDao implements ProjectDaoInterface {
             if (null != transaction) {
                 transaction.rollback();
             }
+            EMSLogger.logger.error(exception);
             throw new EMSException(Constants.ERROR_CODE_013);
         } finally {
             session.close();
@@ -175,6 +180,7 @@ public class ProjectDao implements ProjectDaoInterface {
             if (null != transaction) {
                 transaction.rollback();
             }
+            EMSLogger.logger.error(exception);
             throw new EMSException(Constants.ERROR_CODE_013);
         } finally {
             session.close();

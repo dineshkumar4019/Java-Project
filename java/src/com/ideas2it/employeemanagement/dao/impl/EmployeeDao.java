@@ -17,6 +17,7 @@ import org.hibernate.Transaction;
 import com.ideas2it.employeemanagement.connection.HibernateUtil;
 import com.ideas2it.employeemanagement.dao.EmployeeDaoInterface;
 import com.ideas2it.employeemanagement.exception.EMSException;
+import com.ideas2it.employeemanagement.logger.EMSLogger;
 import com.ideas2it.employeemanagement.model.Employee;
 import com.ideas2it.employeemanagement.model.Address;
 import com.ideas2it.employeemanagement.utils.Constants;
@@ -53,6 +54,7 @@ public class EmployeeDao implements EmployeeDaoInterface {
             if (null != transaction) {
                 transaction.rollback();
             }
+            EMSLogger.logger.error(exception);
             throw new EMSException(Constants.ERROR_CODE_001);
         } finally {
             session.close();
@@ -79,6 +81,7 @@ public class EmployeeDao implements EmployeeDaoInterface {
             if (null != transaction) {
                 transaction.rollback();
             }
+            EMSLogger.logger.error(exception);
             throw new EMSException(Constants.ERROR_CODE_002);
         } finally {
             session.close();
@@ -108,6 +111,7 @@ public class EmployeeDao implements EmployeeDaoInterface {
             if (null != transaction) {
                 transaction.rollback();
             }
+            EMSLogger.logger.error(exception);
             throw new EMSException(Constants.ERROR_CODE_003);
         } finally {
             session.close();
@@ -137,6 +141,7 @@ public class EmployeeDao implements EmployeeDaoInterface {
             if (null != transaction) {
                 transaction.rollback();
             }
+            EMSLogger.logger.error(exception);
             throw new EMSException(Constants.ERROR_CODE_004);
         } finally {
             session.close();
@@ -166,6 +171,7 @@ public class EmployeeDao implements EmployeeDaoInterface {
             if (null != transaction) {
                 transaction.rollback();
             }
+            EMSLogger.logger.error(exception);
             throw new EMSException(Constants.ERROR_CODE_005);
         } finally {
             session.close();
@@ -192,6 +198,7 @@ public class EmployeeDao implements EmployeeDaoInterface {
             if (null != transaction) {
                 transaction.rollback();
             }
+            EMSLogger.logger.error(exception);
             throw new EMSException(Constants.ERROR_CODE_004);
         } finally {
             session.close();
@@ -213,6 +220,7 @@ public class EmployeeDao implements EmployeeDaoInterface {
         try {
             employee = (Employee) session.get(Employee.class, id);
         } catch (HibernateException exception) {
+            EMSLogger.logger.error(exception);
             throw new EMSException(Constants.ERROR_CODE_006);
         } finally {
             session.close();
@@ -234,6 +242,7 @@ public class EmployeeDao implements EmployeeDaoInterface {
         try {
             address = (Address) session.get(Address.class, addressId);
         } catch (HibernateException exception) {
+            EMSLogger.logger.error(exception);
             throw new EMSException(Constants.ERROR_CODE_007);
         } finally {
             session.close();
@@ -254,6 +263,7 @@ public class EmployeeDao implements EmployeeDaoInterface {
             Query query = session.createQuery("FROM Employee");
             employeeList = query.list();
         } catch (HibernateException exception) {
+            EMSLogger.logger.error(exception);
             throw new EMSException(Constants.ERROR_CODE_006);
         } finally {
             session.close();
@@ -276,6 +286,7 @@ public class EmployeeDao implements EmployeeDaoInterface {
             Query query = session.createQuery("FROM Employee WHERE email = :email");
             employee = (Employee) query.setParameter("email", email).uniqueResult();
         } catch (HibernateException exception) {
+            EMSLogger.logger.error(exception);
             throw new EMSException(Constants.ERROR_CODE_008);
         } finally {
             session.close();
@@ -298,10 +309,11 @@ public class EmployeeDao implements EmployeeDaoInterface {
           Query query = session.createQuery("FROM Employee WHERE phoneNumber = :phoneNumber");
           employee = (Employee) query.setParameter("phoneNumber", phoneNumber).uniqueResult();
       } catch (HibernateException exception) {
-            throw new EMSException(Constants.ERROR_CODE_008);
-        } finally {
-            session.close();
-        }
+          EMSLogger.logger.error(exception);
+          throw new EMSException(Constants.ERROR_CODE_008);
+      } finally {
+          session.close();
+      }
       return (null != employee) ? true : false;
    }
 }
