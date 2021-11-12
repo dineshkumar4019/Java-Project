@@ -18,10 +18,6 @@ import org.apache.logging.log4j.LogManager;
  * @since   2021-11-10
  */
 public class EMSLogger {
-    //System.setProperty("log4j2.configurationFile",".src/resources/log4j2.xml");
-    //System.setProperty("logFilePath", "src/resources/log4j2.xml");
-    LoggerContext context = (org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(false);
-    File file = new File("resources/log4j2.xml");
-    context.setConfigLocation(file.toURI());
+
     public static final Logger logger = LogManager.getLogger(EMSLogger.class); 
 }
