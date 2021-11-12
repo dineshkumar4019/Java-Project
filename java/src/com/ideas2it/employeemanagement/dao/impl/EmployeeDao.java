@@ -5,11 +5,10 @@
  */
 package com.ideas2it.employeemanagement.dao.impl;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.HibernateException;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -133,7 +132,7 @@ public class EmployeeDao implements EmployeeDaoInterface {
         
         try {
             transaction = session.beginTransaction();
-            Query query = session.createQuery("DELETE FROM Employee e WHERE e.id = :id");
+            Query<Employee> query = session.createQuery("DELETE FROM Employee e WHERE e.id = :id", Employee.class);
             query.setParameter("id", id);
             rowsAffected = query.executeUpdate();
             transaction.commit();
@@ -163,7 +162,7 @@ public class EmployeeDao implements EmployeeDaoInterface {
         
         try {
             transaction = session.beginTransaction();
-            Query query = session.createQuery("DELETE FROM Address e WHERE e.id = :id");
+            Query<Employee> query = session.createQuery("DELETE FROM Address e WHERE e.id = :id", Employee.class);
             query.setParameter("id", addressId);
             rowsAffected = query.executeUpdate();        
             transaction.commit();
@@ -191,7 +190,7 @@ public class EmployeeDao implements EmployeeDaoInterface {
         
         try {
             transaction = session.beginTransaction(); 
-            Query query = session.createQuery("DELETE FROM Employee");
+            Query<Employee> query = session.createQuery("DELETE FROM Employee", Employee.class);
             rowsAffected = query.executeUpdate();
             transaction.commit();
         } catch (HibernateException exception) {
@@ -260,7 +259,7 @@ public class EmployeeDao implements EmployeeDaoInterface {
         Session session = sessionFactory.openSession();
         
         try {
-            Query query = session.createQuery("FROM Employee");
+            Query<Employee> query = session.createQuery("FROM Employee", Employee.class);
             employeeList = query.list();
         } catch (HibernateException exception) {
             EMSLogger.logger.error(exception);
@@ -283,7 +282,7 @@ public class EmployeeDao implements EmployeeDaoInterface {
         Session session = sessionFactory.openSession();
         
         try {
-            Query query = session.createQuery("FROM Employee WHERE email = :email");
+            Query<Employee> query = session.createQuery("FROM Employee WHERE email = :email", Employee.class);
             employee = (Employee) query.setParameter("email", email).uniqueResult();
         } catch (HibernateException exception) {
             EMSLogger.logger.error(exception);
@@ -306,7 +305,7 @@ public class EmployeeDao implements EmployeeDaoInterface {
       Session session = sessionFactory.openSession();
       
       try {
-          Query query = session.createQuery("FROM Employee WHERE phoneNumber = :phoneNumber");
+          Query<Employee> query = session.createQuery("FROM Employee WHERE phoneNumber = :phoneNumber", Employee.class);
           employee = (Employee) query.setParameter("phoneNumber", phoneNumber).uniqueResult();
       } catch (HibernateException exception) {
           EMSLogger.logger.error(exception);

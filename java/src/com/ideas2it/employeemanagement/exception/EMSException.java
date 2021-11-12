@@ -17,7 +17,12 @@ import com.ideas2it.employeemanagement.utils.Constants;
  */
  
 public class EMSException extends Exception {
-    public EMSException(String errorCode) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public EMSException(String errorCode) {
         super(Constants.errorCodes.get(errorCode));
     }
 }

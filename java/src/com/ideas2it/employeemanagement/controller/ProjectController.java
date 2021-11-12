@@ -6,8 +6,6 @@
 package com.ideas2it.employeemanagement.controller;
 
 import java.util.List;
-import org.hibernate.HibernateException;
-
 import com.ideas2it.employeemanagement.exception.EMSException;
 import com.ideas2it.employeemanagement.model.ProjectDTO;
 import com.ideas2it.employeemanagement.model.EmployeeDTO;

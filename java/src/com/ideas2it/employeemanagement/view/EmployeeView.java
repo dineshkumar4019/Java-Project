@@ -32,7 +32,6 @@ import com.ideas2it.employeemanagement.model.ProjectDTO;
 public class EmployeeView {
     private Scanner scanner = new Scanner(System.in);
     private EmployeeController employeeController = new EmployeeController();
-    private AddressDTO addressDto = new AddressDTO();
     
     /**
      * Selecting the respective operation by user
@@ -301,7 +300,6 @@ public class EmployeeView {
      */
     private void displayEmployee() {
         int ViewChoice;
-        int id;
         
         try {
             if (0 == employeeController.isDataBaseEmpty()) {
@@ -610,13 +608,8 @@ public class EmployeeView {
      * @param id employee id to update
      */
     private void updateField(EmployeeDTO employeeDto) {
-        double salary;
-        long phoneNumber;
         int employeeField;
-        String name;
-        String email;
-        LocalDate DOB;
-                
+        
         System.out.println("Select field to update\n1:Name\n2:Salary\n3:Email\n4:Phone\n5:DOB");
         try {
             employeeField = getAndValidateChoice();
@@ -678,8 +671,6 @@ public class EmployeeView {
      */
     public void updateAddressFields(EmployeeDTO employeeDto) {
         int addressId;
-        AddressDTO addressDto = new AddressDTO();
-        
         try {  
             for (AddressDTO entry : employeeDto.getAddressDto()) {
                 System.out.println(entry);
@@ -715,11 +706,6 @@ public class EmployeeView {
     public void updateAddessField(EmployeeDTO employeeDto) {
         int addressField;
         int addressId = 0;
-        String address;
-        String city;
-        String pincode;
-        String state;
-        String country;
         AddressDTO addressDto = new AddressDTO();
         
         try {
@@ -889,7 +875,6 @@ public class EmployeeView {
      * Assiging the projects to an employee
      */ 
     private void assignProject() {
-        int employeeId;
         String[] ids;
         Set<ProjectDTO> selectedProjects = new HashSet<>();
         System.out.println("Enter the Employee Id to assign project");
@@ -945,7 +930,6 @@ public class EmployeeView {
      * Unassiging the employees to the project 
      */
     private void unAssignProject() {
-        int employeeId;
         String[] ids;
         Set<ProjectDTO> set = new HashSet<>();
         Set<ProjectDTO> toRemove = new HashSet<>();

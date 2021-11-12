@@ -7,7 +7,6 @@ package com.ideas2it.employeemanagement.controller;
 
 import java.time.LocalDate;
 import java.util.List;
-import org.hibernate.HibernateException;
 
 import com.ideas2it.employeemanagement.model.AddressDTO;
 import com.ideas2it.employeemanagement.model.EmployeeDTO;

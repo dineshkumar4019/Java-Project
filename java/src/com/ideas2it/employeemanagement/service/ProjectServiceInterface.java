@@ -6,8 +6,6 @@
 package com.ideas2it.employeemanagement.service;
 
 import java.util.List;
-import java.util.Set;
-
 import com.ideas2it.employeemanagement.exception.EMSException;
 import com.ideas2it.employeemanagement.model.EmployeeDTO;
 import com.ideas2it.employeemanagement.model.ProjectDTO;

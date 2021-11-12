@@ -5,12 +5,10 @@
  */
 package com.ideas2it.employeemanagement.service;
 
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
 import com.ideas2it.employeemanagement.exception.EMSException;
-import com.ideas2it.employeemanagement.model.Employee;
 import com.ideas2it.employeemanagement.model.EmployeeDTO;
 
 public interface EmployeeServiceInterface {

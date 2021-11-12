@@ -5,10 +5,7 @@
  */
 package com.ideas2it.employeemanagement.model;
 
-import java.time.LocalDate; 
 import java.util.Set;
-
-import com.ideas2it.employeemanagement.model.ProjectStatus;
 
 /**
  * Employee fields creation and carries employee details

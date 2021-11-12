@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
 
-import com.ideas2it.employeemanagement.controller.EmployeeController;
 import com.ideas2it.employeemanagement.controller.ProjectController;
 import com.ideas2it.employeemanagement.exception.EMSException;
 import com.ideas2it.employeemanagement.model.EmployeeDTO;
@@ -30,7 +29,6 @@ import com.ideas2it.employeemanagement.model.ProjectStatus;
  */
  public class ProjectView {
     private Scanner scanner = new Scanner(System.in);
-    private EmployeeController employeeController = new EmployeeController();
     private ProjectController projectController = new ProjectController();
     
     /**
@@ -251,7 +249,6 @@ import com.ideas2it.employeemanagement.model.ProjectStatus;
      */
     private void displayProject() {
         int ViewChoice;
-        int id;
         
         try {
             if (0 == projectController.getAllProjects().size()) {
@@ -372,10 +369,6 @@ import com.ideas2it.employeemanagement.model.ProjectStatus;
      */
     private void updateField(ProjectDTO projectDto) {
         int projectField;
-        String name;
-        String description;
-        String manager;
-        
         System.out.println("Select project field to update\n1:Name\n2:Description\n3:Manager\n4:Update status");
         try {
             projectField = getAndValidateChoice();
@@ -428,7 +421,6 @@ import com.ideas2it.employeemanagement.model.ProjectStatus;
      */
     private void deleteProject() {
         int DeleteChoice;
-        int id;
         
         try {
             if (0 == projectController.getAllProjects().size()) {
@@ -492,7 +484,6 @@ import com.ideas2it.employeemanagement.model.ProjectStatus;
      * Assiging the employees to the project 
      */
     private void assignEmployee() {
-        int employeeId;
         String[] ids;
         Set<EmployeeDTO> selectedEmployees = new HashSet<>();
         List<EmployeeDTO> toRemove = new ArrayList<>();
@@ -545,7 +536,6 @@ import com.ideas2it.employeemanagement.model.ProjectStatus;
      * Unassiging the employees to the project 
      */ 
     private void unAssignEmployee() {
-        int projectId;
         String[] ids;
         Set<EmployeeDTO> set = new HashSet<>();
         Set<EmployeeDTO> toRemove = new HashSet<>();

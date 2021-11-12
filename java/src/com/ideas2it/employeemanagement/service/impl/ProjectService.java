@@ -5,13 +5,11 @@
  */
 package com.ideas2it.employeemanagement.service.impl;
 
-import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.regex.Pattern;
-import org.hibernate.HibernateException;
 
 import com.ideas2it.employeemanagement.dao.impl.ProjectDao;
 import com.ideas2it.employeemanagement.exception.EMSException;
@@ -21,7 +19,6 @@ import com.ideas2it.employeemanagement.model.Project;
 import com.ideas2it.employeemanagement.model.ProjectDTO;
 import com.ideas2it.employeemanagement.utils.ModelMapper;
 import com.ideas2it.employeemanagement.service.ProjectServiceInterface;
-import com.ideas2it.employeemanagement.service.impl.EmployeeService;
 
 /**
  * <h1> Project service</h1>
@@ -35,7 +32,6 @@ import com.ideas2it.employeemanagement.service.impl.EmployeeService;
  */
 public class ProjectService implements ProjectServiceInterface {
     private ProjectDao projectDao = new ProjectDao();
-    private ModelMapper modelMapper  = new ModelMapper();
     
     /**
      * Checking an project exist in database by id
@@ -132,7 +128,7 @@ public class ProjectService implements ProjectServiceInterface {
      * @return Number of rows created
      */
     public int createProject(ProjectDTO projectDto) throws EMSException {
-        return projectDao.insertProject(modelMapper.toProject(projectDto));
+        return projectDao.insertProject(ModelMapper.toProject(projectDto));
     }
     
     /**
@@ -143,11 +139,11 @@ public class ProjectService implements ProjectServiceInterface {
      */
     public ProjectDTO getSingleProject(int id) throws EMSException {
         Project project = projectDao.getProject(id);
-        ProjectDTO projectDto = modelMapper.toProjectDto(project);
+        ProjectDTO projectDto = ModelMapper.toProjectDto(project);
         Set<EmployeeDTO> set = new HashSet<>();
         
         for (Employee employee : project.getEmployees()) {
-            set.add(modelMapper.toEmployeeDto(employee));
+            set.add(ModelMapper.toEmployeeDto(employee));
         }
         projectDto.setEmployeesDto(set);
         return projectDto;
@@ -160,10 +156,8 @@ public class ProjectService implements ProjectServiceInterface {
      */
     public List<ProjectDTO> getAllProjects() throws EMSException {
         List<ProjectDTO> projects = new ArrayList<>();
-        Set<EmployeeDTO> employees = new HashSet<>();
-        
         for (Project project : projectDao.getAllProject()) {
-            projects.add(modelMapper.toProjectDto(project));
+            projects.add(ModelMapper.toProjectDto(project));
         }
         
         return projects;
@@ -187,10 +181,10 @@ public class ProjectService implements ProjectServiceInterface {
      */
     public int updateAllFields(ProjectDTO projectDto) throws EMSException {
         Set<Employee> set = new HashSet<>();
-        Project project = modelMapper.toProject(projectDto);
+        Project project = ModelMapper.toProject(projectDto);
         if (null != projectDto.getEmployeesDto()) {
             for (EmployeeDTO employeeDto : projectDto.getEmployeesDto()) {
-                set.add(modelMapper.toEmployee(employeeDto));
+                set.add(ModelMapper.toEmployee(employeeDto));
             }
             project.setEmployees(set);
         }

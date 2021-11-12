@@ -6,11 +6,8 @@
 package com.ideas2it.employeemanagement.model;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
-import com.ideas2it.employeemanagement.model.Address;
 
 /**
  * Employee fields creation and carries employee details

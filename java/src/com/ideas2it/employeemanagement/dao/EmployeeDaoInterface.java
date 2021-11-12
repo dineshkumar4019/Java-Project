@@ -5,11 +5,7 @@
  */
 package com.ideas2it.employeemanagement.dao;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-import org.hibernate.HibernateException;
-
 import com.ideas2it.employeemanagement.exception.EMSException;
 import com.ideas2it.employeemanagement.model.Employee;
 import com.ideas2it.employeemanagement.model.Address;

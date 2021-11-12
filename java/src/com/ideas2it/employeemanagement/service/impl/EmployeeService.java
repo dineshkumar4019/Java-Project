@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.regex.Pattern;
-import org.hibernate.HibernateException;
 
 import com.ideas2it.employeemanagement.dao.impl.EmployeeDao;
 import com.ideas2it.employeemanagement.model.Address;
@@ -38,8 +37,6 @@ import com.ideas2it.employeemanagement.utils.ModelMapper;
  */
 public class EmployeeService implements EmployeeServiceInterface {
     private EmployeeDao employeeDao = new EmployeeDao();
-    private ModelMapper modelMapper  = new ModelMapper();
-
     /**
      * Checking an employee exist in database by id
      *
@@ -234,7 +231,7 @@ public class EmployeeService implements EmployeeServiceInterface {
      * @return Number of rows created
      */
     public int createEmployee(EmployeeDTO employeeDto) throws EMSException {
-        int id = employeeDao.insertEmployee(modelMapper.toEmployee(employeeDto));
+        int id = employeeDao.insertEmployee(ModelMapper.toEmployee(employeeDto));
         
         return id;
     }
@@ -246,8 +243,8 @@ public class EmployeeService implements EmployeeServiceInterface {
      * @return Number of rows created
      */
     public int insertAddress(AddressDTO addressDto) throws EMSException {
-        Address address = modelMapper.toAddress(addressDto);
-        address.setEmployee(modelMapper.toEmployee(addressDto.getEmployeeDto()));
+        Address address = ModelMapper.toAddress(addressDto);
+        address.setEmployee(ModelMapper.toEmployee(addressDto.getEmployeeDto()));
         return employeeDao.insertAddress(address);
     }
     
@@ -260,18 +257,18 @@ public class EmployeeService implements EmployeeServiceInterface {
      */
     public EmployeeDTO getSingleEmployee(int id) throws EMSException {
         Employee employee = employeeDao.getEmployee(id);
-        EmployeeDTO employeeDto = modelMapper.toEmployeeDto(employee);
+        EmployeeDTO employeeDto = ModelMapper.toEmployeeDto(employee);
         Set<ProjectDTO> set = new HashSet<>();
         
         for (Project project : employee.getProjects()) {
-            set.add(modelMapper.toProjectDto(project));
+            set.add(ModelMapper.toProjectDto(project));
         }
         employeeDto.setProjectsDto(set);
         return employeeDto;
     }
     
     public AddressDTO getAddress(int id) throws EMSException {
-        return modelMapper.toAddressDto(employeeDao.getAddress(id));
+        return ModelMapper.toAddressDto(employeeDao.getAddress(id));
     }
     
     /**
@@ -293,7 +290,7 @@ public class EmployeeService implements EmployeeServiceInterface {
         List<EmployeeDTO> employeeDto = new ArrayList<>();
         
         for (Employee employee: employeeDao.getEmployees()) {
-            employeeDto.add(modelMapper.toEmployeeDto(employee));
+            employeeDto.add(ModelMapper.toEmployeeDto(employee));
         }
         return employeeDto;
     }
@@ -306,8 +303,7 @@ public class EmployeeService implements EmployeeServiceInterface {
      */
     public int updateAllFields(EmployeeDTO employeeDto) throws EMSException {
         Employee employee = new Employee();
-        Set<Project> set = new HashSet<>();
-        employee = modelMapper.toEmployee(employeeDto);
+        employee = ModelMapper.toEmployee(employeeDto);
         for (Address address : employee.getAddress()) {
             address.setEmployee(employee);
         }

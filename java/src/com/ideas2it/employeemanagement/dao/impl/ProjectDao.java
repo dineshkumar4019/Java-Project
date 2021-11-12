@@ -8,7 +8,7 @@ package com.ideas2it.employeemanagement.dao.impl;
 import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.HibernateException;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -121,7 +121,7 @@ public class ProjectDao implements ProjectDaoInterface {
         Session session = sessionFactory.openSession();
         
         try {
-            Query query = session.createQuery("FROM Project");
+            Query<Project> query = session.createQuery("FROM Project", Project.class);
             projectList = query.list();
         } catch (HibernateException exception) {
             throw new EMSException(Constants.ERROR_CODE_012);
@@ -145,7 +145,7 @@ public class ProjectDao implements ProjectDaoInterface {
         
         try {
             transaction = session.beginTransaction();
-            Query query = session.createQuery("DELETE FROM Project p WHERE p.id = :id");
+            Query<Project> query = session.createQuery("DELETE FROM Project p WHERE p.id = :id", Project.class);
             query.setParameter("id", id);
             rowsAffected = query.executeUpdate();
             transaction.commit();
@@ -173,7 +173,7 @@ public class ProjectDao implements ProjectDaoInterface {
         
         try { 
             transaction = session.beginTransaction(); 
-            Query query = session.createQuery("DELETE FROM Project");
+            Query<Project> query = session.createQuery("DELETE FROM Project", Project.class);
             rowsAffected = query.executeUpdate();
             transaction.commit();
         } catch (HibernateException exception) {
