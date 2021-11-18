@@ -7,6 +7,6 @@
    <p id='message'>
       Employee Deleted Successfully!!!
     </p>
-   <jsp:include page="viewEmployee.jsp"></jsp:include>
+   <jsp:include page="employee.jsp"></jsp:include>
 </body>
 </html>

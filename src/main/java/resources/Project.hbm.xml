@@ -20,7 +20,7 @@
         <property name="description" column="description" type="string"
                   not-null="true" lazy="true"/>
         <property name="manager" column="manager" type="string"
-                  not-null="true" lazy="true" unique="true"/>
+                  not-null="true" lazy="true"/>
         <property name="status" column="status">
             <type name="org.hibernate.type.EnumType">
                 <param name="enumClass">com.ideas2it.employeemanagement.model.ProjectStatus</param>

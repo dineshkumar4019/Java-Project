@@ -345,4 +345,14 @@ public class EmployeeService implements EmployeeServiceInterface {
     public int deleteAddress(int addressId) throws EMSException {
         return employeeDao.deleteAddress(addressId);
     }
+    
+    public List<ProjectDTO> getAvailableProjects(int id) throws EMSException {
+        List<ProjectDTO> projects = getAllProjects();
+        EmployeeDTO employeeDto = getSingleEmployee(id);
+        Set<ProjectDTO> toRemove = employeeDto.getProjectsDto();
+        if (null != employeeDto.getProjectsDto()) {
+        	projects.removeAll(toRemove);
+        }
+        return projects;
+    }
 }

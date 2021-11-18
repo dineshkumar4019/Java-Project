@@ -52,6 +52,7 @@ public class ProjectDao implements ProjectDaoInterface {
             if (null != transaction) {
                 transaction.rollback();
             }
+            exception.printStackTrace();
             EMSLogger.logger.error(exception);
             throw new EMSException(Constants.ERROR_CODE_010);
         } finally {
@@ -145,7 +146,7 @@ public class ProjectDao implements ProjectDaoInterface {
         
         try {
             transaction = session.beginTransaction();
-            Query<Project> query = session.createQuery("DELETE FROM Project p WHERE p.id = :id", Project.class);
+            Query<?> query = session.createQuery("DELETE FROM Project p WHERE p.id = :id");
             query.setParameter("id", id);
             rowsAffected = query.executeUpdate();
             transaction.commit();
@@ -173,7 +174,7 @@ public class ProjectDao implements ProjectDaoInterface {
         
         try { 
             transaction = session.beginTransaction(); 
-            Query<Project> query = session.createQuery("DELETE FROM Project", Project.class);
+            Query<?> query = session.createQuery("DELETE FROM Project");
             rowsAffected = query.executeUpdate();
             transaction.commit();
         } catch (HibernateException exception) {

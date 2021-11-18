@@ -17,6 +17,7 @@
                 <th>Phone Number</th>
                 <th>Date Of Birth</th>
                 <th>Address</th>
+                <th>Assign/UnAssign Projects</th>
                 <th>Select</th>
             </tr>
             
@@ -37,6 +38,9 @@
                     ${address.country}
                     </td>
                 </c:forEach>
+                <td>
+                    <a href="assign?id=<c:out value='${employee.id}' />">Assign</a>
+                </td>
                 <td>
                     <a href="employeeUpdateForm?id=<c:out value='${employee.id}' />">Edit</a>
                     <a href="delete?id=<c:out value='${employee.id}' />">Delete</a>

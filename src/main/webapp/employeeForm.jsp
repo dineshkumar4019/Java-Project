@@ -4,7 +4,7 @@
 <center><h1>Employee Management System</h1></center>
 <form action = "${action}" method="post">
     <c:if test="${cloneEmployeeDto == null}">
-        Create Employee
+        <h1>Create Employee</h1>
 	</c:if>
 	<c:if test="${cloneEmployeeDto != null}">
         <h1>Update Employee</h1>
@@ -25,7 +25,7 @@
         <label for="Date OF Birth">Date Of Birth</label><br>
         <input type="date" id="Date Of Birth" name="DOB" value = "${cloneEmployeeDto.DOB}" required><br>
         <c:if test="${cloneEmployeeDto != null}">
-            Do You Want To Add Address?<br>
+            Do You Want To Update Address?<br>
             <label>
                 <input type="radio" name="toUpdate" value="Yes" required>
                     Yes
@@ -35,7 +35,14 @@
                     No
             </label><br>
 	    </c:if> 
-        <input type="submit" value="Submit">
+	    <c:if test="${cloneEmployeeDto != null}">
+            <input type="submit" value="update">
+	    </c:if>
+	    <c:if test="${cloneEmployeeDto == null}">
+            <input type="submit" value="create">
+	    </c:if>
+	    
+        
         <input type="reset"> 
     </fieldset>
 </form>

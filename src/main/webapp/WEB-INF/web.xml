@@ -18,82 +18,90 @@ version="5.0">
         <servlet-name>ControllerServlet</servlet-name>
         <url-pattern>/create</url-pattern>
     </servlet-mapping>
-    
-    <servlet>
-        <servlet-name>ControllerServlet</servlet-name>
-        <servlet-class>com.ideas2it.employeemanagement.controller.EmployeeController</servlet-class>
-    </servlet>
- 
+
     <servlet-mapping>
         <servlet-name>ControllerServlet</servlet-name>
         <url-pattern>/createAddress</url-pattern>
     </servlet-mapping>
-    <servlet>
-        <servlet-name>ControllerServlet</servlet-name>
-        <servlet-class>com.ideas2it.employeemanagement.controller.EmployeeController</servlet-class>
-    </servlet>
- 
+
     <servlet-mapping>
         <servlet-name>ControllerServlet</servlet-name>
         <url-pattern>/viewEmployee</url-pattern>
     </servlet-mapping>
-    <servlet>
-        <servlet-name>ControllerServlet</servlet-name>
-        <servlet-class>com.ideas2it.employeemanagement.controller.EmployeeController</servlet-class>
-    </servlet>
- 
+    
     <servlet-mapping>
         <servlet-name>ControllerServlet</servlet-name>
         <url-pattern>/delete</url-pattern>
     </servlet-mapping>
     
-    <servlet>
-        <servlet-name>ControllerServlet</servlet-name>
-        <servlet-class>com.ideas2it.employeemanagement.controller.EmployeeController</servlet-class>
-    </servlet>
- 
     <servlet-mapping>
         <servlet-name>ControllerServlet</servlet-name>
         <url-pattern>/deleteAll</url-pattern>
     </servlet-mapping>
-    
-    <servlet>
-        <servlet-name>ControllerServlet</servlet-name>
-        <servlet-class>com.ideas2it.employeemanagement.controller.EmployeeController</servlet-class>
-    </servlet>
- 
+
     <servlet-mapping>
         <servlet-name>ControllerServlet</servlet-name>
         <url-pattern>/update</url-pattern>
     </servlet-mapping>
     
-    <servlet>
-        <servlet-name>ControllerServlet</servlet-name>
-        <servlet-class>com.ideas2it.employeemanagement.controller.EmployeeController</servlet-class>
-    </servlet>
- 
     <servlet-mapping>
         <servlet-name>ControllerServlet</servlet-name>
         <url-pattern>/employeeCreateForm</url-pattern>
     </servlet-mapping>
     
-    <servlet>
-        <servlet-name>ControllerServlet</servlet-name>
-        <servlet-class>com.ideas2it.employeemanagement.controller.EmployeeController</servlet-class>
-    </servlet>
- 
     <servlet-mapping>
         <servlet-name>ControllerServlet</servlet-name>
         <url-pattern>/employeeUpdateForm</url-pattern>
     </servlet-mapping>
     
-    <servlet>
-        <servlet-name>ControllerServlet</servlet-name>
-        <servlet-class>com.ideas2it.employeemanagement.controller.EmployeeController</servlet-class>
-    </servlet>
- 
     <servlet-mapping>
         <servlet-name>ControllerServlet</servlet-name>
         <url-pattern>/updateAddress</url-pattern>
     </servlet-mapping>
+    
+     <servlet-mapping>
+        <servlet-name>ControllerServlet</servlet-name>
+        <url-pattern>/assign</url-pattern>
+    </servlet-mapping>
+    
+<servlet>
+    <servlet-name>ProjectControllerServlet</servlet-name>
+    <servlet-class>com.ideas2it.employeemanagement.controller.ProjectController</servlet-class>
+</servlet>
+ 
+    <servlet-mapping>
+        <servlet-name>ProjectControllerServlet</servlet-name>
+        <url-pattern>/ProjectCreateForm</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ProjectControllerServlet</servlet-name>
+        <url-pattern>/createProject</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>ProjectControllerServlet</servlet-name>
+        <url-pattern>/viewProject</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>ProjectControllerServlet</servlet-name>
+        <url-pattern>/projectUpdateForm</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ProjectControllerServlet</servlet-name>
+        <url-pattern>/updateProject</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>ProjectControllerServlet</servlet-name>
+        <url-pattern>/deleteProject</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>ProjectControllerServlet</servlet-name>
+        <url-pattern>/deleteAllProject</url-pattern>
+    </servlet-mapping>
+    
 </web-app>

@@ -6,7 +6,7 @@
 import java.util.Scanner;
 
 //import com.ideas2it.employeemanagement.view.EmployeeView;
-import com.ideas2it.employeemanagement.view.ProjectView;
+//import com.ideas2it.employeemanagement.view.ProjectView;
 
 /**
  * <h1> Employees management system </h1>

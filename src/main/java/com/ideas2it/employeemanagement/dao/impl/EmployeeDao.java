@@ -102,11 +102,9 @@ public class EmployeeDao implements EmployeeDaoInterface {
         
         try {
             transaction = session.beginTransaction();
-            Employee newEmployee = (Employee) session.merge(employee);
+            session.update(employee);
+            employeeUpdated = 1;
             transaction.commit();
-            if (newEmployee.getId() == employee.getId()) {
-                employeeUpdated = 1;
-            }
         } catch (HibernateException exception) {
             if (null != transaction) {
                 transaction.rollback();
