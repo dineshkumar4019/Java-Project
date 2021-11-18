@@ -80,6 +80,7 @@ public class EmployeeDao implements EmployeeDaoInterface {
             if (null != transaction) {
                 transaction.rollback();
             }
+            exception.printStackTrace();
             EMSLogger.logger.error(exception);
             throw new EMSException(Constants.ERROR_CODE_002);
         } finally {
@@ -132,9 +133,12 @@ public class EmployeeDao implements EmployeeDaoInterface {
         
         try {
             transaction = session.beginTransaction();
-            Query<Employee> query = session.createQuery("DELETE FROM Employee e WHERE e.id = :id", Employee.class);
-            query.setParameter("id", id);
-            rowsAffected = query.executeUpdate();
+            Employee employee = session.get(Employee.class, id);
+            session.delete(employee);
+            rowsAffected = 1;
+            //Query<?> query = session.createQuery("DELETE FROM Employee e WHERE e.id = :id");
+            //query.setParameter("id", id);
+            //rowsAffected = query.executeUpdate();
             transaction.commit();
         } catch (HibernateException exception) {
             if (null != transaction) {
@@ -190,7 +194,7 @@ public class EmployeeDao implements EmployeeDaoInterface {
         
         try {
             transaction = session.beginTransaction(); 
-            Query<Employee> query = session.createQuery("DELETE FROM Employee", Employee.class);
+            Query<?> query = session.createQuery("DELETE FROM Employee");
             rowsAffected = query.executeUpdate();
             transaction.commit();
         } catch (HibernateException exception) {

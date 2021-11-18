@@ -5,13 +5,23 @@
  */
 package com.ideas2it.employeemanagement.controller;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.ArrayList;
 
 import com.ideas2it.employeemanagement.model.AddressDTO;
 import com.ideas2it.employeemanagement.model.EmployeeDTO;
 import com.ideas2it.employeemanagement.model.ProjectDTO;
 import com.ideas2it.employeemanagement.service.impl.EmployeeService;
+
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+
 import com.ideas2it.employeemanagement.exception.EMSException;
 
 /**
@@ -24,9 +34,78 @@ import com.ideas2it.employeemanagement.exception.EMSException;
  * @since   2021-08-27
  * 
  */
-public class EmployeeController {
-    private EmployeeService employeeService = new EmployeeService();
-    
+public class EmployeeController extends HttpServlet {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 102831973239L;;
+    private EmployeeService employeeService;
+	
+	public void init() throws ServletException {
+		super.init();
+	    employeeService = new EmployeeService();
+	}
+	
+	public void doGet(HttpServletRequest request,HttpServletResponse response) throws IOException, ServletException {
+		String action = request.getServletPath();
+        try {
+	        switch (action) {
+	            case "/employeeCreateForm":
+        	        createEmployeeForm(request, response);
+        	    break;
+	            case "/employeeUpdateForm":
+	            	updateForm(request, response);
+        	    break;
+	            case "/viewEmployee":
+	        	    getAllEmployee(request, response);
+	        	    break;
+	            case "/addressCreateForm":
+        	        createAddressForm(request, response);
+        	    break;
+	            case "/AddressUpdateForm":
+	            	updateForm(request, response);
+        	    break;
+	            case "/delete":
+	        	    deleteSingleEmployee(request, response);
+	        	    break;
+	            case "/deleteAll":
+	        	    deleteAllEmployee(request, response);
+	        	    break;
+	            default :
+	        	    break;
+	        }
+        } catch (ServletException | EMSException | IOException e) {
+        	e.printStackTrace();
+        }
+    }
+	
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String action = request.getServletPath();
+        try {
+	        switch (action) {
+	            case "/create":
+	        	    createEmployee(request, response);
+	        	    break;
+	            case "/createAddress":
+	        	    insertAddress(request, response);
+	        	    break;
+	            case "/viewEmployee":
+	        	    getAllEmployee(request, response);
+	        	    break;
+	            case "/update":
+	        	    updateAllFields(request, response);
+	        	    break;
+	            case "/updateAddress":
+	        	    updateAddressFields(request, response);
+	        	    break;
+	            default :
+	        	    break;
+	        }
+        } catch (ServletException | EMSException | IOException e) {
+        	e.printStackTrace();
+        }
+	}
+	
     /**
      * Checking an employee presences in database
      *
@@ -201,9 +280,51 @@ public class EmployeeController {
      *
      * @param employeeDto employee details to be created
      * @return Number of employees added
+     * @throws IOException 
      */
-    public int createEmployee(EmployeeDTO employeeDto) throws EMSException {
-        return employeeService.createEmployee(employeeDto);
+    public void createEmployee(HttpServletRequest request, HttpServletResponse response)
+    		throws EMSException, ServletException, IOException {
+        String name = (String) request.getParameter("name");
+        String email = (String) request.getParameter("email");
+        long phoneNumber = Long.parseLong((String) request.getParameter("phoneNumber"));
+        String dataOfBirth = (String) request.getParameter("DOB");
+        LocalDate DOB = LocalDate.parse(dataOfBirth);
+     
+        EmployeeDTO employeeDto = new EmployeeDTO(name, phoneNumber, email, phoneNumber, DOB); 
+    	int id = employeeService.createEmployee(employeeDto);
+    	employeeDto.setId(id);
+    	if (0 < id) {
+    		request.getSession().setAttribute("createEmployeeDto", employeeDto);
+    		request.setAttribute("action", "createAddress");
+    	    request.getRequestDispatcher("addressForm.jsp").forward(request, response);
+    	} else {
+    		response.getWriter().print("error page");
+    	}
+    }
+    
+    public void createEmployeeForm(HttpServletRequest request, HttpServletResponse response)
+    		throws EMSException, ServletException, IOException {
+    	request.setAttribute("action", "create");
+    	request.getRequestDispatcher("employeeForm.jsp").forward(request, response);
+    }
+    
+    public void createAddressForm(HttpServletRequest request, HttpServletResponse response)
+    		throws EMSException, ServletException, IOException {
+    	request.setAttribute("action", "createAddress");
+    	request.getRequestDispatcher("addressForm.jsp").forward(request, response);
+    }
+    
+    public void updateForm(HttpServletRequest request, HttpServletResponse response)
+    		throws EMSException, ServletException, IOException {
+    	int id = Integer.parseInt(request.getParameter("id"));
+    	HttpSession session = request.getSession();
+    	request.setAttribute("action", "update");
+    	EmployeeDTO employeeDto = employeeService.getSingleEmployee(id);
+    	employeeDto.setId(id);
+    	//EmployeeDTO cloneEmployeeDto = employeeDto;
+    	request.setAttribute("cloneEmployeeDto", employeeDto);
+    	session.setAttribute("employeeDto", employeeDto); 
+    	request.getRequestDispatcher("employeeForm.jsp").forward(request, response);
     }
     
     /**
@@ -212,8 +333,24 @@ public class EmployeeController {
      * @param employeeDto employee details to be created
      * @return Number of employees added
      */
-    public int insertAddress(AddressDTO addressDto ) throws EMSException {
-        return employeeService.insertAddress(addressDto);
+    public void insertAddress(HttpServletRequest request, HttpServletResponse response)
+    		throws EMSException, ServletException, IOException {
+        EmployeeDTO employeeDto= (EmployeeDTO) request.getSession().getAttribute("createEmployeeDto");
+    	String addressLine = (String) request.getParameter("addressLine");
+        String city = (String) request.getParameter("city");
+        String pincode = (String) request.getParameter("pincode");
+        String state = (String) request.getParameter("state");
+        String country = (String) request.getParameter("country");
+        
+        AddressDTO addressDto = new AddressDTO(employeeDto, addressLine, city
+        		, pincode, state, country);
+        
+        int id = employeeService.insertAddress(addressDto);
+        if (0 < id) {
+            request.getRequestDispatcher("addressSuccess.jsp").forward(request, response);
+        } else {
+        	response.getWriter().print("error page address");
+        }
     }
     
     /**
@@ -222,8 +359,11 @@ public class EmployeeController {
      * @param id employee id to get employee details
      * @return particular employee details
      */
-    public EmployeeDTO getSingleEmployee(int id) throws EMSException {
-        return employeeService.getSingleEmployee(id);
+    public void getSingleEmployee(HttpServletRequest request, HttpServletResponse response)
+    		throws EMSException, ServletException {
+    	int id = Integer.parseInt(request.getParameter("id"));
+        EmployeeDTO employeeDto = employeeService.getSingleEmployee(id);
+        request.setAttribute("employee", employeeDto);
     }
     
     /**
@@ -249,9 +389,14 @@ public class EmployeeController {
      * Getting all employees in the database
      *
      * @return All employee details
+     * @throws IOException 
      */
-    public List<EmployeeDTO> getAllEmployee() throws EMSException {
-        return employeeService.getAllEmployee();
+    public void getAllEmployee(HttpServletRequest request, HttpServletResponse response)
+    		throws EMSException, ServletException, IOException {
+    	List<EmployeeDTO> employees = employeeService.getAllEmployee();
+    	request.setAttribute("employees", employees);
+    	RequestDispatcher dispatcher = request.getRequestDispatcher("viewEmployee.jsp");
+        dispatcher.forward(request, response);
     }
     
     /**
@@ -259,9 +404,46 @@ public class EmployeeController {
      *
      * @param employeeDto employee details to be updated
      * @return Number of rows updated
+     * @throws IOException 
      */
-    public int updateAllFields(EmployeeDTO employeeDto)  throws EMSException {
-        return employeeService.updateAllFields(employeeDto);
+    public void updateAllFields(HttpServletRequest request, HttpServletResponse response)
+    		throws EMSException, ServletException, IOException {
+    	
+    	HttpSession session = request.getSession();
+    	EmployeeDTO employeeDto = (EmployeeDTO) session.getAttribute("employeeDto");
+		employeeDto.setName(request.getParameter("name"));
+		employeeDto.setEmail(request.getParameter("email"));
+		employeeDto.setPhoneNumber(Long.parseLong(request.getParameter("phoneNumber")));
+		employeeDto.setDOB(LocalDate.parse((String) request.getParameter("DOB")));
+    	int result = employeeService.updateAllFields(employeeDto);
+    	if ((0 < result) && (request.getParameter("toUpdate").equals("Yes"))) {
+    		request.setAttribute("action", "updateAddress");
+    	    request.getRequestDispatcher("addressForm.jsp").forward(request, response);
+    	    
+    	} else if((0 < result) && (request.getParameter("toUpdate").equals("No"))) {
+    		request.getRequestDispatcher("employee.jsp").forward(request, response);
+    	} else {
+    		response.getWriter().print("error page");
+    	}
+    }
+    
+    public void updateAddressFields(HttpServletRequest request, HttpServletResponse response)
+    		throws EMSException, ServletException, IOException {
+    	EmployeeDTO employeeDto = (EmployeeDTO) request.getSession().getAttribute("employeeDto");
+    	for (AddressDTO addressDto : employeeDto.getAddressDto()) {
+    	    addressDto.setAddressLine(request.getParameter("addressLine"));
+    	    addressDto.setCity(request.getParameter("city"));
+    	    addressDto.setPincode(request.getParameter("pincode"));
+    	    addressDto.setState(request.getParameter("state"));
+    	    addressDto.setCountry(request.getParameter("country"));
+    	}
+    	int result = employeeService.updateAllFields(employeeDto);
+    	
+    	if(0 < result) {
+    		response.getWriter().print("update address success");
+    	} else {
+    		response.getWriter().print("error page");
+    	}
     }
     
     /**
@@ -269,18 +451,33 @@ public class EmployeeController {
      *
      * @param id id for deleting the employee
      * @return Number of rows deleted
+     * @throws IOException 
      */
-    public int deleteSingleEmployee(int id) throws EMSException {
-        return employeeService.deleteSingleEmployee(id);
+    public void deleteSingleEmployee(HttpServletRequest request, HttpServletResponse response)
+    		throws EMSException, ServletException, IOException {
+    	int id = Integer.parseInt(request.getParameter("id"));
+        int rowsDeleted = employeeService.deleteSingleEmployee(id);
+        if (0 < rowsDeleted) {
+        	request.getRequestDispatcher("deleteSuccess.jsp").forward(request, response);
+        } else {
+        	response.getWriter().print("error page");
+        }
     }
     
     /**
      * Deleting all employees in the database
      *
      * @return Number of rows deleted
+     * @throws IOException 
      */
-    public int deleteAllEmployee() throws EMSException {
-        return employeeService.deleteAllEmployee();
+    public void deleteAllEmployee(HttpServletRequest request, HttpServletResponse response)
+    		throws EMSException, ServletException, IOException {
+        
+        if (0 < employeeService.deleteAllEmployee()) {
+        	request.getRequestDispatcher("deleteAllSuccess.jsp").forward(request, response);
+        } else {
+        	response.getWriter().print("error page");
+        }
     }
     
     /**

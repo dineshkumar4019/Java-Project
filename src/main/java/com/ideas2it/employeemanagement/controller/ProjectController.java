@@ -6,10 +6,13 @@
 package com.ideas2it.employeemanagement.controller;
 
 import java.util.List;
+
 import com.ideas2it.employeemanagement.exception.EMSException;
 import com.ideas2it.employeemanagement.model.ProjectDTO;
 import com.ideas2it.employeemanagement.model.EmployeeDTO;
 import com.ideas2it.employeemanagement.service.impl.ProjectService;
+
+import jakarta.servlet.http.HttpServlet;
 
 /**
  * <h1> Project controller</h1>
@@ -21,8 +24,13 @@ import com.ideas2it.employeemanagement.service.impl.ProjectService;
  * @since   2021-08-27
  * 
  */
-public class ProjectController {
-    private ProjectService projectService = new ProjectService();
+public class ProjectController extends HttpServlet {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private ProjectService projectService = new ProjectService();
     
     /**
      * Checking an project presences in database

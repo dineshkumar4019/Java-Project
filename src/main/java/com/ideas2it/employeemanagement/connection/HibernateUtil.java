@@ -33,6 +33,7 @@ public class HibernateUtil {
             try {
                 sessionFactory = new Configuration().configure().buildSessionFactory();
             } catch (Throwable e) {
+            	System.out.println("connection created");
                 e.printStackTrace();
             }
         }

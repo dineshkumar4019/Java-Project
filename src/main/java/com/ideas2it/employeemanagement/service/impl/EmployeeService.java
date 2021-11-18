@@ -27,7 +27,7 @@ import com.ideas2it.employeemanagement.utils.ModelMapper;
 
 /**
  * <h1> Employees service</h1>
- * Empolyee service provides CRUD operations
+ * Employee service provides CRUD operations
  * and respective validation and implementations
  *
  * @author	Dinesh Kumar
@@ -37,6 +37,7 @@ import com.ideas2it.employeemanagement.utils.ModelMapper;
  */
 public class EmployeeService implements EmployeeServiceInterface {
     private EmployeeDao employeeDao = new EmployeeDao();
+
     /**
      * Checking an employee exist in database by id
      *

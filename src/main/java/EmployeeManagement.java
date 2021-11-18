@@ -5,7 +5,7 @@
  */
 import java.util.Scanner;
 
-import com.ideas2it.employeemanagement.view.EmployeeView;
+//import com.ideas2it.employeemanagement.view.EmployeeView;
 import com.ideas2it.employeemanagement.view.ProjectView;
 
 /**
@@ -17,7 +17,7 @@ import com.ideas2it.employeemanagement.view.ProjectView;
  * @version	1.0
  * @since   2021-08-27
  * 
- */
+ *
 public class EmployeeManagement {
     private Scanner scanner = new Scanner(System.in);
     
@@ -53,7 +53,7 @@ public class EmployeeManagement {
      * respective operations is valid or not
      * 
      * @return proper format of choice 
-     */
+     *
     private int getAndValidateChoice() {
         boolean isValidUserChoice = false; 
         int userChoice = 0;
@@ -69,4 +69,4 @@ public class EmployeeManagement {
         return userChoice;
     }
 }
- 
+ */

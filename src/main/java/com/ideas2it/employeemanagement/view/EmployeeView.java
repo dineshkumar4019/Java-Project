@@ -2,7 +2,7 @@
  * Copyright (c) ideas2it.
  *
  * Date: 2021-09-12 
- */
+ *
 package com.ideas2it.employeemanagement.view;
 
 import java.time.format.DateTimeParseException;
@@ -28,7 +28,7 @@ import com.ideas2it.employeemanagement.model.ProjectDTO;
  * @version	1.0
  * @since   2021-08-27
  * 
- */
+ *
 public class EmployeeView {
     private Scanner scanner = new Scanner(System.in);
     private EmployeeController employeeController = new EmployeeController();
@@ -36,7 +36,7 @@ public class EmployeeView {
     /**
      * Selecting the respective operation by user
      * for CRUD operations 
-     */
+     *
     public void choosingOperation() {
         int userOperationChoice;
         
@@ -78,7 +78,7 @@ public class EmployeeView {
      * respective operations is valid or not
      * 
      * @return proper format of choice 
-     */
+     *
     private int getAndValidateChoice() {
         boolean isValidUserChoice = false; 
         int userChoice = 0;
@@ -99,7 +99,7 @@ public class EmployeeView {
      * and validating the existing id
      * 
      * @return details of an employee
-     */
+     *
     private EmployeeDTO getAndValidateEmployee() {
         boolean isValidId = false;
         int id;
@@ -128,7 +128,7 @@ public class EmployeeView {
      * and validating the existing id
      * 
      * @return proper format of id
-     */
+     *
     private int getAndValidateAddressId() {
         boolean isValidId = false;
         int addressId = 0;
@@ -155,7 +155,7 @@ public class EmployeeView {
      * Checking the entered employee name is valid
      * 
      * @return proper format of name
-     */
+     *
     private String getAndValidateName() {
         boolean isvalidName = false;
         String name = "";
@@ -177,7 +177,7 @@ public class EmployeeView {
      * Checking the entered employee salary is valid
      * 
      * @return proper format of salary
-     */ 
+     *
     private double getAndValidateSalary() {
         boolean isValidSalary = true;
         double salary = 0;
@@ -209,7 +209,7 @@ public class EmployeeView {
      * Checking the entered employee email is valid
      * 
      * @return proper format of email
-     */ 
+     * 
     private String getAndValidateEmail() {
         boolean isvalidEmail = false;
         String email = "";
@@ -239,7 +239,7 @@ public class EmployeeView {
      * Checking the entered employee phone number is valid
      * 
      * @return proper format of phone number
-     */ 
+     * 
     private long getAndValidatePhoneNumber() {
         boolean isValidPhoneNumber = true;
         String phoneNumber = "";
@@ -271,7 +271,7 @@ public class EmployeeView {
      * 
      * @param DOB date of birth for checking eligibility
      * @return Eligible or not
-     */
+     *
     private LocalDate getAndValidateDOB() {
         String DOB = "";
         boolean isValidDOB = false;
@@ -297,7 +297,7 @@ public class EmployeeView {
     /** 
      * Selecting the ways of displaying the employee
      * 
-     */
+     *
     private void displayEmployee() {
         int ViewChoice;
         
@@ -331,7 +331,7 @@ public class EmployeeView {
      * by employee id in the database
      * 
      * @param id employee id to view
-     */
+     *
     private void viewEmployee() {
         System.out.println("Enter Employee id to view:");
         EmployeeDTO employeeDto = getAndValidateEmployee();
@@ -343,7 +343,7 @@ public class EmployeeView {
     
     /**
      * displaying all the employee details and address in the database
-     */
+     *
     private void viewAllEmployee() {
         try {
             for (EmployeeDTO entry: employeeController.getAllEmployee()) {
@@ -363,7 +363,7 @@ public class EmployeeView {
     /**
      * Creating employee and Storing in the database
      * 
-     */
+     *
     private EmployeeDTO createEmployee() {
         EmployeeDTO employeeDto = null;
         int id = 0;
@@ -395,7 +395,7 @@ public class EmployeeView {
      * employee address is valid
      * 
      * @return proper format of address
-     */
+     *
    private String getAndValidateAddress() {
         boolean isvalidAddress = false;
         String address = "";
@@ -418,7 +418,7 @@ public class EmployeeView {
      * employee city is valid
      * 
      * @return proper format of city
-     */
+     *
     private String getAndValidateCity() {
         boolean isvalidCity = false;
         String city = "";
@@ -441,7 +441,7 @@ public class EmployeeView {
      * employee pincode is valid
      * 
      * @return proper format of pincode
-     */
+     *
     private String getAndValidatePincode() {
         boolean isvalidPincode = false;
         String pincode = "";
@@ -464,7 +464,7 @@ public class EmployeeView {
      * employee state is valid
      * 
      * @return proper format of state
-     */
+     *
     private String getAndValidateState() {
         boolean isvalidState = false;
         String state = "";
@@ -487,7 +487,7 @@ public class EmployeeView {
      * employee country is valid
      * 
      * @return proper format of country
-     */
+     *
     private String getAndValidateCountry() {
         boolean isvalidCountry = false;
         String country = "";
@@ -509,7 +509,7 @@ public class EmployeeView {
      * Creating employee address and Storing in the database
      * 
      * @param id id of an employee to create address
-     */
+     *
     private void createAddress(EmployeeDTO employeeDto) { 
         int addressId;
         AddressDTO addressDto;
@@ -539,7 +539,7 @@ public class EmployeeView {
      * Selecting the ways of updating the fields
      * and getting the employee id to update
      * 
-     */
+     *
     private void updateEmployee() {
         int UpdateChoice = 0;
         EmployeeDTO employeeDto;
@@ -584,7 +584,7 @@ public class EmployeeView {
      * Updating all fields of an employee in the database
      *
      * @param id employee id to update
-     */
+     *
     private void updateAllFields(EmployeeDTO employeeDto) {
         try {
             employeeDto.setName(getAndValidateName());
@@ -606,7 +606,7 @@ public class EmployeeView {
      * Updating the particular field of an employee in the database
      * 
      * @param id employee id to update
-     */
+     *
     private void updateField(EmployeeDTO employeeDto) {
         int employeeField;
         
@@ -668,7 +668,7 @@ public class EmployeeView {
      * Updating all fields in address of an employee in the database
      *
      * @param id employee id to update the address
-     */
+     *
     public void updateAddressFields(EmployeeDTO employeeDto) {
         int addressId;
         try {  
@@ -702,7 +702,7 @@ public class EmployeeView {
      * Updating single field in address of an employee in the database
      *
      * @param id employee id to update the address
-     */
+     *
     public void updateAddessField(EmployeeDTO employeeDto) {
         int addressField;
         int addressId = 0;
@@ -776,7 +776,7 @@ public class EmployeeView {
     /**
      * Selecting the ways to delete the employee details
      *
-     */
+     *
     private void deleteEmployee() {
         int DeleteChoice;
         EmployeeDTO employeeDto;
@@ -817,7 +817,7 @@ public class EmployeeView {
      * Deleting the required employee by id
      *
      * @param id id for deleting the employee
-     */
+     *
     private void deleteSingleEmployee(int id) {
         try {
             if (1 == employeeController.deleteSingleEmployee(id)) {
@@ -832,7 +832,7 @@ public class EmployeeView {
 
     /**
      * Deleting the entire employee database
-     */
+     *
     private void deleteAllEmployee() {
         try {
             if (employeeController.isDataBaseEmpty() == employeeController.deleteAllEmployee()) {
@@ -849,7 +849,7 @@ public class EmployeeView {
      * Deleting the required employee by id
      *
      * @param id id for deleting the employee
-     */
+     *
     public void deleteAddress(int id) {
         int addressId;
         
@@ -873,7 +873,7 @@ public class EmployeeView {
      
     /**
      * Assiging the projects to an employee
-     */ 
+     * 
     private void assignProject() {
         String[] ids;
         Set<ProjectDTO> selectedProjects = new HashSet<>();
@@ -928,7 +928,7 @@ public class EmployeeView {
     
     /**
      * Unassiging the employees to the project 
-     */
+     *
     private void unAssignProject() {
         String[] ids;
         Set<ProjectDTO> set = new HashSet<>();
@@ -967,4 +967,6 @@ public class EmployeeView {
             System.out.println("\n\t**No Projects for this employee to unassign**");
         }
     }
+    
 }
+*/
