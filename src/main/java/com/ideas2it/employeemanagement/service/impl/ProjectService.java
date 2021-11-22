@@ -140,12 +140,6 @@ public class ProjectService implements ProjectServiceInterface {
     public ProjectDTO getSingleProject(int id) throws EMSException {
         Project project = projectDao.getProject(id);
         ProjectDTO projectDto = ModelMapper.toProjectDto(project);
-        Set<EmployeeDTO> set = new HashSet<>();
-        
-        for (Employee employee : project.getEmployees()) {
-            set.add(ModelMapper.toEmployeeDto(employee));
-        }
-        projectDto.setEmployeesDto(set);
         return projectDto;
     }
     
@@ -156,8 +150,10 @@ public class ProjectService implements ProjectServiceInterface {
      */
     public List<ProjectDTO> getAllProjects() throws EMSException {
         List<ProjectDTO> projects = new ArrayList<>();
+        ProjectDTO projectDto;
         for (Project project : projectDao.getAllProject()) {
-            projects.add(ModelMapper.toProjectDto(project));
+        	projectDto = ModelMapper.toProjectDto(project);
+            projects.add(projectDto);
         }
         
         return projects;
@@ -208,5 +204,14 @@ public class ProjectService implements ProjectServiceInterface {
      */
     public int deleteAllProject() throws EMSException {
         return projectDao.deleteAllProject();
+    }
+    
+    public List<EmployeeDTO> getAvailableEmployees(ProjectDTO projectDto) throws EMSException {
+        List<EmployeeDTO> employees = getAllEmployees();
+        Set<EmployeeDTO> toRemove = projectDto.getEmployeesDto();
+        if (null != projectDto.getEmployeesDto()) {
+        	employees.removeAll(toRemove);
+        }
+        return employees;
     }
 }

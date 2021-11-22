@@ -28,7 +28,7 @@
             </type>
         </property>
     
-        <set name="employees" table="employee_project" fetch = "join">
+        <set name="employees" table="employee_project">
             <key column="project_id"/>
             <many-to-many column="employee_id" class="Employee" />
         </set>

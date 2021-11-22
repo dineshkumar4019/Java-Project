@@ -64,6 +64,21 @@ version="5.0">
         <url-pattern>/assign</url-pattern>
     </servlet-mapping>
     
+    <servlet-mapping>
+        <servlet-name>ControllerServlet</servlet-name>
+        <url-pattern>/allocateProject</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>ControllerServlet</servlet-name>
+        <url-pattern>/unAssign</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>ControllerServlet</servlet-name>
+        <url-pattern>/unAllocateProject</url-pattern>
+    </servlet-mapping>
+    
 <servlet>
     <servlet-name>ProjectControllerServlet</servlet-name>
     <servlet-class>com.ideas2it.employeemanagement.controller.ProjectController</servlet-class>
@@ -103,5 +118,30 @@ version="5.0">
         <servlet-name>ProjectControllerServlet</servlet-name>
         <url-pattern>/deleteAllProject</url-pattern>
     </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>ProjectControllerServlet</servlet-name>
+        <url-pattern>/assignEmployee</url-pattern>
+    </servlet-mapping>
+    
+     <servlet-mapping>
+        <servlet-name>ProjectControllerServlet</servlet-name>
+        <url-pattern>/allocateEmployee</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>ProjectControllerServlet</servlet-name>
+        <url-pattern>/unAssignEmployee</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>ProjectControllerServlet</servlet-name>
+        <url-pattern>/unAllocateEmployee</url-pattern>
+    </servlet-mapping>
+    
+    <error-page>
+		<exception-type>java.lang.Exception</exception-type>
+		<location>/error.jsp</location>
+	</error-page>
     
 </web-app>

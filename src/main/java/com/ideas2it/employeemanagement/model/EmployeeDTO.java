@@ -7,6 +7,7 @@ package com.ideas2it.employeemanagement.model;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -111,7 +112,24 @@ public class EmployeeDTO {
         this.projectsDto = projectsDto;
     }
     
-    /**
+    @Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		EmployeeDTO other = (EmployeeDTO) obj;
+		return id == other.id;
+	}
+
+	/**
      * displaying the respective employee details 
      * 
      * @return empolyee details

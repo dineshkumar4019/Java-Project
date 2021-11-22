@@ -5,6 +5,7 @@
  */
 package com.ideas2it.employeemanagement.model;
 
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -91,7 +92,24 @@ public class ProjectDTO {
         this.employeesDto = employeesDto;
     }
     
-    /**
+    @Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ProjectDTO other = (ProjectDTO) obj;
+		return id == other.id;
+	}
+
+	/**
      * displaying the respective project details 
      * 
      * @return project details

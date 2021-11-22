@@ -5,6 +5,7 @@
  */
 package com.ideas2it.employeemanagement.dao.impl;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.HibernateException;
@@ -17,8 +18,15 @@ import com.ideas2it.employeemanagement.connection.HibernateUtil;
 import com.ideas2it.employeemanagement.dao.ProjectDaoInterface;
 import com.ideas2it.employeemanagement.exception.EMSException;
 import com.ideas2it.employeemanagement.logger.EMSLogger;
+import com.ideas2it.employeemanagement.model.EmployeeDTO;
 import com.ideas2it.employeemanagement.model.Project;
+import com.ideas2it.employeemanagement.model.ProjectDTO;
 import com.ideas2it.employeemanagement.utils.Constants;
+
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * <h1> Project DAO</h1>
@@ -102,7 +110,10 @@ public class ProjectDao implements ProjectDaoInterface {
         Project project = null;
         Session session = sessionFactory.openSession();
         try {
-            project = (Project) session.get(Project.class, id);
+        	Query<Project> query = session.createQuery("SELECT p FROM Project"
+        			+ " p LEFT JOIN FETCH p.employees WHERE p.id = :id", Project.class);
+        	query.setParameter("id", id);
+        	project = query.getSingleResult();
         } catch (HibernateException exception) {
             EMSLogger.logger.error(exception);
             throw new EMSException(Constants.ERROR_CODE_012);
@@ -122,7 +133,8 @@ public class ProjectDao implements ProjectDaoInterface {
         Session session = sessionFactory.openSession();
         
         try {
-            Query<Project> query = session.createQuery("FROM Project", Project.class);
+        	Query<Project> query = session.createQuery("SELECT DISTINCT p FROM Project"
+        			+ " p LEFT JOIN FETCH p.employees", Project.class);
             projectList = query.list();
         } catch (HibernateException exception) {
             throw new EMSException(Constants.ERROR_CODE_012);

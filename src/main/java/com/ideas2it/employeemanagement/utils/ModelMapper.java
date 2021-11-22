@@ -31,6 +31,8 @@ public class ModelMapper {
      */
     public static EmployeeDTO toEmployeeDto(Employee employee) {
         List<AddressDTO> addressDto = new ArrayList<>();
+        Set<ProjectDTO> set = new HashSet<>();
+        ProjectDTO projectDto;
         EmployeeDTO employeeDto = new EmployeeDTO();
         
         employeeDto.setId(employee.getId());
@@ -45,6 +47,15 @@ public class ModelMapper {
             }
             employeeDto.setAddressDto(addressDto);
         }
+        if (null != employee.getProjects()) {
+            for (Project project : employee.getProjects()) {
+            	projectDto = new ProjectDTO();
+                projectDto.setId(project.getId());
+                projectDto.setName(project.getName());
+                set.add(projectDto);
+            }
+            employeeDto.setProjectsDto(set);
+        }    
         return employeeDto;
     }
    
@@ -125,11 +136,24 @@ public class ModelMapper {
      */
     public static ProjectDTO toProjectDto(Project project) {
         ProjectDTO projectDto = new ProjectDTO();
+        Set<EmployeeDTO> set = new HashSet<>();
+        EmployeeDTO employeeDto;
+        
         projectDto.setId(project.getId());
         projectDto.setName(project.getName());
         projectDto.setDescription(project.getDescription());
         projectDto.setManager(project.getManager());
         projectDto.setStatus(project.getStatus());
+        
+        if (null != project.getEmployees()) {
+        	for (Employee employee : project.getEmployees()) {
+        		employeeDto = new EmployeeDTO();
+        	    employeeDto.setId(employee.getId());
+        	    employeeDto.setName(employee.getName());
+        	    set.add(employeeDto);
+        	}
+        	projectDto.setEmployeesDto(set);
+        }
         return projectDto;
     }
 }

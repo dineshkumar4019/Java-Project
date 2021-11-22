@@ -6,8 +6,8 @@
 </head>  
 <body>  
 <h1>Employee Management System</h1>  
-   <c:if test="${successMessage != null}">
-       "${successMessage}"
+   <c:if test="${Message != null}">
+       "${Message}"
    </c:if><br>
    <a href="employeeCreateForm">Create Employee</a><br> 
    <a href="viewEmployee">Display Employee</a><br>

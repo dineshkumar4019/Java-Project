@@ -7,7 +7,9 @@ package com.ideas2it.employeemanagement.controller;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import com.ideas2it.employeemanagement.model.AddressDTO;
 import com.ideas2it.employeemanagement.model.EmployeeDTO;
@@ -73,14 +75,14 @@ public class EmployeeController extends HttpServlet {
 	            case "/assign":
 	        	    assignProjects(request, response);
 	        	    break;
-	            case "/allocateProject":
-	            	allocateProjects(request, response);
+	            case "/unAssign":
+	        	    unAssignProjects(request, response);
 	        	    break;
 	            default :
 	        	    break;
 	        }
         } catch (ServletException | EMSException | IOException e) {
-        	e.printStackTrace();
+        	request.getRequestDispatcher("error.jsp").forward(request, response);
         }
     }
 	
@@ -103,11 +105,17 @@ public class EmployeeController extends HttpServlet {
 	            case "/updateAddress":
 	        	    updateAddressFields(request, response);
 	        	    break;
+	            case "/allocateProject":
+	            	allocateProjects(request, response);
+	        	    break;
+	            case "/unAllocateProject":
+	            	unAllocateProjects(request, response);
+	        	    break;
 	            default :
 	        	    break;
 	        }
         } catch (ServletException | EMSException | IOException e) {
-        	e.printStackTrace();
+        	request.getRequestDispatcher("error.jsp").forward(request, response);
         }
 	}
 	
@@ -303,7 +311,7 @@ public class EmployeeController extends HttpServlet {
     		request.setAttribute("action", "createAddress");
     	    request.getRequestDispatcher("addressForm.jsp").forward(request, response);
     	} else {
-    		response.getWriter().print("error page");
+    		request.getRequestDispatcher("error.jsp").forward(request, response);
     	}
     }
     
@@ -322,11 +330,11 @@ public class EmployeeController extends HttpServlet {
     public void updateForm(HttpServletRequest request, HttpServletResponse response)
     		throws EMSException, ServletException, IOException {
     	int id = Integer.parseInt(request.getParameter("id"));
-    	HttpSession session = request.getSession();
-    	request.setAttribute("action", "update");
     	EmployeeDTO employeeDto = employeeService.getSingleEmployee(id);
+    	
+    	request.setAttribute("action", "update");
     	request.setAttribute("cloneEmployeeDto", employeeDto);
-    	session.setAttribute("employeeDto", employeeDto); 
+    	request.getSession().setAttribute("employeeDto", employeeDto); 
     	request.getRequestDispatcher("employeeForm.jsp").forward(request, response);
     }
     
@@ -338,6 +346,7 @@ public class EmployeeController extends HttpServlet {
      */
     public void insertAddress(HttpServletRequest request, HttpServletResponse response)
     		throws EMSException, ServletException, IOException {
+    	int id;
         EmployeeDTO employeeDto= (EmployeeDTO) request.getSession().getAttribute("createEmployeeDto");
     	String addressLine = request.getParameter("addressLine");
         String city = request.getParameter("city");
@@ -348,12 +357,12 @@ public class EmployeeController extends HttpServlet {
         AddressDTO addressDto = new AddressDTO(employeeDto, addressLine, city
         		, pincode, state, country);
         
-        int id = employeeService.insertAddress(addressDto);
+        id = employeeService.insertAddress(addressDto);
         if (0 < id) {
-        	request.setAttribute("successMessage", "Employee Details Created Successfully!!!");
-            request.getRequestDispatcher("employee.jsp").forward(request, response);
+        	request.setAttribute("Message", "Employee Details Created Successfully!!!");
+            request.getRequestDispatcher("successMessage.jsp").forward(request, response);
         } else {
-        	response.getWriter().print("error page address");
+        	request.getRequestDispatcher("employee.jsp").forward(request, response);
         }
     }
     
@@ -367,6 +376,7 @@ public class EmployeeController extends HttpServlet {
     		throws EMSException, ServletException {
     	int id = Integer.parseInt(request.getParameter("id"));
         EmployeeDTO employeeDto = employeeService.getSingleEmployee(id);
+        
         request.setAttribute("employee", employeeDto);
     }
     
@@ -412,28 +422,33 @@ public class EmployeeController extends HttpServlet {
      */
     public void updateAllFields(HttpServletRequest request, HttpServletResponse response)
     		throws EMSException, ServletException, IOException {
-    	
+    	int result;
     	HttpSession session = request.getSession();
     	EmployeeDTO employeeDto = (EmployeeDTO) session.getAttribute("employeeDto");
+    	
 		employeeDto.setName(request.getParameter("name"));
 		employeeDto.setEmail(request.getParameter("email"));
 		employeeDto.setPhoneNumber(Long.parseLong(request.getParameter("phoneNumber")));
 		employeeDto.setDOB(LocalDate.parse((String) request.getParameter("DOB")));
-    	int result = employeeService.updateAllFields(employeeDto);
+        result = employeeService.updateAllFields(employeeDto);
+        
     	if ((0 < result) && (request.getParameter("toUpdate").equals("Yes"))) {
     		request.setAttribute("action", "updateAddress");
     	    request.getRequestDispatcher("addressForm.jsp").forward(request, response);
     	    
     	} else if((0 < result) && (request.getParameter("toUpdate").equals("No"))) {
-    		request.getRequestDispatcher("employee.jsp").forward(request, response);
+    		request.setAttribute("Message", "Employee updated Successfully!!!");
+    		request.getRequestDispatcher("successMessage.jsp").forward(request, response);
     	} else {
-    		response.getWriter().print("error page");
+    		request.getRequestDispatcher("error.jsp").forward(request, response);
     	}
     }
     
     public void updateAddressFields(HttpServletRequest request, HttpServletResponse response)
     		throws EMSException, ServletException, IOException {
+    	int result;
     	EmployeeDTO employeeDto = (EmployeeDTO) request.getSession().getAttribute("employeeDto");
+    	
     	for (AddressDTO addressDto : employeeDto.getAddressDto()) {
     	    addressDto.setAddressLine(request.getParameter("addressLine"));
     	    addressDto.setCity(request.getParameter("city"));
@@ -441,12 +456,13 @@ public class EmployeeController extends HttpServlet {
     	    addressDto.setState(request.getParameter("state"));
     	    addressDto.setCountry(request.getParameter("country"));
     	}
-    	int result = employeeService.updateAllFields(employeeDto);
+    	result = employeeService.updateAllFields(employeeDto);
     	
     	if(0 < result) {
-    		response.getWriter().print("update address success");
+    		request.setAttribute("Message", "Employee updated Created Successfully!!!");
+    		request.getRequestDispatcher("successMessage.jsp").forward(request, response);
     	} else {
-    		response.getWriter().print("error page");
+    		request.getRequestDispatcher("error.jsp").forward(request, response);
     	}
     }
     
@@ -461,10 +477,11 @@ public class EmployeeController extends HttpServlet {
     		throws EMSException, ServletException, IOException {
     	int id = Integer.parseInt(request.getParameter("id"));
         int rowsDeleted = employeeService.deleteSingleEmployee(id);
+        
         if (0 < rowsDeleted) {
-        	request.getRequestDispatcher("deleteSuccess.jsp").forward(request, response);
+        	response.sendRedirect("viewEmployee");
         } else {
-        	response.getWriter().print("error page");
+        	request.getRequestDispatcher("error.jsp").forward(request, response);
         }
     }
     
@@ -478,9 +495,10 @@ public class EmployeeController extends HttpServlet {
     		throws EMSException, ServletException, IOException {
         
         if (0 < employeeService.deleteAllEmployee()) {
-        	request.getRequestDispatcher("deleteSuccess.jsp").forward(request, response);
+        	request.setAttribute("Message", "All Employees deleted Successfully!!!");
+    		request.getRequestDispatcher("successMessage.jsp").forward(request, response);
         } else {
-        	response.getWriter().print("error page");
+        	request.getRequestDispatcher("error.jsp").forward(request, response);
         }
     }
     
@@ -497,24 +515,82 @@ public class EmployeeController extends HttpServlet {
     public void assignProjects(HttpServletRequest request, HttpServletResponse response)
     		throws EMSException, ServletException, IOException {
     	int id = Integer.parseInt(request.getParameter("id"));
-        List<ProjectDTO> availableProjects = employeeService.getAvailableProjects(id);
         EmployeeDTO employeeDto = employeeService.getSingleEmployee(id);
+        List<ProjectDTO> availableProjects = employeeService.getAvailableProjects(employeeDto);
+        
         request.getSession().setAttribute("assignEmployeeDto", employeeDto);
-        //request.getSession().setAttribute("availableProjects", availableProjects);
         request.setAttribute("availableProjects", availableProjects);
         request.setAttribute("action", "allocateProject");
-    	RequestDispatcher dispatcher = request.getRequestDispatcher("assign.jsp");
+    	RequestDispatcher dispatcher = request.getRequestDispatcher("assign-unassignProjectsForm.jsp");
         dispatcher.forward(request, response);
     }
     
     public void allocateProjects(HttpServletRequest request, HttpServletResponse response)
     		throws EMSException, ServletException, IOException {
-    	List<ProjectDTO> availableProjects = (List<ProjectDTO>)request.getSession().getAttribute("availableProjects");
+    	int result;
+    	
+    	if (null ==  request.getParameterValues("selectedProjects")) {
+    		request.setAttribute("Message", "No Projects Selected");
+    		request.getRequestDispatcher("error.jsp").forward(request, response);
+    	}
     	String[] selectedProjects = request.getParameterValues("selectedProjects");
     	EmployeeDTO employeeDto = (EmployeeDTO) request.getSession().getAttribute("assignEmployeeDto");
+    	List<ProjectDTO> list = new ArrayList<>();
+    	
     	for (String id : selectedProjects) {
     		ProjectDTO projectDto = new ProjectDTO();
-    		
+    		projectDto.setId(Integer.parseInt(id));
+    		list.add(projectDto);
+    	}
+    	employeeDto.getProjectsDto().addAll(list);
+    	result = employeeService.updateAllFields(employeeDto);
+    	
+    	if (0 < result) {
+    		request.setAttribute("Message", "Project assigned Successfully!!!");
+    		request.getRequestDispatcher("successMessage.jsp").forward(request, response);
+    	} else {
+    		request.getRequestDispatcher("error.jsp").forward(request, response);
+    	}
+    }
+    
+    public void unAssignProjects(HttpServletRequest request, HttpServletResponse response)
+    		throws EMSException, ServletException, IOException {
+    	int id = Integer.parseInt(request.getParameter("id"));
+    	EmployeeDTO employeeDto = employeeService.getSingleEmployee(id);
+    	Set<ProjectDTO> availableProjects = employeeDto.getProjectsDto();
+
+    	request.getSession().setAttribute("unAssignEmployeeDto", employeeDto);
+        request.setAttribute("availableProjects", availableProjects);
+        request.setAttribute("action", "unAllocateProject");
+    	RequestDispatcher dispatcher = request.getRequestDispatcher("assign-unassignProjectsForm.jsp");
+        dispatcher.forward(request, response);
+    }
+    
+    public void unAllocateProjects(HttpServletRequest request, HttpServletResponse response)
+    		throws EMSException, ServletException, IOException {
+    	int result;
+    	
+    	if (null ==  request.getParameterValues("selectedProjects")) {
+    		request.setAttribute("Message", "No Projects Selected");
+    		request.getRequestDispatcher("error.jsp").forward(request, response);
+    	}
+    	String[] selectedProjects = request.getParameterValues("selectedProjects");
+    	EmployeeDTO employeeDto = (EmployeeDTO) request.getSession().getAttribute("unAssignEmployeeDto");
+    	List<ProjectDTO> list = new ArrayList<>();
+    	
+    	for (String id : selectedProjects) {
+    		ProjectDTO projectDto = new ProjectDTO();
+    		projectDto.setId(Integer.parseInt(id));
+    		list.add(projectDto);
+    	}
+    	employeeDto.getProjectsDto().removeAll(list);
+    	result = employeeService.updateAllFields(employeeDto);
+    	
+        if (0 < result) {
+        	request.setAttribute("Message", "Project unAssigned Successfully!!!");
+    		request.getRequestDispatcher("successMessage.jsp").forward(request, response);
+    	} else {
+    		request.getRequestDispatcher("error.jsp").forward(request, response);
     	}
     }
 }

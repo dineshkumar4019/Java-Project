@@ -18,6 +18,7 @@ import com.ideas2it.employeemanagement.dao.EmployeeDaoInterface;
 import com.ideas2it.employeemanagement.exception.EMSException;
 import com.ideas2it.employeemanagement.logger.EMSLogger;
 import com.ideas2it.employeemanagement.model.Employee;
+import com.ideas2it.employeemanagement.model.Project;
 import com.ideas2it.employeemanagement.model.Address;
 import com.ideas2it.employeemanagement.utils.Constants;
 
@@ -102,7 +103,8 @@ public class EmployeeDao implements EmployeeDaoInterface {
         
         try {
             transaction = session.beginTransaction();
-            session.update(employee);
+            session.merge(employee);
+            //session.update(employee);
             employeeUpdated = 1;
             transaction.commit();
         } catch (HibernateException exception) {
@@ -219,7 +221,14 @@ public class EmployeeDao implements EmployeeDaoInterface {
         Session session = sessionFactory.openSession();
         
         try {
-            employee = (Employee) session.get(Employee.class, id);
+        	Query<Employee> addressQuery = session.createQuery("SELECT e FROM Employee"
+        			+ " e LEFT JOIN FETCH e.address WHERE e.id=:id", Employee.class);
+        	Query<Employee> projectQuery = session.createQuery("SELECT e FROM Employee"
+        	        + " e LEFT JOIN FETCH e.projects WHERE e.id=:id", Employee.class);
+        	addressQuery.setParameter("id", id);
+        	projectQuery.setParameter("id", id);
+        	employee = addressQuery.getSingleResult();
+        	employee = projectQuery.getSingleResult();
         } catch (HibernateException exception) {
             EMSLogger.logger.error(exception);
             throw new EMSException(Constants.ERROR_CODE_006);
@@ -258,11 +267,16 @@ public class EmployeeDao implements EmployeeDaoInterface {
      */
     public List<Employee> getEmployees() throws EMSException {
         List<Employee> employeeList = new ArrayList<>();
+        //List<Project> employeeList1 = new ArrayList<>();
         Session session = sessionFactory.openSession();
         
         try {
-            Query<Employee> query = session.createQuery("FROM Employee", Employee.class);
-            employeeList = query.list();
+            Query<Employee> query = session.createQuery("SELECT DISTINCT e FROM Employee"
+        	        + " e LEFT JOIN FETCH e.projects", Employee.class);
+        	Query<Employee> addressQuery = session.createQuery("SELECT DISTINCT e FROM Employee"
+        			+ " e LEFT JOIN FETCH e.address", Employee.class);
+        	employeeList = query.getResultList();
+        	employeeList = addressQuery.getResultList();
         } catch (HibernateException exception) {
             EMSLogger.logger.error(exception);
             throw new EMSException(Constants.ERROR_CODE_006);
@@ -270,7 +284,7 @@ public class EmployeeDao implements EmployeeDaoInterface {
             session.close();
         }
         return employeeList;
-    } 
+    }
 
     /** 
      * Checing the email already exist in the database

@@ -259,12 +259,6 @@ public class EmployeeService implements EmployeeServiceInterface {
     public EmployeeDTO getSingleEmployee(int id) throws EMSException {
         Employee employee = employeeDao.getEmployee(id);
         EmployeeDTO employeeDto = ModelMapper.toEmployeeDto(employee);
-        Set<ProjectDTO> set = new HashSet<>();
-        
-        for (Project project : employee.getProjects()) {
-            set.add(ModelMapper.toProjectDto(project));
-        }
-        employeeDto.setProjectsDto(set);
         return employeeDto;
     }
     
@@ -308,12 +302,9 @@ public class EmployeeService implements EmployeeServiceInterface {
         for (Address address : employee.getAddress()) {
             address.setEmployee(employee);
         }
-        //if (null != employeeDto.getProjectsDto()) {
-        //    for (ProjectDTO projectDto : employeeDto.getProjectsDto()) {
-       //         set.add(modelMapper.toProject(projectDto));
-       //     }
-       //     employee.setProjects(set);
-        //}
+//        for (Project project : employee.getProjects()) {
+//        	project.setEmployees(employee);
+//        }
         return employeeDao.updateAllFields(employee);
     }
     
@@ -346,9 +337,8 @@ public class EmployeeService implements EmployeeServiceInterface {
         return employeeDao.deleteAddress(addressId);
     }
     
-    public List<ProjectDTO> getAvailableProjects(int id) throws EMSException {
+    public List<ProjectDTO> getAvailableProjects(EmployeeDTO employeeDto) throws EMSException {
         List<ProjectDTO> projects = getAllProjects();
-        EmployeeDTO employeeDto = getSingleEmployee(id);
         Set<ProjectDTO> toRemove = employeeDto.getProjectsDto();
         if (null != employeeDto.getProjectsDto()) {
         	projects.removeAll(toRemove);
