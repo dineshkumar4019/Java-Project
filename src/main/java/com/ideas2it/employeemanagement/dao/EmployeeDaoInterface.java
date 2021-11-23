@@ -31,14 +31,6 @@ public interface EmployeeDaoInterface {
     public int insertEmployee(Employee employee) throws EMSException;
     
     /**
-     * Inserting the employee address details from  user input
-     * to the database
-     *
-     * @return Number of rows inserted
-     */
-    public int insertAddress(Address address) throws EMSException;
-    
-    /**
      * Updating all employee fields in the database
      *
      * @param employee employee details to update
@@ -56,15 +48,6 @@ public interface EmployeeDaoInterface {
     public int deleteEmployee(int id) throws EMSException;
     
     /**
-     * Deleting particular employee in the database by 
-     * corresponding employee id
-     *
-     * @param id id of an employee to delete
-     * @return Total number of rows deleted in database
-     */
-    public int deleteAddress(int addressId) throws EMSException;
-    
-    /**
      * Deleting all employees in the database
      *
      * @return Total number of rows deleted in database
@@ -78,14 +61,6 @@ public interface EmployeeDaoInterface {
      * @return Single employee details
      */
     public Employee getEmployee(int id) throws EMSException;
-    /**
-     * Getting the address details from the database
-     * by corresponding address id 
-     *
-     * @param id id of an address to get
-     * @return Single address details
-     */
-    public Address getAddress(int addressId) throws EMSException;
  
     /** 
      * Getting all employees details from the database 

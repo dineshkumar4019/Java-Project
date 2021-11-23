@@ -63,21 +63,6 @@ public class EmployeeService implements EmployeeServiceInterface {
     }
     
     /**
-     * Checking an address exist in database by id
-     *
-     * @param id address id for checking existance
-     * @return address exist or not
-     */
-    public boolean isAddressExist(int addressId) throws EMSException {
-        boolean isExist = true;
-        
-        if(null == employeeDao.getAddress(addressId)) {
-            isExist = false;
-        }
-        return isExist;
-    }
-    
-    /**
      * Validating the corresponding employee name  
      *
      * @param name employee name for validation
@@ -236,20 +221,7 @@ public class EmployeeService implements EmployeeServiceInterface {
         
         return id;
     }
-    
-    /**
-     * Creating the employee and storing in database
-     *
-     * @param employeeDto employee details to be inserted in the database
-     * @return Number of rows created
-     */
-    public int insertAddress(AddressDTO addressDto) throws EMSException {
-        Address address = ModelMapper.toAddress(addressDto);
-        address.setEmployee(ModelMapper.toEmployee(addressDto.getEmployeeDto()));
-        return employeeDao.insertAddress(address);
-    }
-    
-    
+
     /**
      * Getting the particular employee by id in the database
      *
@@ -261,11 +233,7 @@ public class EmployeeService implements EmployeeServiceInterface {
         EmployeeDTO employeeDto = ModelMapper.toEmployeeDto(employee);
         return employeeDto;
     }
-    
-    public AddressDTO getAddress(int id) throws EMSException {
-        return ModelMapper.toAddressDto(employeeDao.getAddress(id));
-    }
-    
+ 
     /**
      * Getting all projects details in the database
      *
@@ -302,9 +270,6 @@ public class EmployeeService implements EmployeeServiceInterface {
         for (Address address : employee.getAddress()) {
             address.setEmployee(employee);
         }
-//        for (Project project : employee.getProjects()) {
-//        	project.setEmployees(employee);
-//        }
         return employeeDao.updateAllFields(employee);
     }
     
@@ -325,16 +290,6 @@ public class EmployeeService implements EmployeeServiceInterface {
      */
     public int deleteAllEmployee() throws EMSException {
         return employeeDao.deleteAllEmployee();
-    }
-    
-    /**
-     * Deleting the required address
-     *
-     * @param id address id for deleting the address
-     * @return total rows deleted
-     */
-    public int deleteAddress(int addressId) throws EMSException {
-        return employeeDao.deleteAddress(addressId);
     }
     
     public List<ProjectDTO> getAvailableProjects(EmployeeDTO employeeDto) throws EMSException {

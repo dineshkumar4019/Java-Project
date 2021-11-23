@@ -185,8 +185,9 @@ public class ProjectController extends HttpServlet {
         int id = projectService.createProject(projectDto);
         
         if (0 < id) {
-        	request.setAttribute("Message", "Project Details Created Successfully!!!");
-            request.getRequestDispatcher("SuccessMessageProject.jsp").forward(request, response);
+        	response.sendRedirect("SuccessMessageProject.jsp?message=Project+Details+Created+Successfully");
+//        	request.setAttribute("Message", "Project Details Created Successfully!!!");
+//            request.getRequestDispatcher("SuccessMessageProject.jsp").forward(request, response);
         } else {
         	request.getRequestDispatcher("error.jsp").forward(request, response);
         }
@@ -267,8 +268,8 @@ public class ProjectController extends HttpServlet {
     	projectDto.setStatus(status);
         result = projectService.updateAllFields(projectDto);
          if (0 < result) {
-        	 request.setAttribute("Message", "Project updated Successfully!!!");
-             request.getRequestDispatcher("SuccessMessageProject.jsp").forward(request, response);
+        	 response.sendRedirect("SuccessMessageProject.jsp"
+        	 		+ "?message=Project+Details+updated+Successfully");
          } else {
         	 request.getRequestDispatcher("error.jsp").forward(request, response);
          }
@@ -285,8 +286,7 @@ public class ProjectController extends HttpServlet {
     	int id = Integer.parseInt(request.getParameter("id"));
         int rowsDeleted = projectService.deleteSingleProject(id);
         if (0 < rowsDeleted) {
-        	request.setAttribute("Message", "Project Deleted  Successfully!!!");
-            request.getRequestDispatcher("SuccessMessageProject.jsp").forward(request, response);
+        	response.sendRedirect("viewProject");
         } else {
         	request.getRequestDispatcher("error.jsp").forward(request, response);
         }
@@ -301,8 +301,7 @@ public class ProjectController extends HttpServlet {
     		throws EMSException, ServletException, IOException {
         int result = projectService.deleteAllProject();
         if (0 < result) {
-        	request.setAttribute("Message", "All projects Deleted Successfully!!!");
-            request.getRequestDispatcher("SuccessMessageProject.jsp").forward(request, response);
+        	response.sendRedirect("SuccessMessageProject.jsp?message=All projects Deleted Successfully");
         } else {
         	request.getRequestDispatcher("error.jsp").forward(request, response);
         }
@@ -340,8 +339,7 @@ public class ProjectController extends HttpServlet {
     	projectDto.getEmployeesDto().addAll(list);
     	result = projectService.updateAllFields(projectDto);
     	if (0 < result) {
-    		request.setAttribute("Message", "Employee Assigned Successfully!!!");
-            request.getRequestDispatcher("SuccessMessageProject.jsp").forward(request, response);
+    		response.sendRedirect("SuccessMessageProject.jsp?message=Employee Assigned Successfully");
         } else {
         	request.getRequestDispatcher("error.jsp").forward(request, response);
         }
@@ -379,8 +377,7 @@ public class ProjectController extends HttpServlet {
     	result = projectService.updateAllFields(projectDto);
     	
     	if (0 < result) {
-    		request.setAttribute("Message", "Employee Un Assigned  Successfully!!!");
-            request.getRequestDispatcher("SuccessMessageProject.jsp").forward(request, response);
+    		response.sendRedirect("SuccessMessageProject.jsp?message=Employee Un Assigned Successfully");
         } else {
         	request.getRequestDispatcher("error.jsp").forward(request, response);
         }

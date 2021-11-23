@@ -61,35 +61,7 @@ public class EmployeeDao implements EmployeeDaoInterface {
         }
         return id;
     }
-    
-    /**
-     * Inserting the employee address details from  user input
-     * to the database
-     *
-     * @return Number of rows inserted
-     */
-    public int insertAddress(Address address) throws EMSException {
-        int id = 0;
-        Transaction transaction = null;
-        Session session = sessionFactory.openSession();
-        
-        try { 
-            transaction = session.beginTransaction();
-            id = (Integer) session.save(address);
-            transaction.commit();
-        } catch (HibernateException exception) {
-            if (null != transaction) {
-                transaction.rollback();
-            }
-            exception.printStackTrace();
-            EMSLogger.logger.error(exception);
-            throw new EMSException(Constants.ERROR_CODE_002);
-        } finally {
-            session.close();
-        }
-        return id;
-    }
-   
+       
     /**
      * Updating all employee fields in the database
      *
@@ -104,7 +76,6 @@ public class EmployeeDao implements EmployeeDaoInterface {
         try {
             transaction = session.beginTransaction();
             session.merge(employee);
-            //session.update(employee);
             employeeUpdated = 1;
             transaction.commit();
         } catch (HibernateException exception) {
@@ -136,9 +107,6 @@ public class EmployeeDao implements EmployeeDaoInterface {
             Employee employee = session.get(Employee.class, id);
             session.delete(employee);
             rowsAffected = 1;
-            //Query<?> query = session.createQuery("DELETE FROM Employee e WHERE e.id = :id");
-            //query.setParameter("id", id);
-            //rowsAffected = query.executeUpdate();
             transaction.commit();
         } catch (HibernateException exception) {
             if (null != transaction) {
@@ -146,36 +114,6 @@ public class EmployeeDao implements EmployeeDaoInterface {
             }
             EMSLogger.logger.error(exception);
             throw new EMSException(Constants.ERROR_CODE_004);
-        } finally {
-            session.close();
-        } 
-        return rowsAffected;
-    }
-    
-    /**
-     * Deleting particular employee in the database by 
-     * corresponding employee id
-     *
-     * @param id id of an employee to delete
-     * @return Total number of rows deleted in database
-     */
-    public int deleteAddress(int addressId) throws EMSException {
-        int rowsAffected = 0; 
-        Transaction transaction = null;
-        Session session = sessionFactory.openSession();
-        
-        try {
-            transaction = session.beginTransaction();
-            Query<Employee> query = session.createQuery("DELETE FROM Address e WHERE e.id = :id", Employee.class);
-            query.setParameter("id", addressId);
-            rowsAffected = query.executeUpdate();        
-            transaction.commit();
-        } catch (HibernateException exception) {
-            if (null != transaction) {
-                transaction.rollback();
-            }
-            EMSLogger.logger.error(exception);
-            throw new EMSException(Constants.ERROR_CODE_005);
         } finally {
             session.close();
         } 
@@ -237,28 +175,6 @@ public class EmployeeDao implements EmployeeDaoInterface {
         }
         return employee;
     }
-    
-    /**
-     * Getting the address details from the database
-     * by corresponding address id 
-     *
-     * @param id id of an address to get
-     * @return Single address details
-     */
-    public Address getAddress(int addressId) throws EMSException {
-        Address address = null;
-        Session session = sessionFactory.openSession();
-        
-        try {
-            address = (Address) session.get(Address.class, addressId);
-        } catch (HibernateException exception) {
-            EMSLogger.logger.error(exception);
-            throw new EMSException(Constants.ERROR_CODE_007);
-        } finally {
-            session.close();
-        }
-        return address;
-    }
  
     /** 
      * Getting all employees details from the database 
@@ -267,7 +183,6 @@ public class EmployeeDao implements EmployeeDaoInterface {
      */
     public List<Employee> getEmployees() throws EMSException {
         List<Employee> employeeList = new ArrayList<>();
-        //List<Project> employeeList1 = new ArrayList<>();
         Session session = sessionFactory.openSession();
         
         try {
