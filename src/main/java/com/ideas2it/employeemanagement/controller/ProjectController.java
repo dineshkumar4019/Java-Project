@@ -120,47 +120,7 @@ public class ProjectController extends HttpServlet {
     public long isDataBaseEmpty() throws EMSException {
         return projectService.isDataBaseEmpty();
     }
-    
-    /**
-     * Validating the corresponding project name  
-     *
-     * @param name project name for validation
-     * @return name is valid or not
-     */
-    public boolean validateName(String name) {
-        return projectService.ValidateName(name);
-    }
-    
-    /**
-     * Validating the corresponding project manager name  
-     *
-     * @param manager project manager name for validation
-     * @return name is valid or not
-     */
-    public boolean validateManagerName(String manager) {
-        return projectService.ValidateManagerName(manager);
-    }
-    
-    /**
-     * Validating the corresponding project description  
-     *
-     * @param description project name for validation
-     * @return description is valid or not
-     */
-    public boolean isValidateDescription(String description) {
-        return projectService.ValidateDescription(description);
-    }
-    
-    /**
-     * validate ids of employees 
-     *
-     * @param ids ids of employees
-     * @return ids valid or not
-     */
-    public boolean validateIds(String[] ids) {
-        return projectService.validateIds(ids);
-    }
-    
+ 
     /**
      * Creating new project and storing in database
      *
@@ -185,9 +145,8 @@ public class ProjectController extends HttpServlet {
         int id = projectService.createProject(projectDto);
         
         if (0 < id) {
-        	response.sendRedirect("SuccessMessageProject.jsp?message=Project+Details+Created+Successfully");
-//        	request.setAttribute("Message", "Project Details Created Successfully!!!");
-//            request.getRequestDispatcher("SuccessMessageProject.jsp").forward(request, response);
+        	response.sendRedirect("SuccessMessageProject.jsp"
+        			+ "?message=Project+Details+Created+Successfully");
         } else {
         	request.getRequestDispatcher("error.jsp").forward(request, response);
         }

@@ -47,6 +47,12 @@ public class EmployeeController extends HttpServlet {
 	    employeeService = new EmployeeService();
 	}
 	
+	/**
+	 * Performs Do get request action from the client
+	 * 
+	 * @param request http request from client
+	 * @param response corresponding response to the client
+	 */
 	public void doGet(HttpServletRequest request,HttpServletResponse response) throws IOException, ServletException {
 		String action = request.getServletPath();
         try {
@@ -139,6 +145,15 @@ public class EmployeeController extends HttpServlet {
     	    request.getRequestDispatcher("addressForm.jsp").forward(request, response);
     }
     
+    /**
+     * forwarding the request to employee form for creating employee
+     * 
+     * @param request
+     * @param response
+     * @throws EMSException
+     * @throws ServletException
+     * @throws IOException
+     */
     public void createEmployeeForm(HttpServletRequest request, HttpServletResponse response)
     		throws EMSException, ServletException, IOException {
     	request.setAttribute("action", "create");
@@ -171,7 +186,8 @@ public class EmployeeController extends HttpServlet {
     		throws EMSException, ServletException, IOException {
     	int id;
     	List<AddressDTO> list = new ArrayList<>();
-        EmployeeDTO employeeDto = (EmployeeDTO) request.getSession().getAttribute("createEmployeeDto"); 
+        EmployeeDTO employeeDto = (EmployeeDTO) request.getSession().getAttribute("createEmployeeDto");
+        request.getSession().removeAttribute("createEmployeeDto");
     	String addressLine = request.getParameter("addressLine");
         String city = request.getParameter("city");
         String pincode = request.getParameter("pincode");
@@ -250,6 +266,7 @@ public class EmployeeController extends HttpServlet {
     	int result;
     	EmployeeDTO employeeDto = (EmployeeDTO) request.getSession().getAttribute("employeeDto");
     	
+    	request.getSession().removeAttribute("employeeDto");
     	for (AddressDTO addressDto : employeeDto.getAddressDto()) {
     	    addressDto.setAddressLine(request.getParameter("addressLine"));
     	    addressDto.setCity(request.getParameter("city"));
