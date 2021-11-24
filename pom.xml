@@ -8,13 +8,28 @@
     <artifactId>Java-Project</artifactId>
     <packaging>war</packaging>
     <version>1.0</version>
-    <name>Employee Management</name>
+    <name>Employee Management System</name>
+    
     <properties>
-		<!-- https://maven.apache.org/general.html#encoding-warning -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		
         <maven.compiler.release>11</maven.compiler.release>
     </properties>
+    
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.8.1</version>
+                    <configuration>
+                        <release>11</release>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+    
     <dependencies>
         <dependency>
             <groupId>jakarta.servlet.jsp.jstl</groupId>
@@ -42,19 +57,5 @@
             <version>5.6.0.Final</version>
         </dependency>
     </dependencies>
-    <build>
-    <pluginManagement>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
-                <configuration>
-                    <release>11</release>
-               </configuration>
-           </plugin>
-       </plugins>
-    </pluginManagement>
-    </build>
 </project>
 

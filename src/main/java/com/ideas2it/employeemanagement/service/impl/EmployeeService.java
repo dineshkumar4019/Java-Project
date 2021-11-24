@@ -292,6 +292,14 @@ public class EmployeeService implements EmployeeServiceInterface {
         return employeeDao.deleteAllEmployee();
     }
     
+    /**
+     * Getting available projects for an employee by removing
+     * existing projects
+     * 
+     * @param employeeDto
+     * @return List of available projects
+     * @throws EMSException
+     */
     public List<ProjectDTO> getAvailableProjects(EmployeeDTO employeeDto) throws EMSException {
         List<ProjectDTO> projects = getAllProjects();
         Set<ProjectDTO> toRemove = employeeDto.getProjectsDto();

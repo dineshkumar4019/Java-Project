@@ -18,4 +18,12 @@ import org.apache.logging.log4j.LogManager;
 public class EMSLogger {
 
     public static final Logger logger = LogManager.getLogger(EMSLogger.class); 
+    
+    public static void info(Object message) {
+    	logger.info(message);
+    }
+    
+    public static void error(Object message) {
+    	logger.error(message);
+    }
 }

@@ -24,6 +24,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import com.ideas2it.employeemanagement.exception.EMSException;
+import com.ideas2it.employeemanagement.logger.EMSLogger;
 
 /**
  * <h1> Employees controller</h1>
@@ -88,10 +89,17 @@ public class EmployeeController extends HttpServlet {
 	        	    break;
 	        }
         } catch (ServletException | EMSException | IOException e) {
+        	EMSLogger.error(e);
         	request.getRequestDispatcher("error.jsp").forward(request, response);
         }
     }
 	
+	/**
+	 * Performs Do post request action from the client
+	 * 
+	 * @param request http request from client
+	 * @param response corresponding response to the client
+	 */
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getServletPath();
         try {
@@ -121,6 +129,7 @@ public class EmployeeController extends HttpServlet {
 	        	    break;
 	        }
         } catch (ServletException | EMSException | IOException e) {
+        	EMSLogger.error(e);
         	request.getRequestDispatcher("error.jsp").forward(request, response);
         }
 	}
@@ -160,12 +169,30 @@ public class EmployeeController extends HttpServlet {
     	request.getRequestDispatcher("employeeForm.jsp").forward(request, response);
     }
     
+    /**
+     * forwarding the request to address form for creating address
+     * 
+     * @param request
+     * @param response
+     * @throws EMSException
+     * @throws ServletException
+     * @throws IOException
+     */
     public void createAddressForm(HttpServletRequest request, HttpServletResponse response)
     		throws EMSException, ServletException, IOException {
     	request.setAttribute("action", "createAddress");
     	request.getRequestDispatcher("addressForm.jsp").forward(request, response);
     }
     
+    /**
+     * forwarding the request to employee form for updating employee
+     * 
+     * @param request
+     * @param response
+     * @throws EMSException
+     * @throws ServletException
+     * @throws IOException
+     */
     public void updateForm(HttpServletRequest request, HttpServletResponse response)
     		throws EMSException, ServletException, IOException {
     	int id = Integer.parseInt(request.getParameter("id"));
@@ -179,8 +206,12 @@ public class EmployeeController extends HttpServlet {
     
     /**
      * Creating the employee and storing in database
-     *
-     * @param employeeDto employee details to be created
+     * 
+     * @param request
+     * @param response
+     * @throws EMSException
+     * @throws ServletException
+     * @throws IOException
      */
     public void insertAddress(HttpServletRequest request, HttpServletResponse response)
     		throws EMSException, ServletException, IOException {
@@ -201,29 +232,22 @@ public class EmployeeController extends HttpServlet {
         id = employeeService.createEmployee(employeeDto);
         
         if (0 < id) {
+        	EMSLogger.info("Employee created");
         	response.sendRedirect("successMessage.jsp?message=Employee Details Created Successfully");
         } else {
+        	EMSLogger.error("Employee not created");
         	request.getRequestDispatcher("employee.jsp").forward(request, response);
         }
     }
     
     /**
-     * Getting the particular employee by id
-     *
-     * @param id employee id to get employee details
-     */
-    public void getSingleEmployee(HttpServletRequest request, HttpServletResponse response)
-    		throws EMSException, ServletException {
-    	int id = Integer.parseInt(request.getParameter("id"));
-        EmployeeDTO employeeDto = employeeService.getSingleEmployee(id);
-        
-        request.setAttribute("employee", employeeDto);
-    }
-    
-    /**
      * Getting all employees in the database
-     *
-     * @throws IOException 
+     * 
+     * @param request
+     * @param response
+     * @throws EMSException
+     * @throws ServletException
+     * @throws IOException
      */
     public void getAllEmployee(HttpServletRequest request, HttpServletResponse response)
     		throws EMSException, ServletException, IOException {
@@ -235,9 +259,12 @@ public class EmployeeController extends HttpServlet {
     
     /**
      * Updating the all fields of an employee 
-     *
-     * @param employeeDto employee details to be updated
-     * @throws IOException 
+     * 
+     * @param request
+     * @param response
+     * @throws EMSException
+     * @throws ServletException
+     * @throws IOException
      */
     public void updateAllFields(HttpServletRequest request, HttpServletResponse response)
     		throws EMSException, ServletException, IOException {
@@ -255,12 +282,23 @@ public class EmployeeController extends HttpServlet {
     		request.setAttribute("action", "updateAddress");
     	    request.getRequestDispatcher("addressForm.jsp").forward(request, response);
     	} else if((0 < result) && (request.getParameter("toUpdate").equals("No"))) {
+    		EMSLogger.info("Employee fields updated");
     		response.sendRedirect("successMessage.jsp?message=Employee updated Successfully");
     	} else {
+    		EMSLogger.error("Employee not updated");
     		request.getRequestDispatcher("error.jsp").forward(request, response);
     	}
     }
     
+    /**
+     * Updating All fields of an address
+     * 
+     * @param request
+     * @param response
+     * @throws EMSException
+     * @throws ServletException
+     * @throws IOException
+     */
     public void updateAddressFields(HttpServletRequest request, HttpServletResponse response)
     		throws EMSException, ServletException, IOException {
     	int result;
@@ -277,17 +315,22 @@ public class EmployeeController extends HttpServlet {
     	result = employeeService.updateAllFields(employeeDto);
     	
     	if(0 < result) {
+    		EMSLogger.info("Employee address fields updated");
     		response.sendRedirect("successMessage.jsp?message=Employee updated Successfully");
     	} else {
+    		EMSLogger.error("Employee address not updated");
     		request.getRequestDispatcher("error.jsp").forward(request, response);
     	}
     }
     
     /**
      * Deleting the required employee
-     *
-     * @param id id for deleting the employee
-     * @throws IOException 
+     * 
+     * @param request
+     * @param response
+     * @throws EMSException
+     * @throws ServletException
+     * @throws IOException
      */
     public void deleteSingleEmployee(HttpServletRequest request, HttpServletResponse response)
     		throws EMSException, ServletException, IOException {
@@ -295,27 +338,45 @@ public class EmployeeController extends HttpServlet {
         int rowsDeleted = employeeService.deleteSingleEmployee(id);
         
         if (0 < rowsDeleted) {
+        	EMSLogger.info("An Employee Deleted");
         	response.sendRedirect("viewEmployee");
         } else {
+        	EMSLogger.error("Employee not deleted");
         	request.getRequestDispatcher("error.jsp").forward(request, response);
         }
     }
     
     /**
      * Deleting all employees in the database
-     *
-     * @throws IOException 
+     * 
+     * @param request
+     * @param response
+     * @throws EMSException
+     * @throws ServletException
+     * @throws IOException
      */
     public void deleteAllEmployee(HttpServletRequest request, HttpServletResponse response)
     		throws EMSException, ServletException, IOException {
         
         if (0 < employeeService.deleteAllEmployee()) {
+        	EMSLogger.info("All Employees Deleted");
         	response.sendRedirect("successMessage.jsp?message=All Employees deleted Successfully");
         } else {
+        	EMSLogger.error("Employees not deleted");
         	request.getRequestDispatcher("error.jsp").forward(request, response);
         }
     }
     
+    /**
+     * Forwarding request to assign form to select projetcs 
+     * for an employee
+     * 
+     * @param request
+     * @param response
+     * @throws EMSException
+     * @throws ServletException
+     * @throws IOException
+     */
     public void assignProjects(HttpServletRequest request, HttpServletResponse response)
     		throws EMSException, ServletException, IOException {
     	int id = Integer.parseInt(request.getParameter("id"));
@@ -329,6 +390,15 @@ public class EmployeeController extends HttpServlet {
         dispatcher.forward(request, response);
     }
     
+    /**
+     * Allocating projects to the employee
+     * 
+     * @param request
+     * @param response
+     * @throws EMSException
+     * @throws ServletException
+     * @throws IOException
+     */
     public void allocateProjects(HttpServletRequest request, HttpServletResponse response)
     		throws EMSException, ServletException, IOException {
     	int result;
@@ -350,12 +420,24 @@ public class EmployeeController extends HttpServlet {
     	result = employeeService.updateAllFields(employeeDto);
     	
     	if (0 < result) {
+    		EMSLogger.info("Project assigned for an Employee id " + employeeDto.getId());
     		response.sendRedirect("successMessage.jsp?message=Project assigned Successfully");
     	} else {
+    		EMSLogger.error("Project not assigned for employee" + employeeDto.getId());
     		request.getRequestDispatcher("error.jsp").forward(request, response);
     	}
     }
     
+    /**
+     * Forwarding request to unAssign form to remove projects 
+     * for an employee
+     * 
+     * @param request
+     * @param response
+     * @throws EMSException
+     * @throws ServletException
+     * @throws IOException
+     */
     public void unAssignProjects(HttpServletRequest request, HttpServletResponse response)
     		throws EMSException, ServletException, IOException {
     	int id = Integer.parseInt(request.getParameter("id"));
@@ -369,6 +451,15 @@ public class EmployeeController extends HttpServlet {
         dispatcher.forward(request, response);
     }
     
+    /**
+     * UnAllocating projects to the employee
+     * 
+     * @param request
+     * @param response
+     * @throws EMSException
+     * @throws ServletException
+     * @throws IOException
+     */
     public void unAllocateProjects(HttpServletRequest request, HttpServletResponse response)
     		throws EMSException, ServletException, IOException {
     	int result;
@@ -390,8 +481,10 @@ public class EmployeeController extends HttpServlet {
     	result = employeeService.updateAllFields(employeeDto);
     	
         if (0 < result) {
+        	EMSLogger.info("Project unAssigned for an Employee id " + employeeDto.getId());
         	response.sendRedirect("successMessage.jsp?message=Project unAssigned Successfully");
     	} else {
+    		EMSLogger.error("Project not unassigned for employee" + employeeDto.getId());
     		request.getRequestDispatcher("error.jsp").forward(request, response);
     	}
     }

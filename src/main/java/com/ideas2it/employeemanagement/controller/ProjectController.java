@@ -44,6 +44,12 @@ public class ProjectController extends HttpServlet {
 	    projectService = new ProjectService();
 	}
 	
+	/**
+	 * Performs Do get request action from the client
+	 * 
+	 * @param request http request from client
+	 * @param response corresponding response to the client
+	 */
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String action = request.getServletPath();
 		
@@ -78,6 +84,12 @@ public class ProjectController extends HttpServlet {
         }
 	}
 	
+	/**
+	 * Performs Do post request action from the client
+	 * 
+	 * @param request http request from client
+	 * @param response corresponding response to the client
+	 */
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getServletPath();
         try {
@@ -103,29 +115,13 @@ public class ProjectController extends HttpServlet {
 	}
     
     /**
-     * Checking an project presences in database
-     *
-     * @param id project id for checking existance
-     * @return project exist or not
-     */
-    public boolean isProjectExist(int id) throws EMSException {
-        return projectService.isProjectExist(id);
-    }
-    
-    /**
-     * Checking if projects present in database
-     *
-     * @return database empty or not
-     */
-    public long isDataBaseEmpty() throws EMSException {
-        return projectService.isDataBaseEmpty();
-    }
- 
-    /**
      * Creating new project and storing in database
-     *
-     * @param projectDto project details to be created
-     * @return Number of projects added
+     * 
+     * @param request
+     * @param response
+     * @throws EMSException
+     * @throws ServletException
+     * @throws IOException
      */
     public void createProject(HttpServletRequest request, HttpServletResponse response)
     		throws EMSException, ServletException, IOException {
@@ -153,12 +149,30 @@ public class ProjectController extends HttpServlet {
         
     }
     
+    /**
+     * forwarding the request to project form for creating project
+     * 
+     * @param request
+     * @param response
+     * @throws EMSException
+     * @throws ServletException
+     * @throws IOException
+     */
     public void createProjectForm(HttpServletRequest request, HttpServletResponse response)
     		throws EMSException, ServletException, IOException {
     	request.setAttribute("action", "createProject");
     	request.getRequestDispatcher("projectForm.jsp").forward(request, response);
     }
     
+    /**
+     * forwarding the request to project form for updating project
+     * 
+     * @param request
+     * @param response
+     * @throws EMSException
+     * @throws ServletException
+     * @throws IOException
+     */
     public void updateProjectForm(HttpServletRequest request, HttpServletResponse response)
     		throws EMSException, ServletException, IOException {
     	int id = Integer.parseInt(request.getParameter("id"));
@@ -170,19 +184,13 @@ public class ProjectController extends HttpServlet {
     }
     
     /**
-     * Getting the particular project by id
-     *
-     * @param id project id to get project details
-     * @return particular project details
-     */
-    public ProjectDTO getSingleProject(int id) throws EMSException {
-        return projectService.getSingleProject(id);
-    }
-    
-    /**
      * Getting all projects in the database
-     *
-     * @return All projects details
+     * 
+     * @param request
+     * @param response
+     * @throws EMSException
+     * @throws ServletException
+     * @throws IOException
      */
     public void getAllProjects(HttpServletRequest request, HttpServletResponse response)
     		throws EMSException, ServletException, IOException {
@@ -190,15 +198,6 @@ public class ProjectController extends HttpServlet {
     	request.setAttribute("projects", projects);
     	RequestDispatcher dispatcher = request.getRequestDispatcher("viewProject.jsp");
         dispatcher.forward(request, response);
-    }
-    
-    /**
-     * Getting all employees in the database
-     *
-     * @return All employees details
-     */
-    public List<EmployeeDTO> getAllEmployees() throws EMSException {
-        return projectService.getAllEmployees();
     }
     
     /**
