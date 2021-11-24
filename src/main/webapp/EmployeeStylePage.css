@@ -1,0 +1,83 @@
+@charset "UTF-8";
+body{
+	background-color: #D9AFD9;
+    background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);
+	color:black;
+	margin:5%;
+	text-align:center;
+	font-size:20px;
+}
+
+a{
+	text-decoration:none;
+	color:black;
+	margin:5%;
+}
+
+button{
+	background-image: linear-gradient(to right, #E6DADA 0%, #274046  51%, #E6DADA  100%);
+	margin: 10px;
+            padding: 15px 45px;
+            text-align: center;
+            text-transform: uppercase;
+            transition: 0.5s;
+            background-size: 200% auto;
+            color: white;            
+            box-shadow: 0 0 20px #eee;
+            border-radius: 10px;
+}
+
+button:hover{
+	background-position: right center;
+            color: #fff;
+            text-decoration: none;
+}
+
+h1{
+	font-family:monospace;
+	font-size:30px;
+	text-align:center;
+}
+
+legend {
+	font-family:monospace;
+	text-align:left;
+	color:white;
+	background-color:black;
+	padding:10px;
+	border-radius:5px;
+}
+
+input{
+	margin-bottom:2%;
+	padding:10px;
+	border-radius:5px;
+	border-color:black;
+}
+
+form{
+	font-family:monospace;
+}
+
+fieldset{
+	border:2px solid black;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  border-color:black;
+}
+
+td {
+  background-color:#eeeeec;
+  text-align: left;
+  padding: 4px;
+}
+
+th{
+	text-align: left;
+     padding: 8px;
+	background-color:black;
+	color:white;
+}

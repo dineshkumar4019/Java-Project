@@ -33,7 +33,7 @@ import com.ideas2it.employeemanagement.utils.ModelMapper;
  * @author	Dinesh Kumar
  * @version	1.0
  * @since   2021-08-27
- * 
+ *  
  */
 public class EmployeeService implements EmployeeServiceInterface {
     private EmployeeDao employeeDao = new EmployeeDao();
@@ -217,9 +217,7 @@ public class EmployeeService implements EmployeeServiceInterface {
      * @return Number of rows created
      */
     public int createEmployee(EmployeeDTO employeeDto) throws EMSException {
-        int id = employeeDao.insertEmployee(ModelMapper.toEmployee(employeeDto));
-        
-        return id;
+        return employeeDao.insertEmployee(ModelMapper.toEmployee(employeeDto));
     }
 
     /**

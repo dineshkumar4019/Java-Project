@@ -22,7 +22,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-
 import com.ideas2it.employeemanagement.exception.EMSException;
 import com.ideas2it.employeemanagement.logger.EMSLogger;
 
@@ -37,11 +36,11 @@ import com.ideas2it.employeemanagement.logger.EMSLogger;
  * 
  */
 public class EmployeeController extends HttpServlet {
-    /**
-	 * 
-	 */
+	private EMSLogger EmsLogger = new EMSLogger(EmployeeController.class);
+
 	private static final long serialVersionUID = 102831973239L;
-    private EmployeeService employeeService;
+    
+	private EmployeeService employeeService;
 	
 	public void init() throws ServletException {
 		super.init();
@@ -89,7 +88,7 @@ public class EmployeeController extends HttpServlet {
 	        	    break;
 	        }
         } catch (ServletException | EMSException | IOException e) {
-        	EMSLogger.error(e);
+        	EmsLogger.error(e);
         	request.getRequestDispatcher("error.jsp").forward(request, response);
         }
     }
@@ -111,6 +110,7 @@ public class EmployeeController extends HttpServlet {
 	        	    insertAddress(request, response);
 	        	    break;
 	            case "/viewEmployee":
+	            	EmsLogger.info("request recived");
 	        	    getAllEmployee(request, response);
 	        	    break;
 	            case "/update":
@@ -129,7 +129,7 @@ public class EmployeeController extends HttpServlet {
 	        	    break;
 	        }
         } catch (ServletException | EMSException | IOException e) {
-        	EMSLogger.error(e);
+        	EmsLogger.error(e);
         	request.getRequestDispatcher("error.jsp").forward(request, response);
         }
 	}
@@ -143,12 +143,13 @@ public class EmployeeController extends HttpServlet {
     public void createEmployee(HttpServletRequest request, HttpServletResponse response)
     		throws EMSException, ServletException, IOException {
         String name = request.getParameter("name");
+        double salary = Double.parseDouble(request.getParameter("salary"));
         String email = request.getParameter("email");
         long phoneNumber = Long.parseLong((String) request.getParameter("phoneNumber"));
         String dataOfBirth = request.getParameter("DOB");
         LocalDate DOB = LocalDate.parse(dataOfBirth);
      
-        EmployeeDTO employeeDto = new EmployeeDTO(name, phoneNumber, email, phoneNumber, DOB); 
+        EmployeeDTO employeeDto = new EmployeeDTO(name, salary, email, phoneNumber, DOB); 
     		request.getSession().setAttribute("createEmployeeDto", employeeDto);
     		request.setAttribute("action", "createAddress");
     	    request.getRequestDispatcher("addressForm.jsp").forward(request, response);
@@ -232,10 +233,10 @@ public class EmployeeController extends HttpServlet {
         id = employeeService.createEmployee(employeeDto);
         
         if (0 < id) {
-        	EMSLogger.info("Employee created");
+        	EmsLogger.info("Employee created");
         	response.sendRedirect("successMessage.jsp?message=Employee Details Created Successfully");
         } else {
-        	EMSLogger.error("Employee not created");
+        	EmsLogger.error("Employee not created");
         	request.getRequestDispatcher("employee.jsp").forward(request, response);
         }
     }
@@ -273,6 +274,7 @@ public class EmployeeController extends HttpServlet {
     	EmployeeDTO employeeDto = (EmployeeDTO) session.getAttribute("employeeDto");
     	
 		employeeDto.setName(request.getParameter("name"));
+		employeeDto.setSalary(Double.parseDouble(request.getParameter("salary")));
 		employeeDto.setEmail(request.getParameter("email"));
 		employeeDto.setPhoneNumber(Long.parseLong(request.getParameter("phoneNumber")));
 		employeeDto.setDOB(LocalDate.parse((String) request.getParameter("DOB")));
@@ -282,10 +284,10 @@ public class EmployeeController extends HttpServlet {
     		request.setAttribute("action", "updateAddress");
     	    request.getRequestDispatcher("addressForm.jsp").forward(request, response);
     	} else if((0 < result) && (request.getParameter("toUpdate").equals("No"))) {
-    		EMSLogger.info("Employee fields updated");
+    		EmsLogger.info("Employee fields updated");
     		response.sendRedirect("successMessage.jsp?message=Employee updated Successfully");
     	} else {
-    		EMSLogger.error("Employee not updated");
+    		EmsLogger.error("Employee not updated");
     		request.getRequestDispatcher("error.jsp").forward(request, response);
     	}
     }
@@ -315,10 +317,10 @@ public class EmployeeController extends HttpServlet {
     	result = employeeService.updateAllFields(employeeDto);
     	
     	if(0 < result) {
-    		EMSLogger.info("Employee address fields updated");
+    		EmsLogger.info("Employee address fields updated");
     		response.sendRedirect("successMessage.jsp?message=Employee updated Successfully");
     	} else {
-    		EMSLogger.error("Employee address not updated");
+    		EmsLogger.error("Employee address not updated");
     		request.getRequestDispatcher("error.jsp").forward(request, response);
     	}
     }
@@ -338,10 +340,10 @@ public class EmployeeController extends HttpServlet {
         int rowsDeleted = employeeService.deleteSingleEmployee(id);
         
         if (0 < rowsDeleted) {
-        	EMSLogger.info("An Employee Deleted");
+        	EmsLogger.info("Employee Deleted id: " + id);
         	response.sendRedirect("viewEmployee");
         } else {
-        	EMSLogger.error("Employee not deleted");
+        	EmsLogger.error("Employee not deleted");
         	request.getRequestDispatcher("error.jsp").forward(request, response);
         }
     }
@@ -359,10 +361,10 @@ public class EmployeeController extends HttpServlet {
     		throws EMSException, ServletException, IOException {
         
         if (0 < employeeService.deleteAllEmployee()) {
-        	EMSLogger.info("All Employees Deleted");
+        	EmsLogger.info("All Employees Deleted");
         	response.sendRedirect("successMessage.jsp?message=All Employees deleted Successfully");
         } else {
-        	EMSLogger.error("Employees not deleted");
+        	EmsLogger.error("Employees not deleted");
         	request.getRequestDispatcher("error.jsp").forward(request, response);
         }
     }
@@ -420,10 +422,10 @@ public class EmployeeController extends HttpServlet {
     	result = employeeService.updateAllFields(employeeDto);
     	
     	if (0 < result) {
-    		EMSLogger.info("Project assigned for an Employee id " + employeeDto.getId());
+    		EmsLogger.info("Project assigned for an Employee id " + employeeDto.getId());
     		response.sendRedirect("successMessage.jsp?message=Project assigned Successfully");
     	} else {
-    		EMSLogger.error("Project not assigned for employee" + employeeDto.getId());
+    		EmsLogger.error("Project not assigned for employee" + employeeDto.getId());
     		request.getRequestDispatcher("error.jsp").forward(request, response);
     	}
     }
@@ -481,10 +483,10 @@ public class EmployeeController extends HttpServlet {
     	result = employeeService.updateAllFields(employeeDto);
     	
         if (0 < result) {
-        	EMSLogger.info("Project unAssigned for an Employee id " + employeeDto.getId());
+        	EmsLogger.info("Project unAssigned for an Employee id " + employeeDto.getId());
         	response.sendRedirect("successMessage.jsp?message=Project unAssigned Successfully");
     	} else {
-    		EMSLogger.error("Project not unassigned for employee" + employeeDto.getId());
+    		EmsLogger.error("Project not unassigned for employee" + employeeDto.getId());
     		request.getRequestDispatcher("error.jsp").forward(request, response);
     	}
     }

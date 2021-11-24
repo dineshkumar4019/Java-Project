@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.ideas2it.employeemanagement.exception.EMSException;
+import com.ideas2it.employeemanagement.logger.EMSLogger;
 import com.ideas2it.employeemanagement.model.ProjectDTO;
 import com.ideas2it.employeemanagement.model.EmployeeDTO;
 import com.ideas2it.employeemanagement.service.impl.ProjectService;
@@ -43,6 +44,8 @@ public class ProjectController extends HttpServlet {
 		super.init();
 	    projectService = new ProjectService();
 	}
+	
+	EMSLogger EmsLogger = new EMSLogger(ProjectController.class);
 	
 	/**
 	 * Performs Do get request action from the client
@@ -80,6 +83,7 @@ public class ProjectController extends HttpServlet {
 	        	    break;
 	        }
         } catch (ServletException | EMSException | IOException e) {
+        	EmsLogger.error(e);
         	request.getRequestDispatcher("error.jsp").forward(request, response);
         }
 	}
@@ -110,6 +114,7 @@ public class ProjectController extends HttpServlet {
 	        	    break;
 	        }
         } catch (ServletException | EMSException | IOException e) {
+        	EmsLogger.error(e);
         	request.getRequestDispatcher("error.jsp").forward(request, response);
         }
 	}
@@ -141,9 +146,11 @@ public class ProjectController extends HttpServlet {
         int id = projectService.createProject(projectDto);
         
         if (0 < id) {
+        	EmsLogger.info("Project Created");
         	response.sendRedirect("SuccessMessageProject.jsp"
         			+ "?message=Project+Details+Created+Successfully");
         } else {
+        	EmsLogger.error("Project Not created");
         	request.getRequestDispatcher("error.jsp").forward(request, response);
         }
         
@@ -226,9 +233,11 @@ public class ProjectController extends HttpServlet {
     	projectDto.setStatus(status);
         result = projectService.updateAllFields(projectDto);
          if (0 < result) {
+        	 EmsLogger.info("Project Updated id:" + projectDto.getId());
         	 response.sendRedirect("SuccessMessageProject.jsp"
         	 		+ "?message=Project+Details+updated+Successfully");
          } else {
+        	 EmsLogger.error("Project not updated" + projectDto.getId());
         	 request.getRequestDispatcher("error.jsp").forward(request, response);
          }
     }
@@ -244,8 +253,10 @@ public class ProjectController extends HttpServlet {
     	int id = Integer.parseInt(request.getParameter("id"));
         int rowsDeleted = projectService.deleteSingleProject(id);
         if (0 < rowsDeleted) {
+        	EmsLogger.info("Project deleted id:" + id);
         	response.sendRedirect("viewProject");
         } else {
+        	EmsLogger.error("Project not deleted id:" + id);
         	request.getRequestDispatcher("error.jsp").forward(request, response);
         }
     }
@@ -259,8 +270,10 @@ public class ProjectController extends HttpServlet {
     		throws EMSException, ServletException, IOException {
         int result = projectService.deleteAllProject();
         if (0 < result) {
+        	EmsLogger.info("All projects deleted");
         	response.sendRedirect("SuccessMessageProject.jsp?message=All projects Deleted Successfully");
         } else {
+        	EmsLogger.error("projects not deleted");
         	request.getRequestDispatcher("error.jsp").forward(request, response);
         }
     }
@@ -297,8 +310,10 @@ public class ProjectController extends HttpServlet {
     	projectDto.getEmployeesDto().addAll(list);
     	result = projectService.updateAllFields(projectDto);
     	if (0 < result) {
+    		EmsLogger.info("Employees Assigned for project id:" + projectDto.getId());
     		response.sendRedirect("SuccessMessageProject.jsp?message=Employee Assigned Successfully");
         } else {
+        	EmsLogger.error("Employees not assigned for project id:" + projectDto.getId());
         	request.getRequestDispatcher("error.jsp").forward(request, response);
         }
     }
@@ -335,8 +350,10 @@ public class ProjectController extends HttpServlet {
     	result = projectService.updateAllFields(projectDto);
     	
     	if (0 < result) {
+    		EmsLogger.error("Employees unAssigned for project id:" + projectDto.getId());
     		response.sendRedirect("SuccessMessageProject.jsp?message=Employee Un Assigned Successfully");
         } else {
+        	EmsLogger.error("Employees not unAssigned for project id:" + projectDto.getId());
         	request.getRequestDispatcher("error.jsp").forward(request, response);
         }
     }

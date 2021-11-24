@@ -3,7 +3,10 @@
 <!DOCTYPE html>  
 <html>  
 <head>
-    <title>Employees</title>
+    <title>
+        Employee Management System
+    </title>
+    <link rel="stylesheet" href="EmployeeStylePage.css">
 </head>
 <body>
     <div align="center">
@@ -67,7 +70,7 @@
         <a href = "index.jsp"><button> Home </button></a>
         <c:if test="${not empty employees}">
            <div>
-                <a href = "deleteAll"><button> Delete All</button></a>
+                <a href = "deleteAll"><button class="btn-grad"> Delete All</button></a>
             </div>
         </c:if>
     </div>   

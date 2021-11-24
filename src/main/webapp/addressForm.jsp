@@ -1,5 +1,11 @@
 <!DOCTYPE html>  
-<html>  
+<html>
+<head>
+    <title>
+        Employee Management System
+    </title>
+    <link rel="stylesheet" href="EmployeeStylePage.css">
+</head>  
 <body>
     <h1> Create Address </h1>
 <form action = "${action}" method="post">
@@ -17,7 +23,7 @@
         <input type="submit" value="create">
         <input type="reset">
     </fieldset>
-</form>
+</form> 
 </body>
 </html>
     

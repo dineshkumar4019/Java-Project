@@ -15,8 +15,8 @@
         <property name="connection.username">root</property>
         <property name="connection.password">Test@321</property>
          
-        <mapping resource="resources/Employee.hbm.xml"></mapping>
-        <mapping resource="resources/Address.hbm.xml"></mapping>
-        <mapping resource="resources/Project.hbm.xml"></mapping>
+        <mapping resource="Employee.hbm.xml"></mapping>
+        <mapping resource="Address.hbm.xml"></mapping>
+        <mapping resource="Project.hbm.xml"></mapping>
     </session-factory>
 </hibernate-configuration>

@@ -1,6 +1,12 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
-<html>  
+<html>
+<head>
+    <title>
+        Employee Management System
+    </title>
+    <link rel="stylesheet" href="EmployeeStylePage.css">
+</head>
     <body>
         <form action = "${action}" method="post">
             <div align="center">

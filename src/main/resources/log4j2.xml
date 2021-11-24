@@ -4,7 +4,7 @@
     
     <Appenders>
         <File name="File" fileName="logs/EMSLogs.log">
-            <PatternLayout pattern="%d{yyyy-MMM-dd HH:mm:ss a} [%t] %-5level %logger{36} - %msg%n" />
+            <PatternLayout pattern="%date %level [%thread][%level][%c]:%message%n " />
         </File>
     </Appenders>
     
@@ -17,7 +17,7 @@
             <AppenderRef ref="File"/>
         </Logger>
         
-        <Root level="error">
+        <Root level="info">
           <AppenderRef ref="File"/>
         </Root>
     </Loggers>

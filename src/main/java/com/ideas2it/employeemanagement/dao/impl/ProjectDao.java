@@ -18,15 +18,8 @@ import com.ideas2it.employeemanagement.connection.HibernateUtil;
 import com.ideas2it.employeemanagement.dao.ProjectDaoInterface;
 import com.ideas2it.employeemanagement.exception.EMSException;
 import com.ideas2it.employeemanagement.logger.EMSLogger;
-import com.ideas2it.employeemanagement.model.EmployeeDTO;
 import com.ideas2it.employeemanagement.model.Project;
-import com.ideas2it.employeemanagement.model.ProjectDTO;
 import com.ideas2it.employeemanagement.utils.Constants;
-
-import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * <h1> Project DAO</h1>
@@ -40,6 +33,7 @@ import jakarta.servlet.http.HttpServletResponse;
  */
 public class ProjectDao implements ProjectDaoInterface {
     private SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+    EMSLogger EmsLogger = new EMSLogger(ProjectDao.class);
     
     /**
      * Inserting the project details from  user input
@@ -60,8 +54,7 @@ public class ProjectDao implements ProjectDaoInterface {
             if (null != transaction) {
                 transaction.rollback();
             }
-            exception.printStackTrace();
-            EMSLogger.logger.error(exception);
+            EmsLogger.error(exception);
             throw new EMSException(Constants.ERROR_CODE_010);
         } finally {
             session.close();
@@ -91,7 +84,7 @@ public class ProjectDao implements ProjectDaoInterface {
             if (null != transaction) {
                 transaction.rollback();
             }
-            EMSLogger.logger.error(exception);
+            EmsLogger.error(exception);
             throw new EMSException(Constants.ERROR_CODE_011);
         } finally {
             session.close();
@@ -115,7 +108,7 @@ public class ProjectDao implements ProjectDaoInterface {
         	query.setParameter("id", id);
         	project = query.getSingleResult();
         } catch (HibernateException exception) {
-            EMSLogger.logger.error(exception);
+            EmsLogger.error(exception);
             throw new EMSException(Constants.ERROR_CODE_012);
         } finally {
             session.close();
@@ -137,6 +130,7 @@ public class ProjectDao implements ProjectDaoInterface {
         			+ " p LEFT JOIN FETCH p.employees", Project.class);
             projectList = query.list();
         } catch (HibernateException exception) {
+        	EmsLogger.error(exception);
             throw new EMSException(Constants.ERROR_CODE_012);
         } finally {
             session.close();
@@ -166,7 +160,7 @@ public class ProjectDao implements ProjectDaoInterface {
             if (null != transaction) {
                 transaction.rollback();
             }
-            EMSLogger.logger.error(exception);
+            EmsLogger.error(exception);
             throw new EMSException(Constants.ERROR_CODE_013);
         } finally {
             session.close();
@@ -193,7 +187,7 @@ public class ProjectDao implements ProjectDaoInterface {
             if (null != transaction) {
                 transaction.rollback();
             }
-            EMSLogger.logger.error(exception);
+            EmsLogger.error(exception);
             throw new EMSException(Constants.ERROR_CODE_013);
         } finally {
             session.close();

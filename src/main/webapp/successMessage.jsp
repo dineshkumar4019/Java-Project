@@ -2,7 +2,12 @@
 <!DOCTYPE html>  
 <html>  
 <head>  
-<title>Employee Management System</title>  
+<head>
+    <title>
+        Employee Management System
+    </title>
+    <link rel="stylesheet" href="EmployeeStylePage.css">
+</head>
 </head>  
 <body>  
 <h1>Employee Management System</h1>  

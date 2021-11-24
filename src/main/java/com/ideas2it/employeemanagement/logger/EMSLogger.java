@@ -16,14 +16,35 @@ import org.apache.logging.log4j.LogManager;
  * @since   2021-11-10
  */
 public class EMSLogger {
-
-    public static final Logger logger = LogManager.getLogger(EMSLogger.class); 
     
-    public static void info(Object message) {
+	public Logger logger;
+	
+//	public EMSLogger() {
+//		logger = LogManager.getLogger();
+//	}
+	
+	public EMSLogger(Class<?> className) {
+	    logger = LogManager.getLogger(className);
+	    logger.error("started");
+	}
+	
+//	public Logger getLogger() {
+//		return logger;
+//	}
+	
+    public void debug(Object message) {
+    	logger.debug(message);
+    }
+    
+    public void info(Object message) {
     	logger.info(message);
     }
     
-    public static void error(Object message) {
+    public void error(Object message) {
     	logger.error(message);
+    }
+    
+    public void fatal(Object message) {
+    	logger.fatal(message);
     }
 }
