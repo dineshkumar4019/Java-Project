@@ -48,12 +48,19 @@
 	    <c:if test="${cloneEmployeeDto == null}">
             <button type="submit"> Create </button>
 	    </c:if>
-	    
-        
-        <button type="reset"> Reset </button> 
+	    <c:if test="${cloneEmployeeDto == null}">
+            <button type="reset"> Reset </button> 
+	    </c:if>
     </fieldset>
 </form>
-<a href = "employee.jsp"><button> Back </button></a>
-<a href = "index.jsp"><button> Home </button></a>
+<c:if test="${cloneEmployeeDto != null}">
+    <a href = "viewEmployee"><button> Back </button></a>
+    <a href = "index.jsp"><button> Home </button></a>
+</c:if>
+
+<c:if test="${cloneEmployeeDto == null}">
+    <a href = "employee.jsp"><button> Back </button></a>
+    <a href = "index.jsp"><button> Home </button></a>
+</c:if>
 </body>
 </html>

@@ -109,10 +109,6 @@ public class EmployeeController extends HttpServlet {
 	            case "/createAddress":
 	        	    insertAddress(request, response);
 	        	    break;
-	            case "/viewEmployee":
-	            	EmsLogger.info("request recived");
-	        	    getAllEmployee(request, response);
-	        	    break;
 	            case "/update":
 	        	    updateAllFields(request, response);
 	        	    break;
@@ -270,8 +266,7 @@ public class EmployeeController extends HttpServlet {
     public void updateAllFields(HttpServletRequest request, HttpServletResponse response)
     		throws EMSException, ServletException, IOException {
     	int result;
-    	HttpSession session = request.getSession();
-    	EmployeeDTO employeeDto = (EmployeeDTO) session.getAttribute("employeeDto");
+    	EmployeeDTO employeeDto = (EmployeeDTO)    request.getSession().getAttribute("employeeDto");
     	
 		employeeDto.setName(request.getParameter("name"));
 		employeeDto.setSalary(Double.parseDouble(request.getParameter("salary")));
@@ -284,6 +279,7 @@ public class EmployeeController extends HttpServlet {
     		request.setAttribute("action", "updateAddress");
     	    request.getRequestDispatcher("addressForm.jsp").forward(request, response);
     	} else if((0 < result) && (request.getParameter("toUpdate").equals("No"))) {
+    		request.getSession().removeAttribute("employeeDto");
     		EmsLogger.info("Employee fields updated");
     		response.sendRedirect("successMessage.jsp?message=Employee updated Successfully");
     	} else {
@@ -411,6 +407,7 @@ public class EmployeeController extends HttpServlet {
     	}
     	String[] selectedProjects = request.getParameterValues("selectedProjects");
     	EmployeeDTO employeeDto = (EmployeeDTO) request.getSession().getAttribute("assignEmployeeDto");
+    	request.getSession().removeAttribute("assignEmployeeDto");
     	List<ProjectDTO> list = new ArrayList<>();
     	
     	for (String id : selectedProjects) {
@@ -472,6 +469,7 @@ public class EmployeeController extends HttpServlet {
     	}
     	String[] selectedProjects = request.getParameterValues("selectedProjects");
     	EmployeeDTO employeeDto = (EmployeeDTO) request.getSession().getAttribute("unAssignEmployeeDto");
+    	request.getSession().removeAttribute("unAssignEmployeeDto");
     	List<ProjectDTO> list = new ArrayList<>();
     	
     	for (String id : selectedProjects) {

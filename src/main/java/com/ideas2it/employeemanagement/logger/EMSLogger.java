@@ -19,18 +19,9 @@ public class EMSLogger {
     
 	public Logger logger;
 	
-//	public EMSLogger() {
-//		logger = LogManager.getLogger();
-//	}
-	
 	public EMSLogger(Class<?> className) {
 	    logger = LogManager.getLogger(className);
-	    logger.error("started");
 	}
-	
-//	public Logger getLogger() {
-//		return logger;
-//	}
 	
     public void debug(Object message) {
     	logger.debug(message);

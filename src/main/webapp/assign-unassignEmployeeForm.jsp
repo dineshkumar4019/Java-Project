@@ -53,7 +53,7 @@
             </div>
         </form>
         <center>
-        <a href = "project.jsp"><button> Back </button></a>
+        <a href = "viewProject"><button> Back </button></a>
         <a href = "index.jsp"><button> Home </button></a>
         </center>
     </body>

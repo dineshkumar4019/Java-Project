@@ -8,12 +8,9 @@
     <link rel="stylesheet" href="EmployeeStylePage.css">
 </head>
 <body>  
-<h1>Employee Management System</h1>  
-   <c:if test="${Message != null}">
-       "${Message}"
-   </c:if><br>
-   <a href="employeeCreateForm">Create Employee</a><br> 
-   <a href="viewEmployee">Display Employee</a><br>
+<h1>Employee Management System</h1>
+   <a href="employeeCreateForm"><button class="intro">Create Employee</button></a><br> 
+   <a href="viewEmployee"><button class="intro">Display Employee</button></a><br>
    <a href = "index.jsp"><button> Back </button></a>
 </body>  
 </html>  

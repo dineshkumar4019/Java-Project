@@ -20,8 +20,7 @@
         <input type="text" id="state" name="state" required><br>
         <label for="country">Country</label><br>
         <input type="text" id="country" name="country" required><br>
-        <input type="submit" value="create">
-        <input type="reset">
+        <button type="submit">Submit</button>
     </fieldset>
 </form> 
 </body>

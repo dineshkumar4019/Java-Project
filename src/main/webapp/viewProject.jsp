@@ -19,7 +19,7 @@
                 <th>Manager</th>
                 <th>Project Status</th>
                 <th>Employees</th>
-                <th>Assign UnAssign Employee</th>
+                <th>Assign or UnAssign</th>
                 <th>Select</th>
             </tr>
             
@@ -31,20 +31,26 @@
                     <td>${project.manager}</td>
                     <td>${project.status}</td>
                 <td>
+                <table >
+                  <tr>
+                    <th>Employee id</th>
+                    <th>Employee Name</th>
+                 </tr>
                 <c:forEach var="employee" items = "${project.employeesDto}">
-                    Employee id :
-                    ${employee.id} <br>
-                    Employee Name :
-                    ${employee.name} <br>
+                <tr>
+                    <td>${employee.id}</td>
+                    <td>${employee.name}</td>
+                </tr>
                 </c:forEach>
+                </table>
                 </td>
                 <td>
-                    <a href="assignEmployee?id=<c:out value='${project.id}' />">Assign</a>
-                    <a href="unAssignEmployee?id=<c:out value='${project.id}' />">UnAssign</a>
+                    <a href="assignEmployee?id=<c:out value='${project.id}' />"><button>Assign</button></a><br>
+                    <a href="unAssignEmployee?id=<c:out value='${project.id}' />"><button>UnAssign</button></a>
                 </td>
                 <td>
-                    <a href="projectUpdateForm?id=<c:out value='${project.id}' />">Edit</a>
-                    <a href="deleteProject?id=<c:out value='${project.id}' />">Delete</a>
+                    <a href="projectUpdateForm?id=<c:out value='${project.id}' />"><button>Edit</button></a>
+                    <a href="deleteProject?id=<c:out value='${project.id}' />"><button>Delete</button></a>
                 </td> 
             </tr>
             </c:forEach>

@@ -10,9 +10,9 @@
 </head>
 </head>  
 <body>  
-<h1>Employee Management System</h1>  
+<h1>Employee Management System</h1>
 <h2>
 <% out.print(request.getParameter("message")); %><br></h2>
-<a href = "employee.jsp"><button> Go To Home Page </button></a>
+<a href = "viewEmployee"><button> Go To view Page </button></a>
 </body>  
 </html> 

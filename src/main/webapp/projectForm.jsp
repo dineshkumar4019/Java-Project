@@ -46,8 +46,13 @@
         <input type="reset">
     </fieldset>
     </form>
-    <a href = "project.jsp"><button> Back </button></a>
-    <a href = "index.jsp"><button> Home </button></a>
+    <c:if test="${cloneProjectDto != null}">
+        <a href = "viewProject"><button> Back </button></a>
+        <a href = "index.jsp"><button> Home </button></a>	</c:if>
+	<c:if test="${cloneProjectDto == null}">
+        <a href = "project.jsp"><button> Back </button></a>
+        <a href = "index.jsp"><button> Home </button></a>
+	</c:if>
 </body>
 </html>
     
