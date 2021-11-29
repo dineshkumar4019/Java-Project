@@ -4,16 +4,16 @@
     
     <Appenders>
         <File name="File" fileName="logs/EMSLogs.log">
-            <PatternLayout pattern="%date %level [%thread][%level][%c]:%message%n " />
+            <PatternLayout pattern="%date [%thread][%level][%c]:%message%n "/>
         </File>
     </Appenders>
     
     <Loggers>
-        <Logger name="org.hibernate" level="info" additivity="false">
+        <Logger name="org.hibernate" level="info">
             <AppenderRef ref="File"/>
         </Logger>
         
-        <Logger name="com.ideas2it.employeemanagement.logger.EMSLogger" level="info" additivity="false">
+        <Logger name="com.ideas2it.employeemanagement.logger.EMSLogger" level="info">
             <AppenderRef ref="File"/>
         </Logger>
         

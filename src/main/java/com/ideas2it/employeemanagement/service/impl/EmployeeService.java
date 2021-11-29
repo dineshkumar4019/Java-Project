@@ -306,4 +306,21 @@ public class EmployeeService implements EmployeeServiceInterface {
         }
         return projects;
     }
+    
+    /**
+     * creating projects and assinging selected ids to the new projects
+     * 
+     * @param selectedIds ids of the projects
+     * @return List of projects 
+     */
+    public List<ProjectDTO> getSelectedProjectDtos(String[] selectedIds) {
+        List<ProjectDTO> list = new ArrayList<>();
+    	
+    	for (String id : selectedIds) {
+    		ProjectDTO projectDto = new ProjectDTO();
+    		projectDto.setId(Integer.parseInt(id));
+    		list.add(projectDto);
+    	}
+    	return list;
+    }
 }

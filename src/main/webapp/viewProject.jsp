@@ -51,7 +51,7 @@
                 <td>
                     <a href="projectUpdateForm?id=<c:out value='${project.id}' />"><button>Edit</button></a>
                     <a href="deleteProject?id=<c:out value='${project.id}' />"><button>Delete</button></a>
-                </td> 
+                </td>
             </tr>
             </c:forEach>
         </table>

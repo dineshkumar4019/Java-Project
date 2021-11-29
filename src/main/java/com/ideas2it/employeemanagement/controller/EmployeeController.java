@@ -27,7 +27,7 @@ import com.ideas2it.employeemanagement.logger.EMSLogger;
 
 /**
  * <h1> Employees controller</h1>
- * Empolyee controller controls and manipulates the CRUD
+ * Employee controller controls and manipulates the CRUD
  * operations and validation
  * 
  * @author	Dinesh Kumar
@@ -37,15 +37,8 @@ import com.ideas2it.employeemanagement.logger.EMSLogger;
  */
 public class EmployeeController extends HttpServlet {
 	private EMSLogger EmsLogger = new EMSLogger(EmployeeController.class);
-
-	private static final long serialVersionUID = 102831973239L;
-    
-	private EmployeeService employeeService;
-	
-	public void init() throws ServletException {
-		super.init();
-	    employeeService = new EmployeeService();
-	}
+	private static final long serialVersionUID = 1L;
+	private EmployeeService employeeService = new EmployeeService();
 	
 	/**
 	 * Performs Do get request action from the client
@@ -408,14 +401,7 @@ public class EmployeeController extends HttpServlet {
     	String[] selectedProjects = request.getParameterValues("selectedProjects");
     	EmployeeDTO employeeDto = (EmployeeDTO) request.getSession().getAttribute("assignEmployeeDto");
     	request.getSession().removeAttribute("assignEmployeeDto");
-    	List<ProjectDTO> list = new ArrayList<>();
-    	
-    	for (String id : selectedProjects) {
-    		ProjectDTO projectDto = new ProjectDTO();
-    		projectDto.setId(Integer.parseInt(id));
-    		list.add(projectDto);
-    	}
-    	employeeDto.getProjectsDto().addAll(list);
+    	employeeDto.getProjectsDto().addAll(employeeService.getSelectedProjectDtos(selectedProjects));
     	result = employeeService.updateAllFields(employeeDto);
     	
     	if (0 < result) {
@@ -470,14 +456,7 @@ public class EmployeeController extends HttpServlet {
     	String[] selectedProjects = request.getParameterValues("selectedProjects");
     	EmployeeDTO employeeDto = (EmployeeDTO) request.getSession().getAttribute("unAssignEmployeeDto");
     	request.getSession().removeAttribute("unAssignEmployeeDto");
-    	List<ProjectDTO> list = new ArrayList<>();
-    	
-    	for (String id : selectedProjects) {
-    		ProjectDTO projectDto = new ProjectDTO();
-    		projectDto.setId(Integer.parseInt(id));
-    		list.add(projectDto);
-    	}
-    	employeeDto.getProjectsDto().removeAll(list);
+    	employeeDto.getProjectsDto().removeAll(employeeService.getSelectedProjectDtos(selectedProjects));
     	result = employeeService.updateAllFields(employeeDto);
     	
         if (0 < result) {

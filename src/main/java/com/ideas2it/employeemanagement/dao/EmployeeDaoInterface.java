@@ -70,7 +70,7 @@ public interface EmployeeDaoInterface {
     public List<Employee> getEmployees() throws EMSException;
 
     /** 
-     * Checing the email already exist in the database
+     * Checking the email already exist in the database
      * for an employee
      *
      * @param email email to check the existance
@@ -79,7 +79,7 @@ public interface EmployeeDaoInterface {
     public boolean isEmailExist(String email) throws EMSException;
    
     /** 
-     * Checing the phonenumber already exist in the database
+     * Checking the phonenumber already exist in the database
      * for an employee
      *
      * @param phoneNumber phone number to check the existance

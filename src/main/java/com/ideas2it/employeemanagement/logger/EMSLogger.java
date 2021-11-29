@@ -35,7 +35,4 @@ public class EMSLogger {
     	logger.error(message);
     }
     
-    public void fatal(Object message) {
-    	logger.fatal(message);
-    }
 }

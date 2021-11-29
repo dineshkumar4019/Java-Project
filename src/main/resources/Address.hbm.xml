@@ -16,15 +16,15 @@
         </id>
         
         <property name="addressLine" column="addressLine"  type="string"
-                  not-null="true" lazy="true"/> 
+                  not-null="true"/> 
         <property name="city" column="city" type="string"
-                  not-null="true" lazy="true"/> 
+                  not-null="true"/> 
         <property name="pincode" column="pincode" type="string"
-                  not-null="true" lazy="true"/> 
+                  not-null="true"/> 
         <property name="state" column="state" type="string"
-                  not-null="true" lazy="true"/> 
+                  not-null="true"/> 
         <property name="country" column="country" type="string"
-                  not-null="true" lazy="true"/> 
+                  not-null="true"/> 
         
         <many-to-one name = "employee" column = "employee_id"
             class = "Employee"/>
