@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 /**
  * Employee fields creation and carries employee details
  * 
@@ -23,6 +25,7 @@ public class EmployeeDTO {
     private double salary;
     private String email;
     private long phoneNumber;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate DOB;
     private List<AddressDTO> addressDto;
     private Set<ProjectDTO> projectsDto;
@@ -96,6 +99,7 @@ public class EmployeeDTO {
         this.DOB = DOB;
     }
     
+
     public List<AddressDTO> getAddressDto() {
         return addressDto;
     }
@@ -116,7 +120,7 @@ public class EmployeeDTO {
 	public int hashCode() {
 		return Objects.hash(id);
 	}
-
+    
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

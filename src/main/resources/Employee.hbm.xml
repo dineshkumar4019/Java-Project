@@ -26,8 +26,8 @@
         <property name="DOB" column="DOB" type="LocalDate"
                   not-null="true" />
         
-        <bag name = "address" cascade = "all">
-        <key column = "employee_id" on-delete="cascade"/>
+        <bag name = "address" cascade = "all" >
+        <key column = "employee_id" on-delete="cascade" />
         <one-to-many class="Address"/>
         </bag>
         

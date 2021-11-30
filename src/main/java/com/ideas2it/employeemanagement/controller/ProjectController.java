@@ -17,11 +17,16 @@ import com.ideas2it.employeemanagement.model.EmployeeDTO;
 import com.ideas2it.employeemanagement.service.impl.ProjectService;
 import com.ideas2it.employeemanagement.model.ProjectStatus;
 
-import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 /**
  * <h1> Project controller</h1>
@@ -33,91 +38,88 @@ import jakarta.servlet.http.HttpServletResponse;
  * @since   2021-08-27
  * 
  */
+@Controller
 public class ProjectController extends HttpServlet {
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L; 
     private ProjectService projectService;
 	
-	public void init() throws ServletException {
-		super.init();
-	    projectService = new ProjectService();
+	public ProjectController(ProjectService projectService) {
+	    this.projectService = projectService;
 	}
 	
 	EMSLogger EmsLogger = new EMSLogger(ProjectController.class);
 	
-	/**
-	 * Performs Do get request action from the client
-	 * 
-	 * @param request http request from client
-	 * @param response corresponding response to the client
-	 */
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		String action = request.getServletPath();
-		
-        try {
-	        switch (action) {
-	            case "/ProjectCreateForm":
-        	        createProjectForm(request, response);
-        	    break;
-	            case "/viewProject":
-	            	getAllProjects(request, response);
-        	    break;
-	            case "/projectUpdateForm":
-	            	updateProjectForm(request, response);
-        	    break;
-	            case "/deleteProject":
-	            	deleteSingleProject(request, response);
-        	    break;
-	            case "/deleteAllProject":
-	            	deleteAllProject(request, response);
-        	    break;
-	            case "/assignEmployee":
-	            	assignEmployees(request, response);
-        	    break;
-	            case "/unAssignEmployee":
-	            	unAssignEmployees(request, response);
-        	    break;
-	            default :
-	        	    break;
-	        }
-        } catch (ServletException | EMSException | IOException e) {
-        	EmsLogger.error(e);
-        	request.getRequestDispatcher("error.jsp").forward(request, response);
-        }
-	}
-	
-	/**
-	 * Performs Do post request action from the client
-	 * 
-	 * @param request http request from client
-	 * @param response corresponding response to the client
-	 */
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String action = request.getServletPath();
-        try {
-	        switch (action) {
-	            case "/createProject":
-	        	    createProject(request, response);
-	        	    break;
-	            case "/updateProject":
-	            	updateAllFields(request, response);
-	        	    break;
-	            case "/allocateEmployee":
-	            	allocateEmployees(request, response);
-	        	    break;
-	            case "/unAllocateEmployee":
-	            	unAllocateEmployees(request, response);
-	        	    break;
-	            default :
-	        	    break;
-	        }
-        } catch (ServletException | EMSException | IOException e) {
-        	EmsLogger.error(e);
-        	request.getRequestDispatcher("error.jsp").forward(request, response);
-        }
-	}
+//	/**
+//	 * Performs Do get request action from the client
+//	 * 
+//	 * @param request http request from client
+//	 * @param response corresponding response to the client
+//	 */
+//	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+//		String action = request.getServletPath();
+//		
+//        try {
+//	        switch (action) {
+//	            case "/ProjectCreateForm":
+//        	        createProjectForm(request, response);
+//        	    break;
+//	            case "/viewProject":
+//	            	getAllProjects(request, response);
+//        	    break;
+//	            case "/projectUpdateForm":
+//	            	updateProjectForm(request, response);
+//        	    break;
+//	            case "/deleteProject":
+//	            	deleteSingleProject(request, response);
+//        	    break;
+//	            case "/deleteAllProject":
+//	            	deleteAllProject(request, response);
+//        	    break;
+//	            case "/assignEmployee":
+//	            	assignEmployees(request, response);
+//        	    break;
+//	            case "/unAssignEmployee":
+//	            	unAssignEmployees(request, response);
+//        	    break;
+//	            default :
+//	        	    break;
+//	        }
+//        } catch (ServletException | EMSException | IOException e) {
+//        	EmsLogger.error(e);
+//        	request.getRequestDispatcher("error.jsp").forward(request, response);
+//        }
+//	}
+//	
+//	/**
+//	 * Performs Do post request action from the client
+//	 * 
+//	 * @param request http request from client
+//	 * @param response corresponding response to the client
+//	 */
+//	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+//        String action = request.getServletPath();
+//        try {
+//	        switch (action) {
+//	            case "/createProject":
+//	        	    createProject(request, response);
+//	        	    break;
+//	            case "/updateProject":
+//	            	updateAllFields(request, response);
+//	        	    break;
+//	            case "/allocateEmployee":
+//	            	allocateEmployees(request, response);
+//	        	    break;
+//	            case "/unAllocateEmployee":
+//	            	unAllocateEmployees(request, response);
+//	        	    break;
+//	            default :
+//	        	    break;
+//	        }
+//        } catch (ServletException | EMSException | IOException e) {
+//        	EmsLogger.error(e);
+//        	request.getRequestDispatcher("error.jsp").forward(request, response);
+//        }
+//	}
     
     /**
      * Creating new project and storing in database
@@ -128,6 +130,7 @@ public class ProjectController extends HttpServlet {
      * @throws ServletException
      * @throws IOException
      */
+	@PostMapping("createProject")
     public void createProject(HttpServletRequest request, HttpServletResponse response)
     		throws EMSException, ServletException, IOException {
     	ProjectStatus status;
@@ -153,7 +156,6 @@ public class ProjectController extends HttpServlet {
         	EmsLogger.error("Project Not created");
         	request.getRequestDispatcher("error.jsp").forward(request, response);
         }
-        
     }
     
     /**
@@ -165,10 +167,13 @@ public class ProjectController extends HttpServlet {
      * @throws ServletException
      * @throws IOException
      */
-    public void createProjectForm(HttpServletRequest request, HttpServletResponse response)
-    		throws EMSException, ServletException, IOException {
-    	request.setAttribute("action", "createProject");
-    	request.getRequestDispatcher("projectForm.jsp").forward(request, response);
+	@GetMapping("ProjectCreateForm")
+    public String createProjectForm(Model model) throws EMSException {
+		model.addAttribute("action", "createProject");
+		model.addAttribute("project", new ProjectDTO());
+		return "projectForm.jsp";
+//    	request.setAttribute("action", "createProject");
+//    	request.getRequestDispatcher("projectForm.jsp").forward(request, response);
     }
     
     /**
@@ -180,6 +185,7 @@ public class ProjectController extends HttpServlet {
      * @throws ServletException
      * @throws IOException
      */
+	@GetMapping("projectUpdateForm")
     public void updateProjectForm(HttpServletRequest request, HttpServletResponse response)
     		throws EMSException, ServletException, IOException {
     	int id = Integer.parseInt(request.getParameter("id"));
@@ -199,6 +205,7 @@ public class ProjectController extends HttpServlet {
      * @throws ServletException
      * @throws IOException
      */
+    @GetMapping("viewProject")
     public void getAllProjects(HttpServletRequest request, HttpServletResponse response)
     		throws EMSException, ServletException, IOException {
     	List<ProjectDTO> projects = projectService.getAllProjects();
@@ -213,6 +220,7 @@ public class ProjectController extends HttpServlet {
      * @param projectDto project details to be updated
      * @return Number of rows updated
      */
+    @PostMapping("updateProject")
     public void updateAllFields(HttpServletRequest request, HttpServletResponse response)
     		throws EMSException, ServletException, IOException {
     	ProjectStatus status;
@@ -248,6 +256,7 @@ public class ProjectController extends HttpServlet {
      * @param id id for deleting the project
      * @return Number of rows deleted
      */
+    @GetMapping("deleteProject")
     public void deleteSingleProject(HttpServletRequest request, HttpServletResponse response)
     		throws EMSException, ServletException, IOException {
     	int id = Integer.parseInt(request.getParameter("id"));
@@ -266,6 +275,7 @@ public class ProjectController extends HttpServlet {
      *
      * @return Number of rows deleted
      */
+    @GetMapping("deleteAllProject")
     public void deleteAllProject(HttpServletRequest request, HttpServletResponse response)
     		throws EMSException, ServletException, IOException {
         int result = projectService.deleteAllProject();
@@ -278,6 +288,7 @@ public class ProjectController extends HttpServlet {
         }
     }
     
+    @GetMapping("assignEmployee")
     public void assignEmployees(HttpServletRequest request, HttpServletResponse response)
     		throws EMSException, ServletException, IOException {
     	int id = Integer.parseInt(request.getParameter("id"));
@@ -290,6 +301,7 @@ public class ProjectController extends HttpServlet {
         dispatcher.forward(request, response);
     }
     
+    @PostMapping("allocateEmployee")
     public void allocateEmployees(HttpServletRequest request, HttpServletResponse response)
     		throws EMSException, ServletException, IOException {
     	int result;
@@ -318,6 +330,7 @@ public class ProjectController extends HttpServlet {
         }
     }
     
+    @GetMapping("unAssignEmployee")
     public void unAssignEmployees(HttpServletRequest request, HttpServletResponse response)
     		throws EMSException, ServletException, IOException {
     	int id = Integer.parseInt(request.getParameter("id"));
@@ -330,6 +343,7 @@ public class ProjectController extends HttpServlet {
         dispatcher.forward(request, response);
     }
     
+    @PostMapping("unAllocateEmployee")
     public void unAllocateEmployees(HttpServletRequest request, HttpServletResponse response)
     		throws EMSException, ServletException, IOException {
     	int result;

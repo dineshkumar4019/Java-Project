@@ -26,8 +26,8 @@
         <property name="country" column="country" type="string"
                   not-null="true"/> 
         
-        <many-to-one name = "employee" column = "employee_id"
-            class = "Employee"/>
+        <many-to-one name = "employee" column = "employee_id" 
+            class = "Employee" />
         
     </class>
 </hibernate-mapping>

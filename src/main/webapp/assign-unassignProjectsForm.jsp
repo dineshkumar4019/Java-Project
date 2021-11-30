@@ -1,4 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,7 +9,7 @@
     <link rel="stylesheet" href="EmployeeStylePage.css">
 </head>
     <body>
-        <form action = "${action}" method="post">
+        <form:form action = "${action}" method="post" modelAttribute = "availableProjects">
             <div align="center">
             <c:if test='${action.equals("allocateProject")}'>
                 <h1>Available Projects to Assign</h1>
@@ -51,7 +52,7 @@
 	            </c:if>
 	        </c:if>
             </div>
-        </form>
+        </form:form>
         <center>
         <a href = "viewEmployee"><button> Back </button></a>
         <a href = "index.jsp"><button> Home </button></a>

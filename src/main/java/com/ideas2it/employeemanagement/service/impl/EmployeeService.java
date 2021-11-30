@@ -11,15 +11,12 @@ import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.HashSet;
 import java.util.regex.Pattern;
 
 import com.ideas2it.employeemanagement.dao.impl.EmployeeDao;
 import com.ideas2it.employeemanagement.model.Address;
-import com.ideas2it.employeemanagement.model.AddressDTO;
 import com.ideas2it.employeemanagement.model.Employee;
 import com.ideas2it.employeemanagement.model.EmployeeDTO;
-import com.ideas2it.employeemanagement.model.Project;
 import com.ideas2it.employeemanagement.model.ProjectDTO;
 import com.ideas2it.employeemanagement.service.EmployeeServiceInterface;
 import com.ideas2it.employeemanagement.exception.EMSException;
@@ -36,7 +33,20 @@ import com.ideas2it.employeemanagement.utils.ModelMapper;
  *  
  */
 public class EmployeeService implements EmployeeServiceInterface {
-    private EmployeeDao employeeDao = new EmployeeDao();
+    private EmployeeDao employeeDao;
+    private ProjectService projectService;
+    
+    public ProjectService getProjectService() {
+		return projectService;
+	}
+
+	public void setProjectService(ProjectService projectService) {
+		this.projectService = projectService;
+	}
+
+	public EmployeeService(EmployeeDao employeeDao) {
+    	this.employeeDao = employeeDao;
+    }
 
     /**
      * Checking an employee exist in database by id
@@ -89,7 +99,7 @@ public class EmployeeService implements EmployeeServiceInterface {
      * @return email exist or not
      */
     public boolean isEmailExist(String email) throws EMSException {
-        return employeeDao.isEmailExist(email);
+    	return (null != employeeDao.getEmployeeEmail(email)) ? true : false;
     }
     
     /**
@@ -111,7 +121,7 @@ public class EmployeeService implements EmployeeServiceInterface {
      * @return phoneNumber exist or not
      */
     public boolean isPhoneNumberExist(long phoneNumber) throws EMSException {
-        return employeeDao.isPhoneNumberExist(phoneNumber);
+        return (null != employeeDao.getEmployeePhoneNumber(phoneNumber)) ? true : false;
     }
     
     /**
@@ -217,7 +227,7 @@ public class EmployeeService implements EmployeeServiceInterface {
      * @return Number of rows created
      */
     public int createEmployee(EmployeeDTO employeeDto) throws EMSException {
-        return employeeDao.insertEmployee(ModelMapper.toEmployee(employeeDto));
+        return employeeDao.insertEmployee(ModelMapper.toEmployee(employeeDto)).getId();
     }
 
     /**
@@ -237,8 +247,7 @@ public class EmployeeService implements EmployeeServiceInterface {
      *
      * @return All projects details
      */
-    public List<ProjectDTO> getAllProjects() throws EMSException {
-        ProjectService projectService = new ProjectService();
+    private List<ProjectDTO> getAllProjects() throws EMSException {
         return projectService.getAllProjects();
     }
     
@@ -268,7 +277,7 @@ public class EmployeeService implements EmployeeServiceInterface {
         for (Address address : employee.getAddress()) {
             address.setEmployee(employee);
         }
-        return employeeDao.updateAllFields(employee);
+        return employeeDao.updateAllFields(employee).getId();
     }
     
     /**
@@ -313,10 +322,10 @@ public class EmployeeService implements EmployeeServiceInterface {
      * @param selectedIds ids of the projects
      * @return List of projects 
      */
-    public List<ProjectDTO> getSelectedProjectDtos(String[] selectedIds) {
+    public List<ProjectDTO> getSelectedProjectDtos(String[] selectedProjectIds) {
         List<ProjectDTO> list = new ArrayList<>();
     	
-    	for (String id : selectedIds) {
+    	for (String id : selectedProjectIds) {
     		ProjectDTO projectDto = new ProjectDTO();
     		projectDto.setId(Integer.parseInt(id));
     		list.add(projectDto);

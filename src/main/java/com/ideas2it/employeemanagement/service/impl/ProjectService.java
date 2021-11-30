@@ -31,9 +31,22 @@ import com.ideas2it.employeemanagement.service.ProjectServiceInterface;
  * 
  */
 public class ProjectService implements ProjectServiceInterface {
-    private ProjectDao projectDao = new ProjectDao();
+    private ProjectDao projectDao;
+    private EmployeeService employeeService;
     
-    /**
+    public EmployeeService getEmployeeService() {
+		return employeeService;
+	}
+
+	public void setEmployeeService(EmployeeService employeeService) {
+		this.employeeService = employeeService;
+	}
+	
+	public ProjectService(ProjectDao projectDao) {
+		this.projectDao = projectDao;
+	}
+
+	/**
      * Checking an project exist in database by id
      *
      * @param id project id for checking existance
@@ -128,7 +141,7 @@ public class ProjectService implements ProjectServiceInterface {
      * @return Number of rows created
      */
     public int createProject(ProjectDTO projectDto) throws EMSException {
-        return projectDao.insertProject(ModelMapper.toProject(projectDto));
+        return projectDao.insertProject(ModelMapper.toProject(projectDto)).getId();
     }
     
     /**
@@ -165,7 +178,6 @@ public class ProjectService implements ProjectServiceInterface {
      * @return All employees details
      */
     public List<EmployeeDTO> getAllEmployees() throws EMSException {
-        EmployeeService employeeService = new EmployeeService();
         return employeeService.getAllEmployee();
     }
     

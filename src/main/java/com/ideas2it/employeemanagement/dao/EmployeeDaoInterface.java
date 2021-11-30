@@ -8,7 +8,6 @@ package com.ideas2it.employeemanagement.dao;
 import java.util.List;
 import com.ideas2it.employeemanagement.exception.EMSException;
 import com.ideas2it.employeemanagement.model.Employee;
-import com.ideas2it.employeemanagement.model.Address;
 
 /**
  * <h1> Employee DAO</h1>
@@ -28,7 +27,7 @@ public interface EmployeeDaoInterface {
      *
      * @return Number of rows inserted
      */
-    public int insertEmployee(Employee employee) throws EMSException;
+    public Employee insertEmployee(Employee employee) throws EMSException;
     
     /**
      * Updating all employee fields in the database
@@ -36,7 +35,7 @@ public interface EmployeeDaoInterface {
      * @param employee employee details to update
      * @return Total number of rows updated in database
      */
-    public int updateAllFields(Employee employee) throws EMSException;
+    public Employee updateAllFields(Employee employee) throws EMSException;
 
     /**
      * Deleting particular employee in the database by 
@@ -76,7 +75,7 @@ public interface EmployeeDaoInterface {
      * @param email email to check the existance
      * @return email exist or not
      */
-    public boolean isEmailExist(String email) throws EMSException;
+    public Employee getEmployeeEmail(String email) throws EMSException;
    
     /** 
      * Checking the phonenumber already exist in the database
@@ -85,6 +84,6 @@ public interface EmployeeDaoInterface {
      * @param phoneNumber phone number to check the existance
      * @return email exist or not
      */
-   public boolean isPhoneNumberExist(long phoneNumber) throws EMSException;
+   public Employee getEmployeePhoneNumber(long phoneNumber) throws EMSException;
 }
 

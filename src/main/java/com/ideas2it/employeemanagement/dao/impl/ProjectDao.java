@@ -5,7 +5,6 @@
  */
 package com.ideas2it.employeemanagement.dao.impl;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.HibernateException;
@@ -41,14 +40,13 @@ public class ProjectDao implements ProjectDaoInterface {
      *
      * @return Number of rows inserted
      */
-    public int insertProject(Project project) throws EMSException {
-        int id = 0;
+    public Project insertProject(Project project) throws EMSException {
         Transaction transaction = null;
         Session session = sessionFactory.openSession();
         
         try {
             transaction = session.beginTransaction();
-            id = (Integer) session.save(project);
+            session.save(project);
             transaction.commit();
         } catch (HibernateException exception) {
             if (null != transaction) {
@@ -59,7 +57,7 @@ public class ProjectDao implements ProjectDaoInterface {
         } finally {
             session.close();
         }
-        return id;
+        return project;
     }
     
     /**

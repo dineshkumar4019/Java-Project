@@ -1,3 +1,4 @@
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <!DOCTYPE html>  
 <html>
 <head>
@@ -8,21 +9,21 @@
 </head>  
 <body>
     <h1> Create Address </h1>
-<form action = "${action}" method="post">
+<form:form action = "${action}" method="post" modelAttribute = "address">
     <fieldset>
         <label for="addressLine">Address Line</label><br>
-        <input type="text" id="addressLine" name="addressLine" placeholder = "Eg(No-09/10 xxxxtown)" required><br>
+        <form:input type="text" path="addressLine" placeholder = "Eg(No-09/10 xxxxtown)" /><br>
         <label for="city">City</label><br>
-        <input type="text" id="city" name="city" required><br>
+        <form:input type="text" id="city" path="city" /><br>
         <label for="pincode">Pin Code</label><br>
-        <input type="number" id="pincode" name="pincode" maxlength="6" required><br>
+        <form:input type="number" id="pincode" path="pincode" maxlength="6"/><br>
         <label for="state">State</label><br>
-        <input type="text" id="state" name="state" required><br>
+        <form:input type="text" id="state" path="state" /><br>
         <label for="country">Country</label><br>
-        <input type="text" id="country" name="country" required><br>
+        <form:input type="text" id="country" path="country"/><br>
         <button type="submit">Submit</button>
     </fieldset>
-</form> 
+</form:form> 
 </body>
 </html>
     

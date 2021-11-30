@@ -28,7 +28,7 @@ public interface ProjectDaoInterface {
      *
      * @return Number of rows inserted
      */
-    public int insertProject(Project project) throws EMSException;
+    public Project insertProject(Project project) throws EMSException;
     
     /**
      * Updating all project fields in the database

@@ -8,7 +8,6 @@ package com.ideas2it.employeemanagement.connection;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
-import com.ideas2it.employeemanagement.controller.EmployeeController;
 import com.ideas2it.employeemanagement.logger.EMSLogger;
 
 /**

@@ -40,14 +40,13 @@ public class EmployeeDao implements EmployeeDaoInterface {
      *
      * @return Number of rows inserted
      */
-    public int insertEmployee(Employee employee) throws EMSException {
-        int id = 0;
+    public Employee insertEmployee(Employee employee) throws EMSException {
         Transaction transaction = null;
         Session session = sessionFactory.openSession();
         
         try {
             transaction = session.beginTransaction();
-            id = (Integer) session.save(employee);
+            session.save(employee);
             transaction.commit();
         } catch (HibernateException exception) {
             if (null != transaction) {
@@ -58,7 +57,7 @@ public class EmployeeDao implements EmployeeDaoInterface {
         } finally {
             session.close();
         }
-        return id;
+        return employee;
     }
        
     /**
@@ -67,15 +66,14 @@ public class EmployeeDao implements EmployeeDaoInterface {
      * @param employee employee details to update
      * @return Total number of rows updated in database
      */
-    public int updateAllFields(Employee employee) throws EMSException {
-        int employeeUpdated = 0;
+    public Employee updateAllFields(Employee employee) throws EMSException {
+        Employee newEmployee;
         Transaction transaction = null;
         Session session = sessionFactory.openSession();
         
         try {
             transaction = session.beginTransaction();
-            session.merge(employee);
-            employeeUpdated = 1;
+            newEmployee = (Employee) session.merge(employee);
             transaction.commit();
         } catch (HibernateException exception) {
             if (null != transaction) {
@@ -86,7 +84,7 @@ public class EmployeeDao implements EmployeeDaoInterface {
         } finally {
             session.close();
         }
-        return employeeUpdated;
+        return newEmployee;
     }
 
     /**
@@ -201,13 +199,13 @@ public class EmployeeDao implements EmployeeDaoInterface {
     }
 
     /** 
-     * Checing the email already exist in the database
+     * Checking the email already exist in the database
      * for an employee
      *
      * @param email email to check the existance
      * @return email exist or not
      */
-    public boolean isEmailExist(String email) throws EMSException {
+    public Employee getEmployeeEmail(String email) throws EMSException {
         Employee employee = null;
         Session session = sessionFactory.openSession();
         
@@ -220,8 +218,8 @@ public class EmployeeDao implements EmployeeDaoInterface {
         } finally {
             session.close();
         }
-        return (null != employee) ? true : false;
-   }
+        return employee;
+    }
    
     /** 
      * Checking the phone number already exist in the database
@@ -230,20 +228,19 @@ public class EmployeeDao implements EmployeeDaoInterface {
      * @param phoneNumber phone number to check the existence
      * @return email exist or not
      */
-   public boolean isPhoneNumberExist(long phoneNumber) throws EMSException {
-      Employee employee = null;
-      Session session = sessionFactory.openSession();
-      
-      try {
-          Query<Employee> query = session.createQuery("FROM Employee WHERE phoneNumber = :phoneNumber", Employee.class);
-          employee = (Employee) query.setParameter("phoneNumber", phoneNumber).uniqueResult();
-      } catch (HibernateException exception) {
-          EmsLogger.error(exception);
-          throw new EMSException(Constants.ERROR_CODE_008);
-      } finally {
-          session.close();
-      }
-      return (null != employee) ? true : false;
-   }
+    public Employee getEmployeePhoneNumber(long phoneNumber) throws EMSException {
+        Employee employee = null;
+        Session session = sessionFactory.openSession();
+        
+        try {
+            Query<Employee> query = session.createQuery("FROM Employee WHERE phoneNumber = :phoneNumber", Employee.class);
+            employee = (Employee) query.setParameter("phoneNumber", phoneNumber).uniqueResult();
+        } catch (HibernateException exception) {
+            EmsLogger.error(exception);
+            throw new EMSException(Constants.ERROR_CODE_008);
+        } finally {
+            session.close();
+        }
+        return employee;
+     }
 }
-
