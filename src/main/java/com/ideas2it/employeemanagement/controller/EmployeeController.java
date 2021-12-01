@@ -141,6 +141,7 @@ public class EmployeeController extends HttpServlet {
      * @throws ServletException
      * @throws IOException
      */
+    @GetMapping("viewEmployee")
     public String getAllEmployee(EmployeeDTO employee, Model model) {
     	try {
     	    List<EmployeeDTO> employees = employeeService.getAllEmployee();
@@ -228,11 +229,8 @@ public class EmployeeController extends HttpServlet {
     /**
      * Deleting the required employee
      * 
-     * @param request
-     * @param response
-     * @throws EMSException
-     * @throws ServletException
-     * @throws IOException
+     * @param id Employee id to delete
+     * @return
      */
     @GetMapping("delete")
     public String deleteSingleEmployee(@RequestParam("id") int id) {
@@ -256,14 +254,10 @@ public class EmployeeController extends HttpServlet {
     /**
      * Deleting all employees in the database
      * 
-     * @param request
-     * @param response
-     * @throws EMSException
-     * @throws ServletException
-     * @throws IOException
+     * @return redirect site
      */
     @GetMapping("deleteAll")
-    public String deleteAllEmployee() throws EMSException {
+    public String deleteAllEmployee() {
     	String redirect = null;
     	try {
             if (0 < employeeService.deleteAllEmployee()) {
@@ -283,11 +277,9 @@ public class EmployeeController extends HttpServlet {
      * Forwarding request to assign form to select projects 
      * for an employee
      * 
-     * @param request
-     * @param response
-     * @throws EMSException
-     * @throws ServletException
-     * @throws IOException
+     * @param id employee id to assign projects
+     * @param modelMap for handling request and response attributes
+     * @return redirect site
      */
     @GetMapping("assign")
     public String assignProjects(@RequestParam("id") int id, ModelMap modelMap) {
@@ -307,33 +299,36 @@ public class EmployeeController extends HttpServlet {
     /**
      * Allocating projects to the employee
      * 
-     * @param request
-     * @param response
-     * @throws EMSException
-     * @throws ServletException
-     * @throws IOException
+     * @param selectedProjectIds selected ids of the project to allocate projects
+     * @param employeeDto employee to allocate projects
+     * @param sessionStatus
+     * @return redirect site
      */
     @PostMapping("allocateProject")
     public String allocateProjects(@RequestParam(value = "selectedProjects", required = false) String[] selectedProjectIds
-    		, @SessionAttribute("employee") EmployeeDTO employeeDto, SessionStatus sessionStatus) throws EMSException {
+    		, @SessionAttribute("employee") EmployeeDTO employeeDto, SessionStatus sessionStatus) {
     	int result;
-    	String redirect;
+    	String redirect = null;
     	
-    	if (null != selectedProjectIds) { 
-    		employeeDto.getProjectsDto().addAll(employeeService.getSelectedProjectDtos(selectedProjectIds));
-    	    result = employeeService.updateAllFields(employeeDto);
+    	try {
+    	    if (null != selectedProjectIds) { 
+    		    employeeDto.getProjectsDto().addAll(employeeService.getSelectedProjectDtos(selectedProjectIds));
+    	        result = employeeService.updateAllFields(employeeDto);
     	
-    	    sessionStatus.setComplete();
-    	    if (0 < result) {
-    		    EmsLogger.info("Project assigned for an Employee id " + employeeDto.getId());
-    		    redirect = "redirect:successMessage.jsp?message=Project assigned Successfully";
+    	        sessionStatus.setComplete();
+    	        if (0 < result) {
+    		        EmsLogger.info("Project assigned for an Employee id " + employeeDto.getId());
+    		        redirect = "redirect:successMessage.jsp?message=Project assigned Successfully";
+    	        } else {
+    		        EmsLogger.error("Project not assigned for employee" + employeeDto.getId());
+    		        redirect = "redirect:error.jsp";
+    	        }
     	    } else {
-    		    EmsLogger.error("Project not assigned for employee" + employeeDto.getId());
-    		    redirect = "redirect:error.jsp";
+    		    redirect = "redirect:error.jsp?message=No Projects Selected";
     	    }
-    	} else {
-    		redirect = "redirect:error.jsp?message=No Projects Selected";
-    	} 
+    	} catch (EMSException exception) {
+    		EmsLogger.error(exception);
+    	}
     	return redirect;
     }
     
