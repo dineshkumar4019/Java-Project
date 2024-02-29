@@ -36,7 +36,7 @@ public class HibernateUtil {
             try {
                 sessionFactory = new Configuration().configure().buildSessionFactory();
             } catch (Throwable e) {
-            	
+            	e.printStackTrace();
             	//EmsLogger.fatal(e);
             }
         }
