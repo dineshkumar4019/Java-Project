@@ -34,7 +34,10 @@ public class HibernateUtil {
     public static SessionFactory getSessionFactory() {
         if (null == sessionFactory) {
             try {
+                System.out.println("**************");
                 sessionFactory = new Configuration().configure().buildSessionFactory();
+                System.out.println("--------------");
+                System.out.println(sessionFactory);
             } catch (Throwable e) {
                 System.out.println("**************");
             	e.printStackTrace();
