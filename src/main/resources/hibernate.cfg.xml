@@ -11,7 +11,7 @@
         <property name="format_sql">true</property>
         <property name="dialect">org.hibernate.dialect.MySQL8Dialect</property>
         <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
-        <property name="connection.url">jdbc:mysql://meta-mysql.c4uhhfzpvkyd.us-east-1.rds.amazonaws.com:3306/employeesrecord</property>
+        <property name="connection.url">jdbc:mysql://meta-sql.c4uhhfzpvkyd.us-east-1.rds.amazonaws.com:3306/employeesrecord</property>
         <property name="connection.username">root</property>
         <property name="connection.password">qwertyuiop4019</property>
          
