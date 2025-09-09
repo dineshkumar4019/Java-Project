@@ -1,0 +1,40 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.ideas2it.employeemanagement.model">
+
+    <class name="Employee" table = "employees">
+    
+        <meta attribute="Class-description">
+            This class Holds the employees detail.
+        </meta>  
+        
+        <id name="id" column="id" type="int" >
+            <generator class="native"/>
+        </id>
+     
+        <property name="name" column="name"  type="string"
+                  not-null="true" /> 
+        <property name="salary" column="salary" type="double"
+                  not-null="true" />
+        <property name="email" column="email" type="string"
+                  not-null="true"  unique="true"/>
+        <property name="phoneNumber" column="phone_number" type="long"
+                  not-null="true" unique="true"/>
+        <property name="DOB" column="DOB" type="LocalDate"
+                  not-null="true" />
+        
+        <bag name = "address" cascade = "all" >
+        <key column = "employee_id" on-delete="cascade" />
+        <one-to-many class="Address"/>
+        </bag>
+        
+        <set name="projects" table="employee_project">
+            <key column="employee_id" />
+            <many-to-many column="project_id" class="Project" />
+        </set>
+        
+    </class>
+</hibernate-mapping>
